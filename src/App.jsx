@@ -1,7 +1,16 @@
 import React from 'react'
 import SideBar from "./components/layout/SideBar";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
 import './App.css';
+import {
+  Management,
+  Dashboard,
+  Daily,
+  Settings,
+  Transaction,
+  Rates
+} from "./pages"
 
 const App = () => {
 
@@ -10,13 +19,11 @@ const App = () => {
       <SideBar>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/messages" element={<Messages />} />
-          <Route path="/analytics" element={<Analytics />} />
-          <Route path="/file-manager" element={<FileManager />} />
-          <Route path="/order" element={<Order />} />
-          <Route path="/saved" element={<Saved />} />
-          <Route path="/settings" element={<Setting />} />
+          <Route path="/management" element={<Management />} />
+          <Route path="/daily" element={<Daily />} />
+          <Route path="/rates" element={<Rates />} />
+          <Route path="/Setting" element={<Settings />} />
+          <Route path="/transaction" element={<Transaction />} />
 
           <Route path="*" element={<> not found</>} />
         </Routes>

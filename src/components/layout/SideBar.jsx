@@ -16,23 +16,23 @@ const routes = [
     icon: <FaHome />,
   },
   {
-    path: "/users",
-    name: "Users",
+    path: "/management",
+    name: "Management",
     icon: <FaUser />,
   },
   {
-    path: "/messages",
-    name: "Messages",
+    path: "/daily",
+    name: "Daily",
     icon: <MdMessage />,
   },
   {
-    path: "/analytics",
-    name: "Analytics",
+    path: "/transaction",
+    name: "Transaction",
     icon: <BiAnalyse />,
   },
   {
-    path: "/file-manager",
-    name: "File Manager",
+    path: "/rate",
+    name: "Rates",
     icon: <AiTwotoneFileExclamation />,
     subRoutes: [
       {
@@ -51,11 +51,6 @@ const routes = [
         icon: <FaMoneyBill />,
       },
     ],
-  },
-  {
-    path: "/order",
-    name: "Order",
-    icon: <BsCartCheck />,
   },
   {
     path: "/settings",
@@ -187,7 +182,6 @@ const SideBar = ({ children }) => {
                   />
                 );
               }
-
               return (
                 <NavLink
                   to={route.path}

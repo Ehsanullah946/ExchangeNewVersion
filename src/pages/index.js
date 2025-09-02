@@ -1,0 +1,6 @@
+export {default as Dashboard} from "./Dashboard"
+export {default as Daily} from "./Daily"
+export {default as Management} from "./Management"
+export {default as Rates} from "./Rates"
+export {default as Settings} from "./Settings"
+export {default as Transaction} from "./Transaction"
