@@ -1,8 +1,9 @@
 import React from 'react'
+import { Outlet } from 'react-router-dom'
 
 const Management = () => {
   return (
-    <div>Management</div>
+    <div> <Outlet /></div>
   )
 }
 

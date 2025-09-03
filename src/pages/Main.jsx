@@ -1,10 +1,10 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 
-const Rates = () => {
+const Main = () => {
   return (
     <div><Outlet/></div>
   )
 }
 
-export default Rates
+export default Main

@@ -1,9 +1,8 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
 
 const Daily = () => {
   return (
-    <div>daily</div>
+    <div>Daily</div>
   )
 }
 

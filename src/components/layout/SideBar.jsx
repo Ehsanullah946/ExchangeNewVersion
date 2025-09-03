@@ -1,11 +1,13 @@
 import SidebarMenu from "./SidebarMenu";
 import { useState } from "react";
-import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser } from "react-icons/fa";
-import { MdMessage } from "react-icons/md";
-import { BiAnalyse, BiSearch } from "react-icons/bi";
+import { FaBars, FaHome, FaLock, FaMoneyBill, FaRegArrowAltCircleUp, FaUser, FaUserTie } from "react-icons/fa";
+import { MdAccountTree, MdCompareArrows, MdManageAccounts, MdMessage, MdToday } from "react-icons/md";
+import { BiAnalyse, BiSearch, BiTransferAlt } from "react-icons/bi";
 import { BiCog } from "react-icons/bi";
-import { AiFillHeart, AiTwotoneFileExclamation } from "react-icons/ai";
-import { BsCartCheck } from "react-icons/bs";
+import { AiFillHome, AiOutlineDashboard, AiOutlineRise } from "react-icons/ai";
+import { RiDownloadLine, RiSendPlaneLine } from 'react-icons/ri';
+import { FiUser, FiUsers } from "react-icons/fi"
+import { GiPayMoney } from 'react-icons/gi';
 import { NavLink } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -13,44 +15,86 @@ const routes = [
   {
     path: "/",
     name: "Dashboard",
-    icon: <FaHome />,
+    icon: <AiOutlineDashboard />,
+  },
+    {
+    path: "/main",
+    name: "Main",
+      icon: <AiFillHome />,
+      subRoutes: [
+      {
+        path: "/main/receive",
+        name: "Receive",
+        icon: <RiDownloadLine />,
+      },
+      {
+        path: "/main/transfer",
+        name: "Transfer",
+        icon: <RiSendPlaneLine />,
+      },
+      {
+        path: "/main/depositWithdraw",
+        name: "DepositWithdraw",
+        icon: <FaRegArrowAltCircleUp />,
+      },
+      {
+        path: "/main/consumption",
+        name: "Consumption",
+        icon: <GiPayMoney />,
+      },
+      {
+        path: "/main/transferToAccount",
+        name: "TransferToAccount",
+        icon: <MdCompareArrows />,
+      },
+    ]
   },
   {
     path: "/management",
     name: "Management",
-    icon: <FaUser />,
+    icon: <MdManageAccounts />,
+    subRoutes: [
+       {
+        path: "/management/customer",
+        name: "Customer",
+        icon: <FiUsers />,
+      },
+       {
+        path: "/management/branch",
+        name: "Branch",
+        icon: <MdAccountTree />,
+      },
+       {
+        path: "/management/employee",
+        name: "Employees",
+        icon: <FaUserTie />,
+      },
+       {
+        path: "/management/exchanger",
+        name: "Exchanger",
+        icon: <FaUser />,
+      },
+       {
+        path: "/management/senderReceiver",
+        name: "SenderReceiver",
+        icon: <BiTransferAlt />,
+      },
+    ]
   },
   {
     path: "/daily",
     name: "Daily",
-    icon: <MdMessage />,
+    icon: <MdToday />,
   },
   {
-    path: "/transaction",
-    name: "Transaction",
-    icon: <BiAnalyse />,
+    path: "/account",
+    name: "Accounts",
+    icon: <FiUser />,
   },
   {
-    path: "/rate",
+    path: "/rates",
     name: "Rates",
-    icon: <AiTwotoneFileExclamation />,
-    subRoutes: [
-      {
-        path: "/settings/profile",
-        name: "Profile ",
-        icon: <FaUser />,
-      },
-      {
-        path: "/settings/2fa",
-        name: "2FA",
-        icon: <FaLock />,
-      },
-      {
-        path: "/settings/billing",
-        name: "Billing",
-        icon: <FaMoneyBill />,
-      },
-    ],
+    icon: <AiOutlineRise />,
   },
   {
     path: "/settings",
@@ -74,11 +118,6 @@ const routes = [
         icon: <FaMoneyBill />,
       },
     ],
-  },
-  {
-    path: "/saved",
-    name: "Saved",
-    icon: <AiFillHeart />,
   },
 ];
 
