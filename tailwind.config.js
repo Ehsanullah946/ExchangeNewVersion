@@ -19,7 +19,7 @@ export default {
         'half-transparent': 'rgba(0, 0, 0, 0.5)',
       },
       borderWidth: {
-        1: '1px',
+        // 1: '1px',
       },
       borderColor: {
         // color: 'rgba(0, 0, 0, 0.1)',
