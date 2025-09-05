@@ -235,7 +235,7 @@ const SideBar = ({ children }) => {
                   exit="hidden"
                   className="logo"
                 >
-                  DoSomeCoding
+                  Exchange Money
                 </motion.h1>
               )}
             </AnimatePresence>
