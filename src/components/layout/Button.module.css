@@ -1,0 +1,22 @@
+.primary {
+  /* font-weight: 400; */
+  background-image: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 20px 10px -15px;
+  color: white;
+  margin-left: 10px;
+  box-shadow: 0 0.4rem 1.2rem rgba(225, 233, 238, 0.16);
+}
+.btn {
+  color: inherit;
+  padding: 0.1rem 1.2rem;
+  font-family: inherit;
+  /* font-size: 1.3rem; */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.primary:hover,
+.formBtn:hover {
+  transform: scale(0.9);
+  box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 23px 10px -20px;
+}

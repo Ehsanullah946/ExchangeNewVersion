@@ -1,14 +1,11 @@
 import React from 'react';
+import styles from './Button.module.css';
 
-const Button = ({ bgColor, color, size, text, borderRadius }) => {
+const Button = ({ children, type, onClick }) => {
   return (
     <div>
-      <button
-        type="button"
-        style={{ backgroundColor: bgColor, color, borderRadius }}
-        className={`text-${size} p-3 hover:drop-shadow-xl`}
-      >
-        {text}
+      <button className={`${styles.btn} ${styles[type]}`} onClick={onClick}>
+        {children}
       </button>
     </div>
   );

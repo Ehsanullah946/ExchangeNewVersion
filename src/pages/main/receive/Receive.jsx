@@ -1,22 +1,30 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import { BiChevronDown } from 'react-icons/bi';
+import Button from '../../../components/layout/Button';
+import { MdOutlineCancel } from 'react-icons/md';
+import { useStateContext } from '../../../context/contextProvider';
 const Receive = () => {
-  const [isActive, setIsActive] = useState(true);
+  const { currentColor } = useStateContext();
+  const [isActive, setIsActive] = useState(false);
+
   return (
     <>
       <div>
         <div>buttons</div>
         <div>
           <form>
-            <div className="grid justify-around sm:grid-cols-2 pl-10 pr-10 bg-blue-400">
+            <div className="font-extrabold bg-blue-400 p-2.5 rounded-t-2xl text-white mr-10 text-center">
+              <span>Receive</span>
+            </div>
+            <div className="grid justify-around sm:grid-cols-2  rounded-b-2xl md:pl-0 mr-10 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl ">
               <div className="w-100">
-                <div className="flex gap-10  justify-center ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="mt-1 w-30 ">
+                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
+                  <label htmlFor="" className="mt-1  w-30 ">
                     Branch:
                   </label>
                   <Select
-                    className="w-full max-w-56"
+                    className="w-full max-w-56 shadow-2xl"
                     name="branch"
                     // value={{ label: formData.branch, value: formData.branch }}
                     // options={branch.map((item) => ({
@@ -27,7 +35,7 @@ const Receive = () => {
                     isDisabled={!isActive}
                   />
                 </div>
-                <div className="flex gap-10  justify-center ml-5 mr-5 mt-1">
+                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
                     Number
                   </label>
@@ -35,11 +43,11 @@ const Receive = () => {
                     type="text"
                     id="number"
                     aria-describedby="helper-text-explanation"
-                    class="bg-gray-50 border border-gray-300 shadow-cyan-400 max-w-56 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
+                    class="border border-gray-300 shadow-cyan-400 max-w-56 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
                     required
                   />
                 </div>
-                <div className="flex gap-10  justify-center ml-5 mr-5 mt-1">
+                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
                     Transfer:
                   </label>
@@ -51,7 +59,7 @@ const Receive = () => {
                     required
                   />
                 </div>
-                <div className="flex gap-10  justify-center ml-5 mr-5 mt-1">
+                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
                     Receiver:
                   </label>
@@ -63,7 +71,7 @@ const Receive = () => {
                     required
                   />
                 </div>
-                <div className="flex gap-10 justify-center  ml-5 mr-5 mt-1">
+                <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
                     Amount:
                   </label>
@@ -83,7 +91,7 @@ const Receive = () => {
                         id="currency"
                         name="currency"
                         aria-label="Currency"
-                        className="col-start-1 row-start-1 w-full appearance-none rounded-md py-1.5 pr-7 pl-2 text-base text-gray-500 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                        className="col-start-1 row-start-1  appearance-none rounded-md py-1.5 pr-7 pl-2 text-base text-gray-500 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                       >
                         <option>USD</option>
                         <option>CAD</option>
@@ -96,7 +104,7 @@ const Receive = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-10 justify-center  ml-5 mr-5 mt-1">
+                <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
                     charges:
                   </label>
@@ -129,7 +137,7 @@ const Receive = () => {
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-10 justify-center  ml-5 mr-5 mt-1">
+                <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
                     pass charge:
                   </label>
@@ -164,7 +172,7 @@ const Receive = () => {
                 </div>
               </div>
               <div className="w-100">
-                <div className="flex gap-10  justify-center ml-5 mr-5 mt-1">
+                <div className="flex gap-10 md:block lg:flex  justify-center  md:gap-0  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
                     Date:
                   </label>
@@ -176,7 +184,7 @@ const Receive = () => {
                     required
                   />
                 </div>
-                <div className="flex gap-10  justify-center ml-5 mr-5 mt-1">
+                <div className="flex gap-10 md:block lg:flex   justify-center  md:gap-0 ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
                     Customer:
                   </label>
@@ -192,7 +200,7 @@ const Receive = () => {
                     isDisabled={!isActive}
                   />
                 </div>
-                <div className="flex gap-10  justify-center ml-5 mr-5 mt-1">
+                <div className="flex gap-10 md:block  lg:flex  justify-center  md:gap-0  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
                     pass To:
                   </label>
@@ -208,7 +216,7 @@ const Receive = () => {
                     isDisabled={!isActive}
                   />
                 </div>
-                <div className="flex gap-10  justify-center ml-5 mr-5 mt-1">
+                <div className="flex gap-10 justify-center md:block lg:flex  md:gap-0  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
                     Description:
                   </label>
@@ -219,6 +227,25 @@ const Receive = () => {
                     placeholder="Details..."
                   ></textarea>
                 </div>
+              </div>
+              <div className="mt-4 flex mb-2">
+                {isActive ? (
+                  <>
+                    <Button type="primary" htmlType="submit">
+                      Save
+                    </Button>
+                    <Button type="primary">Cancel</Button>
+                  </>
+                ) : (
+                  <>
+                    <Button type="primary" onClick={() => setIsActive(true)}>
+                      New
+                    </Button>
+                    <Button type="primary">Edit</Button>
+                    <Button type="primary">Delete</Button>
+                    <Button type="primary">Search</Button>
+                  </>
+                )}
               </div>
             </div>
           </form>

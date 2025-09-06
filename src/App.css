@@ -5,18 +5,23 @@
   position: relative;
   min-height: 100vh;
 }
+label {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
 
 main {
   padding: 20px;
   flex: 1;
   transition: margin-left 0.3s ease;
+  height: 100vh;
 }
 
 /* Mobile first approach */
 .sidebar {
   background: rgb(0, 7, 61);
   color: white;
-  height: 100vh;
+  height: 100%;
   overflow-y: auto;
   position: fixed;
   top: 0;
