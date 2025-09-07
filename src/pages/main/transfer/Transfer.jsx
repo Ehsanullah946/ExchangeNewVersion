@@ -5,9 +5,11 @@ import { BiChevronDown } from 'react-icons/bi';
 import Button from '../../../components/layout/Button';
 import { MdOutlineCancel } from 'react-icons/md';
 import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
+import { useTranslation } from 'react-i18next';
 const Transfer = () => {
   const { currentColor } = useStateContext();
   const [isActive, setIsActive] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -15,30 +17,31 @@ const Transfer = () => {
         <div className=" flex mt-1 mb-1">
           <Button type="secondry">
             <span className="flex justify-between">
-              لیست <BsListCheck className="mt-1 ml-3" />
+              <BsListCheck className="mt-1 ml-3" />
+              {t('List')}
             </span>
           </Button>
           <Button type="secondry">
             <span className="flex justify-between ">
-              پرینت <BsPrinter className="mt-1 ml-3" />
+              <BsPrinter className="mt-1 ml-3" /> {t('Print')}
             </span>
           </Button>
           <Button type="secondry">
             <span className="flex justify-between ">
-              جستجو <BsSearch className="mt-1 ml-3" />
+              <BsSearch className="mt-1 ml-3" /> {t('Search')}
             </span>
           </Button>
         </div>
         <div>
           <form>
-            <div className="font-extrabold bg-blue-400 p-2.5 rounded-t-2xl text-white  text-center">
-              <span>انتفال حواله</span>
+            <div className="font-extrabold bg-blue-400 p-2.5 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
+              <span>{t('Send')}</span>
             </div>
-            <div className="grid justify-around sm:grid-cols-2 rounded-b-2xl md:pl-0 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl ">
+            <div className="grid justify-around sm:grid-cols-2 rounded-b-2xl ltr:mr-4 rtl:ml-4 md:pl-0 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl ">
               <div className="w-100">
-                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="mt-1  w-30 ">
-                    نماینده گی:
+                <div className="flex gap-10 lg:flex md:block justify-center ml-5 mr-5 mt-1">
+                  <label htmlFor="" className="mt-1 w-30">
+                    {t('Branch')}:
                   </label>
                   <Select
                     className="w-full max-w-58 shadow-2xl"
@@ -54,7 +57,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
-                    نمبر:
+                    {t('Number')}:
                   </label>
                   <input
                     type="text"
@@ -66,7 +69,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
-                    فرستنده:
+                    {t('Transfer')}:
                   </label>
                   <input
                     type="text"
@@ -78,7 +81,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
-                    گیرنده:
+                    {t('Receiver')}:
                   </label>
                   <input
                     type="text"
@@ -90,7 +93,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
-                    مقدار:
+                    {t('Amount')}:
                   </label>
                   <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
                     <div className="shrink-0 text-base pl-1 pr-1 text-gray-500 select-none sm:text-sm/6">
@@ -123,7 +126,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
-                    کمیشن:
+                    {t('charges')}:
                   </label>
                   <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
                     <div className="shrink-0 text-base pl-1 pr-1 text-gray-500 select-none sm:text-sm/6">
@@ -156,7 +159,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
-                    کمیشن پاس:
+                    {t('pass charges')}:
                   </label>
                   <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
                     <div className="shrink-0 text-base pl-1 pr-1 text-gray-500 select-none sm:text-sm/6">
@@ -192,7 +195,7 @@ const Transfer = () => {
               <div className="w-100">
                 <div className="flex gap-10 md:block lg:flex  justify-center  md:gap-0  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
-                    تاریخ:
+                    {t('Date')}:
                   </label>
                   <input
                     type="date"
@@ -204,7 +207,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 md:block lg:flex   justify-center  md:gap-0 ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
-                    مشتری:
+                    {t('Customer')}:
                   </label>
                   <Select
                     className="w-full max-w-58"
@@ -220,7 +223,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 md:block  lg:flex  justify-center  md:gap-0  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
-                    پاس به:
+                    {t('pass to')}:
                   </label>
                   <Select
                     className="w-full max-w-58"
@@ -236,13 +239,13 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 justify-center md:block lg:flex  md:gap-0  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
-                    توضیحات:
+                    {t('Description')}:
                   </label>
                   <textarea
                     id="message"
                     rows="4"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-58  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
-                    placeholder="بشتر ..........."
+                    placeholder=""
                   ></textarea>
                 </div>
               </div>
@@ -250,18 +253,18 @@ const Transfer = () => {
                 {isActive ? (
                   <>
                     <Button type="primary" htmlType="submit">
-                      ذخیره
+                      {t('Save')}
                     </Button>
-                    <Button type="primary">Cancel</Button>
+                    <Button type="primary">{t('Cancel')}</Button>
                   </>
                 ) : (
                   <>
                     <Button type="primary" onClick={() => setIsActive(true)}>
-                      جدید
+                      {t('New')}
                     </Button>
-                    <Button type="primary">ویرایش</Button>
-                    <Button type="primary">حذف</Button>
-                    <Button type="primary">اجراکردن</Button>
+                    <Button type="primary">{t('Edit')}</Button>
+                    <Button type="primary">{t('Delete')}</Button>
+                    <Button type="primary">{t('Complete')}</Button>
                   </>
                 )}
               </div>

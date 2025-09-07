@@ -4,16 +4,17 @@ import { MdOutlineCancel } from 'react-icons/md';
 import Button from './Button.jsx';
 import { useStateContext } from '../../context/contextProvider.jsx';
 import { chatData } from '../../data/dummy.jsx';
+import { useTranslation } from 'react-i18next';
 
 const NotificationPanel = () => {
   const { currentColor } = useStateContext();
-
+  const { t } = useTranslation();
   return (
     <div className="nav-item absolute right-5 md:right-40 top-12 bg-white dark:bg-[#42464D] p-3 rounded-lg w-96">
       <div className="flex justify-between items-center">
         <div className="flex gap-3">
           <p className="font-semibold text-lg dark:text-gray-200">
-            Notifications
+            {t('Notifications')}
           </p>
           <button
             type="button"

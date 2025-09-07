@@ -22,7 +22,8 @@ import {
   Main,
   Receive,
   Transfer,
-  DepositWithdraw,
+  Deposit,
+  Withdraw,
   Consumption,
   TransferToAccount,
   Accounts,
@@ -53,7 +54,8 @@ const App = () => {
               <Route path="/main" element={<Main />}>
                 <Route path="receive" element={<Receive />} />
                 <Route path="transfer" element={<Transfer />} />
-                <Route path="depositWithdraw" element={<DepositWithdraw />} />
+                <Route path="deposit" element={<Deposit />} />
+                <Route path="withdraw" element={<Withdraw />} />
                 <Route path="consumption" element={<Consumption />} />
                 <Route
                   path="transferToAccount"

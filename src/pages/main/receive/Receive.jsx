@@ -36,10 +36,10 @@ const Receive = () => {
         </div>
         <div>
           <form>
-            <div className="font-extrabold bg-blue-400 p-2.5 rounded-t-2xl text-white  text-center">
-              <span>اجرای حواله</span>
+            <div className="font-extrabold bg-blue-400 p-2.5 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
+              <span>{t('Receive')}</span>
             </div>
-            <div className="grid justify-around sm:grid-cols-2 rounded-b-2xl md:pl-0 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl ">
+            <div className="grid justify-around sm:grid-cols-2 rounded-b-2xl ltr:mr-4 rtl:ml-4 md:pl-0 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl ">
               <div className="w-100">
                 <div className="flex gap-10 lg:flex md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
@@ -278,18 +278,18 @@ const Receive = () => {
                 {isActive ? (
                   <>
                     <Button type="primary" htmlType="submit">
-                      ذخیره
+                      {t('Save')}
                     </Button>
-                    <Button type="primary">Cancel</Button>
+                    <Button type="primary">{t('Cancel')}</Button>
                   </>
                 ) : (
                   <>
                     <Button type="primary" onClick={() => setIsActive(true)}>
-                      جدید
+                      {t('New')}
                     </Button>
-                    <Button type="primary">ویرایش</Button>
-                    <Button type="primary">حذف</Button>
-                    <Button type="primary">اجراکردن</Button>
+                    <Button type="primary">{t('Edit')}</Button>
+                    <Button type="primary">{t('Delete')}</Button>
+                    <Button type="primary">{t('Complete')}</Button>
                   </>
                 )}
               </div>

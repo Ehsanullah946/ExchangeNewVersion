@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import React, { useState, useEffect } from 'react';
 import { FaAngleDown } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const menuAnimation = {
   hidden: {
@@ -37,6 +38,7 @@ const menuItemAnimation = {
 
 const SidebarMenu = ({ route, showAnimation, isOpen, setIsOpen }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { t } = useTranslation();
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     setIsOpen(true);
@@ -61,7 +63,7 @@ const SidebarMenu = ({ route, showAnimation, isOpen, setIsOpen }) => {
                 exit="hidden"
                 className="link_text"
               >
-                {route.name}
+                {t(route.nameKey)}
               </motion.div>
             )}
           </AnimatePresence>
@@ -93,7 +95,9 @@ const SidebarMenu = ({ route, showAnimation, isOpen, setIsOpen }) => {
               <motion.div variants={menuItemAnimation} key={i} custom={i}>
                 <NavLink to={subRoute.path} className="link">
                   <div className="icon">{subRoute.icon}</div>
-                  <motion.div className="link_text">{subRoute.name}</motion.div>
+                  <motion.div className="link_text">
+                    {t(subRoute.nameKey)}
+                  </motion.div>
                 </NavLink>
               </motion.div>
             ))}

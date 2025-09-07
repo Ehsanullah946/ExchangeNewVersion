@@ -25,119 +25,12 @@ import { FiUser, FiUsers } from 'react-icons/fi';
 import { GiPayMoney } from 'react-icons/gi';
 import { NavLink } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-
-const routes = [
-  {
-    path: '/',
-    name: 'Dashboard',
-    icon: <AiOutlineDashboard />,
-  },
-  {
-    path: '/main',
-    name: 'Main',
-    icon: <AiFillHome />,
-    subRoutes: [
-      {
-        path: '/main/receive',
-        name: 'Receive',
-        icon: <RiDownloadLine />,
-      },
-      {
-        path: '/main/transfer',
-        name: 'Transfer',
-        icon: <RiSendPlaneLine />,
-      },
-      {
-        path: '/main/depositWithdraw',
-        name: 'DepositWithdraw',
-        icon: <FaRegArrowAltCircleUp />,
-      },
-      {
-        path: '/main/consumption',
-        name: 'Consumption',
-        icon: <GiPayMoney />,
-      },
-      {
-        path: '/main/transferToAccount',
-        name: 'TransferToAccount',
-        icon: <MdCompareArrows />,
-      },
-    ],
-  },
-  {
-    path: '/management',
-    name: 'Management',
-    icon: <MdManageAccounts />,
-    subRoutes: [
-      {
-        path: '/management/customer',
-        name: 'Customer',
-        icon: <FiUsers />,
-      },
-      {
-        path: '/management/branch',
-        name: 'Branch',
-        icon: <MdAccountTree />,
-      },
-      {
-        path: '/management/employee',
-        name: 'Employees',
-        icon: <FaUserTie />,
-      },
-      {
-        path: '/management/exchanger',
-        name: 'Exchanger',
-        icon: <FaUser />,
-      },
-      {
-        path: '/management/senderReceiver',
-        name: 'SenderReceiver',
-        icon: <BiTransferAlt />,
-      },
-    ],
-  },
-  {
-    path: '/daily',
-    name: 'Daily',
-    icon: <MdToday />,
-  },
-  {
-    path: '/account',
-    name: 'Accounts',
-    icon: <FiUser />,
-  },
-  {
-    path: '/rates',
-    name: 'Rates',
-    icon: <AiOutlineRise />,
-  },
-  {
-    path: '/settings',
-    name: 'Settings',
-    icon: <BiCog />,
-    exact: true,
-    subRoutes: [
-      {
-        path: '/settings/languages',
-        name: 'Languages',
-        icon: <FaUser />,
-      },
-      {
-        path: '/settings/2fa',
-        name: '2FA',
-        icon: <FaLock />,
-      },
-      {
-        path: '/settings/billing',
-        name: 'Billing',
-        icon: <FaMoneyBill />,
-      },
-    ],
-  },
-];
+import { useTranslation } from 'react-i18next';
+import { routes } from '../../routes/Routes';
 
 const SideBar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -225,7 +118,7 @@ const SideBar = ({ children }) => {
           }}
           className={`sidebar ${isMobile ? 'mobile-sidebar' : ''}`}
         >
-          <div className="top_section">
+          <div className="top_section rtl:mr-1 ltr:mr-1">
             <AnimatePresence>
               {isOpen && (
                 <motion.h1
@@ -235,7 +128,7 @@ const SideBar = ({ children }) => {
                   exit="hidden"
                   className="logo"
                 >
-                  Exchange Money
+                  {t('Akbarian Exchange')}
                 </motion.h1>
               )}
             </AnimatePresence>
@@ -299,7 +192,7 @@ const SideBar = ({ children }) => {
                             exit="hidden"
                             className="link_text"
                           >
-                            {route.name}
+                            {t(route.nameKey)}
                           </motion.div>
                         )}
                       </AnimatePresence>
