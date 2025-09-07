@@ -1,9 +1,14 @@
 @import url('https://cdn.syncfusion.com/ej2/material.css');
 
+body {
+  direction: rtl;
+}
+
 .main-container {
   display: flex;
   position: relative;
   min-height: 100vh;
+  direction: rtl;
 }
 label {
   font-size: 0.9rem;

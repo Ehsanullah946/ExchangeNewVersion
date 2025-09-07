@@ -4,6 +4,7 @@ import Select from 'react-select';
 import { BiChevronDown } from 'react-icons/bi';
 import Button from '../../../components/layout/Button';
 import { MdOutlineCancel } from 'react-icons/md';
+import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
 const Transfer = () => {
   const { currentColor } = useStateContext();
   const [isActive, setIsActive] = useState(false);
@@ -11,20 +12,36 @@ const Transfer = () => {
   return (
     <>
       <div>
-        <div>buttons</div>
+        <div className=" flex mt-1 mb-1">
+          <Button type="secondry">
+            <span className="flex justify-between">
+              List <BsListCheck className="mt-1 ml-3" />
+            </span>
+          </Button>
+          <Button type="secondry">
+            <span className="flex justify-between ">
+              Print <BsPrinter className="mt-1 ml-3" />
+            </span>
+          </Button>
+          <Button type="secondry">
+            <span className="flex justify-between ">
+              search <BsSearch className="mt-1 ml-3" />
+            </span>
+          </Button>
+        </div>
         <div>
           <form>
             <div className="font-extrabold bg-blue-400 p-2.5 rounded-t-2xl text-white mr-10 text-center">
               <span>Transfer</span>
             </div>
-            <div className="grid justify-around sm:grid-cols-2  rounded-b-2xl md:pl-0 mr-10 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl ">
+            <div className="grid justify-around sm:grid-cols-2 rounded-b-2xl md:pl-0 mr-10 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl ">
               <div className="w-100">
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1  w-30 ">
                     Branch:
                   </label>
                   <Select
-                    className="w-full max-w-56 shadow-2xl"
+                    className="w-full max-w-58 shadow-2xl"
                     name="branch"
                     // value={{ label: formData.branch, value: formData.branch }}
                     // options={branch.map((item) => ({
@@ -43,7 +60,7 @@ const Transfer = () => {
                     type="text"
                     id="number"
                     aria-describedby="helper-text-explanation"
-                    class="border border-gray-300 shadow-cyan-400 max-w-56 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
+                    class="border border-gray-300 shadow-cyan-400 max-w-58 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
                     required
                   />
                 </div>
@@ -55,7 +72,7 @@ const Transfer = () => {
                     type="text"
                     id="transfer"
                     aria-describedby="helper-text-explanation"
-                    class="bg-gray-50 border max-w-56 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
+                    class="bg-gray-50 border max-w-58 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
                     required
                   />
                 </div>
@@ -67,7 +84,7 @@ const Transfer = () => {
                     type="text"
                     id="receiver"
                     aria-describedby="helper-text-explanation"
-                    class="bg-gray-50 border border-gray-300 max-w-56 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
+                    class="bg-gray-50 border border-gray-300 max-w-58 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
                     required
                   />
                 </div>
@@ -139,7 +156,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
-                    place charge:
+                    pass charge:
                   </label>
                   <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
                     <div className="shrink-0 text-base pl-2 text-gray-500 select-none sm:text-sm/6">
@@ -171,6 +188,7 @@ const Transfer = () => {
                   </div>
                 </div>
               </div>
+
               <div className="w-100">
                 <div className="flex gap-10 md:block lg:flex  justify-center  md:gap-0  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
@@ -180,7 +198,7 @@ const Transfer = () => {
                     type="date"
                     id="transfer"
                     aria-describedby="helper-text-explanation"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-56   p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-58 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
                   />
                 </div>
@@ -189,7 +207,7 @@ const Transfer = () => {
                     Customer:
                   </label>
                   <Select
-                    className="w-full max-w-56"
+                    className="w-full max-w-58"
                     name="Customer"
                     // value={{ label: formData.branch, value: formData.branch }}
                     // options={branch.map((item) => ({
@@ -205,7 +223,7 @@ const Transfer = () => {
                     pass To:
                   </label>
                   <Select
-                    className="w-full max-w-56"
+                    className="w-full max-w-58"
                     name="passTo"
                     // value={{ label: formData.branch, value: formData.branch }}
                     // options={branch.map((item) => ({
@@ -223,12 +241,12 @@ const Transfer = () => {
                   <textarea
                     id="message"
                     rows="4"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-56  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-58  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
                     placeholder="Details..."
                   ></textarea>
                 </div>
               </div>
-              <div className="mt-4 flex mb-2">
+              <div className="mt-4 flex mb-2 ml-3">
                 {isActive ? (
                   <>
                     <Button type="primary" htmlType="submit">
@@ -243,7 +261,7 @@ const Transfer = () => {
                     </Button>
                     <Button type="primary">Edit</Button>
                     <Button type="primary">Delete</Button>
-                    <Button type="primary">Search</Button>
+                    <Button type="primary">Complete</Button>
                   </>
                 )}
               </div>
