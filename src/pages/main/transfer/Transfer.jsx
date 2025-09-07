@@ -15,30 +15,30 @@ const Transfer = () => {
         <div className=" flex mt-1 mb-1">
           <Button type="secondry">
             <span className="flex justify-between">
-              List <BsListCheck className="mt-1 ml-3" />
+              لیست <BsListCheck className="mt-1 ml-3" />
             </span>
           </Button>
           <Button type="secondry">
             <span className="flex justify-between ">
-              Print <BsPrinter className="mt-1 ml-3" />
+              پرینت <BsPrinter className="mt-1 ml-3" />
             </span>
           </Button>
           <Button type="secondry">
             <span className="flex justify-between ">
-              search <BsSearch className="mt-1 ml-3" />
+              جستجو <BsSearch className="mt-1 ml-3" />
             </span>
           </Button>
         </div>
         <div>
           <form>
-            <div className="font-extrabold bg-blue-400 p-2.5 rounded-t-2xl text-white mr-10 text-center">
-              <span>Transfer</span>
+            <div className="font-extrabold bg-blue-400 p-2.5 rounded-t-2xl text-white  text-center">
+              <span>انتفال حواله</span>
             </div>
-            <div className="grid justify-around sm:grid-cols-2 rounded-b-2xl md:pl-0 mr-10 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl ">
+            <div className="grid justify-around sm:grid-cols-2 rounded-b-2xl md:pl-0 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl ">
               <div className="w-100">
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1  w-30 ">
-                    Branch:
+                    نماینده گی:
                   </label>
                   <Select
                     className="w-full max-w-58 shadow-2xl"
@@ -54,7 +54,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
-                    Number
+                    نمبر:
                   </label>
                   <input
                     type="text"
@@ -66,7 +66,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
-                    Transfer:
+                    فرستنده:
                   </label>
                   <input
                     type="text"
@@ -78,7 +78,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
-                    Receiver:
+                    گیرنده:
                   </label>
                   <input
                     type="text"
@@ -90,10 +90,10 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
-                    Amount:
+                    مقدار:
                   </label>
                   <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
-                    <div className="shrink-0 text-base pl-2 text-gray-500 select-none sm:text-sm/6">
+                    <div className="shrink-0 text-base pl-1 pr-1 text-gray-500 select-none sm:text-sm/6">
                       $
                     </div>
                     <input
@@ -101,14 +101,14 @@ const Transfer = () => {
                       name="price"
                       type="text"
                       placeholder="0.00"
-                      className="block min-w-0 grow py-1.5 pr-5 pl-3  text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      className="block min-w-0 grow py-1.5 pr-4 pl-3  text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
                     />
                     <div className="grid shrink-0 grid-cols-1 focus-within:relative">
                       <select
                         id="currency"
                         name="currency"
                         aria-label="Currency"
-                        className="col-start-1 row-start-1  appearance-none rounded-md py-1.5 pr-7 pl-2 text-base text-gray-500 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                        className="col-start-1 row-start-1  appearance-none rounded-md py-1.5 pr-7 ml-2 pl-2 text-base text-gray-500 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                       >
                         <option>USD</option>
                         <option>CAD</option>
@@ -116,17 +116,17 @@ const Transfer = () => {
                       </select>
                       <BiChevronDown
                         aria-hidden="true"
-                        className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+                        className="pointer-events-none col-start-1 row-start-1 mr-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
                       />
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
-                    charges:
+                    کمیشن:
                   </label>
                   <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
-                    <div className="shrink-0 text-base pl-2 text-gray-500 select-none sm:text-sm/6">
+                    <div className="shrink-0 text-base pl-1 pr-1 text-gray-500 select-none sm:text-sm/6">
                       $
                     </div>
                     <input
@@ -134,14 +134,14 @@ const Transfer = () => {
                       name="price"
                       type="text"
                       placeholder="0.00"
-                      className="block min-w-0 grow py-1.5 pr-5 pl-3  text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      className="block min-w-0 grow py-1.5 pr-4 pl-3  text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
                     />
                     <div className="grid shrink-0 grid-cols-1 focus-within:relative">
                       <select
                         id="currency"
                         name="currency"
                         aria-label="Currency"
-                        className="col-start-1 row-start-1 w-full appearance-none rounded-md py-1.5 pr-7 pl-2 text-base text-gray-500 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                        className="col-start-1 row-start-1  appearance-none rounded-md ml-2 py-1.5 pr-7 pl-2 text-base text-gray-500 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                       >
                         <option>USD</option>
                         <option>CAD</option>
@@ -149,17 +149,17 @@ const Transfer = () => {
                       </select>
                       <BiChevronDown
                         aria-hidden="true"
-                        className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+                        className="pointer-events-none col-start-1 row-start-1 mr-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
                       />
                     </div>
                   </div>
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
-                    pass charge:
+                    کمیشن پاس:
                   </label>
                   <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
-                    <div className="shrink-0 text-base pl-2 text-gray-500 select-none sm:text-sm/6">
+                    <div className="shrink-0 text-base pl-1 pr-1 text-gray-500 select-none sm:text-sm/6">
                       $
                     </div>
                     <input
@@ -167,14 +167,14 @@ const Transfer = () => {
                       name="price"
                       type="text"
                       placeholder="0.00"
-                      className="block min-w-0 grow py-1.5 pr-5 pl-3  text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      className="block min-w-0 grow py-1.5 pr-4 pl-3  text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
                     />
                     <div className="grid shrink-0 grid-cols-1 focus-within:relative">
                       <select
                         id="currency"
                         name="currency"
                         aria-label="Currency"
-                        className="col-start-1 row-start-1 w-full appearance-none rounded-md py-1.5 pr-7 pl-2 text-base text-gray-500 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                        className="col-start-1 row-start-1  appearance-none rounded-md ml-2 py-1.5 pr-7 pl-2 text-base text-gray-500 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                       >
                         <option>USD</option>
                         <option>CAD</option>
@@ -182,7 +182,7 @@ const Transfer = () => {
                       </select>
                       <BiChevronDown
                         aria-hidden="true"
-                        className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+                        className="pointer-events-none col-start-1 row-start-1 mr-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
                       />
                     </div>
                   </div>
@@ -192,7 +192,7 @@ const Transfer = () => {
               <div className="w-100">
                 <div className="flex gap-10 md:block lg:flex  justify-center  md:gap-0  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
-                    Date:
+                    تاریخ:
                   </label>
                   <input
                     type="date"
@@ -204,7 +204,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 md:block lg:flex   justify-center  md:gap-0 ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
-                    Customer:
+                    مشتری:
                   </label>
                   <Select
                     className="w-full max-w-58"
@@ -220,7 +220,7 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 md:block  lg:flex  justify-center  md:gap-0  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
-                    pass To:
+                    پاس به:
                   </label>
                   <Select
                     className="w-full max-w-58"
@@ -236,13 +236,13 @@ const Transfer = () => {
                 </div>
                 <div className="flex gap-10 justify-center md:block lg:flex  md:gap-0  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
-                    Description:
+                    توضیحات:
                   </label>
                   <textarea
                     id="message"
                     rows="4"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-58  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
-                    placeholder="Details..."
+                    placeholder="بشتر ..........."
                   ></textarea>
                 </div>
               </div>
@@ -250,18 +250,18 @@ const Transfer = () => {
                 {isActive ? (
                   <>
                     <Button type="primary" htmlType="submit">
-                      Save
+                      ذخیره
                     </Button>
                     <Button type="primary">Cancel</Button>
                   </>
                 ) : (
                   <>
                     <Button type="primary" onClick={() => setIsActive(true)}>
-                      New
+                      جدید
                     </Button>
-                    <Button type="primary">Edit</Button>
-                    <Button type="primary">Delete</Button>
-                    <Button type="primary">Complete</Button>
+                    <Button type="primary">ویرایش</Button>
+                    <Button type="primary">حذف</Button>
+                    <Button type="primary">اجراکردن</Button>
                   </>
                 )}
               </div>
