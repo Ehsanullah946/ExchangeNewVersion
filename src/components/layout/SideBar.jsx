@@ -118,8 +118,8 @@ const routes = [
     exact: true,
     subRoutes: [
       {
-        path: '/settings/profile',
-        name: 'Profile ',
+        path: '/settings/languages',
+        name: 'Languages',
         icon: <FaUser />,
       },
       {

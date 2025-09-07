@@ -26,6 +26,7 @@ import {
   Consumption,
   TransferToAccount,
   Accounts,
+  Languages,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 import Navbar from './components/layout/Navbar';
@@ -62,7 +63,9 @@ const App = () => {
               <Route path="account" element={<Accounts />} />
               <Route path="/daily" element={<Daily />} />
               <Route path="/rates" element={<Rates />} />
-              <Route path="/Setting" element={<Settings />} />
+              <Route path="/settings" element={<Settings />}>
+                <Route path="languages" element={<Languages />} />
+              </Route>
               <Route path="*" element={<PageNotF />} />
             </Routes>
           </div>

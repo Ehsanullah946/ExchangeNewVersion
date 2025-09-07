@@ -8,27 +8,29 @@ import { BsListCheck } from 'react-icons/bs';
 import { BsPrinter } from 'react-icons/bs';
 import { BiSearch, BiSearchAlt, BiSolidSearch } from 'react-icons/bi';
 import { useStateContext } from '../../../context/contextProvider';
+import { useTranslation } from 'react-i18next';
 const Receive = () => {
   const { currentColor } = useStateContext();
   const [isActive, setIsActive] = useState(false);
-
+  const { t } = useTranslation();
   return (
     <>
       <div>
         <div className=" flex mt-1 mb-1">
           <Button type="secondry">
             <span className="flex justify-between">
-              لیست <BsListCheck className="mt-1 ml-3" />
+              <BsListCheck className="mt-1 ml-3" />
+              {t('List')}
             </span>
           </Button>
           <Button type="secondry">
             <span className="flex justify-between ">
-              پرینت <BsPrinter className="mt-1 ml-3" />
+              <BsPrinter className="mt-1 ml-3" /> {t('Print')}
             </span>
           </Button>
           <Button type="secondry">
             <span className="flex justify-between ">
-              جستجو <BsSearch className="mt-1 ml-3" />
+              <BsSearch className="mt-1 ml-3" /> {t('Search')}
             </span>
           </Button>
         </div>
@@ -39,9 +41,9 @@ const Receive = () => {
             </div>
             <div className="grid justify-around sm:grid-cols-2 rounded-b-2xl md:pl-0 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl ">
               <div className="w-100">
-                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="mt-1  w-30 ">
-                    نماینده گی:
+                <div className="flex gap-10 lg:flex md:block justify-center ml-5 mr-5 mt-1">
+                  <label htmlFor="" className="mt-1 w-30">
+                    {t('Branch')}:
                   </label>
                   <Select
                     className="w-full max-w-58 shadow-2xl"
@@ -57,7 +59,7 @@ const Receive = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
-                    نمبر:
+                    {t('Number')}:
                   </label>
                   <input
                     type="text"
@@ -69,7 +71,7 @@ const Receive = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
-                    فرستنده:
+                    {t('Transfer')}:
                   </label>
                   <input
                     type="text"
@@ -81,7 +83,7 @@ const Receive = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
-                    گیرنده:
+                    {t('Receiver')}:
                   </label>
                   <input
                     type="text"
@@ -93,7 +95,7 @@ const Receive = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
-                    مقدار:
+                    {t('Amount')}:
                   </label>
                   <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
                     <div className="shrink-0 text-base pl-1 pr-1 text-gray-500 select-none sm:text-sm/6">
@@ -126,7 +128,7 @@ const Receive = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
-                    کمیشن:
+                    {t('charges')}:
                   </label>
                   <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
                     <div className="shrink-0 text-base pl-1 pr-1 text-gray-500 select-none sm:text-sm/6">
@@ -159,7 +161,7 @@ const Receive = () => {
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
-                    کمیشن پاس:
+                    {t('pass charges')}:
                   </label>
                   <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
                     <div className="shrink-0 text-base pl-1 pr-1 text-gray-500 select-none sm:text-sm/6">
@@ -195,7 +197,7 @@ const Receive = () => {
               <div className="w-100">
                 <div className="flex gap-10 md:block lg:flex  justify-center  md:gap-0  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
-                    تاریخ:
+                    {t('Date')}:
                   </label>
                   <input
                     type="date"
@@ -207,7 +209,7 @@ const Receive = () => {
                 </div>
                 <div className="flex gap-10 md:block lg:flex   justify-center  md:gap-0 ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
-                    مشتری:
+                    {t('Customer')}:
                   </label>
                   <Select
                     className="w-full max-w-58"
@@ -223,7 +225,7 @@ const Receive = () => {
                 </div>
                 <div className="flex gap-10 md:block  lg:flex  justify-center  md:gap-0  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
-                    پاس به:
+                    {t('pass to')}:
                   </label>
                   <Select
                     className="w-full max-w-58"
@@ -239,7 +241,7 @@ const Receive = () => {
                 </div>
                 <div className="flex gap-10 justify-center md:block lg:flex  md:gap-0  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
-                    توضیحات:
+                    {t('Description')}:
                   </label>
                   <textarea
                     id="message"
@@ -264,7 +266,7 @@ const Receive = () => {
                       >
                         <div class="block">
                           <div class="w-full text-md font-semibold">
-                            اجرا شده
+                            {t('Completed')}
                           </div>
                         </div>
                       </label>
