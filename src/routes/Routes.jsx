@@ -7,6 +7,7 @@ import {
   FaUser,
   FaUserTie,
   FaTimes,
+  FaArrowAltCircleDown,
 } from 'react-icons/fa';
 import {
   MdAccountTree,
@@ -45,7 +46,7 @@ export const routes = [
       {
         path: '/main/deposit',
         nameKey: 'Deposit',
-        icon: <FaRegArrowAltCircleUp />,
+        icon: <FaArrowAltCircleDown />,
       },
       {
         path: '/main/withdraw',
@@ -100,10 +101,17 @@ export const routes = [
     path: '/daily',
     nameKey: 'Daily',
     icon: <MdToday />,
+    subRoutes: [
+      {
+        path: '/daily/dailyTransaction',
+        nameKey: 'Daily Transaction',
+        icon: <MdToday />,
+      },
+    ],
   },
   {
     path: '/account',
-    nameKey: 'Accounts',
+    nameKey: 'Account',
     icon: <FiUser />,
   },
   {

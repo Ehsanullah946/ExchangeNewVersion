@@ -15,7 +15,7 @@ function Languages() {
   }, [i18n.language]);
 
   return (
-    <div>
+    <div className="flex gap-5">
       <Button type="primary" onClick={() => switchLanguage('en')}>
         English
       </Button>

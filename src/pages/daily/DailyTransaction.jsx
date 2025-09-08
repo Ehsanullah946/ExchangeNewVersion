@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { useStateContext } from '../../../context/contextProvider';
+import { useStateContext } from '../../context/contextProvider';
 import Select from 'react-select';
 import { BiChevronDown } from 'react-icons/bi';
-import Button from '../../../components/layout/Button';
+import Button from '../../components/layout/Button';
+import { BiMoneyWithdraw } from 'react-icons/bi';
 import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
-
 import { useTranslation } from 'react-i18next';
-import { FaRegArrowAltCircleDown } from 'react-icons/fa';
-const Deposit = () => {
+import { FaRegArrowAltCircleUp } from 'react-icons/fa';
+
+const DailyTransaction = () => {
   const { currentColor } = useStateContext();
   const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
@@ -35,15 +36,26 @@ const Deposit = () => {
         <div>
           <form>
             <div className="font-extrabold bg-blue-400  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
-              <span className="flex justify-center gap-3 ">
-                {t('Deposit')} <FaRegArrowAltCircleDown className="mt-1" />
-              </span>
+              <span>{t('Daily Transaction')}</span>
             </div>
-            <div className="grid justify-center items-center p-4 rounded-b-2xl ltr:mr-4 rtl:ml-4 md:pl-0 pr-10 border-b-2 shadow-2xl ">
+            <div className="grid justify-around sm:grid-cols-2 rounded-b-2xl ltr:mr-4 rtl:ml-4 md:pl-0 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl  ">
               <div className="w-100">
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
-                    {t('Account No')}:
+                    {t('Date')}:
+                  </label>
+                  <input
+                    type="date"
+                    id="number"
+                    aria-describedby="helper-text-explanation"
+                    class="border border-gray-300 shadow-cyan-400 max-w-58 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
+                    required
+                  />
+                </div>
+
+                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
+                  <label htmlFor="" className="w-30 mt-1">
+                    {t('Number')}:
                   </label>
                   <input
                     type="text"
@@ -55,7 +67,7 @@ const Deposit = () => {
                 </div>
                 <div className="flex gap-10 lg:flex md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
-                    {t('Account')}:
+                    {t('Customer')}:
                   </label>
                   <Select
                     className="w-full max-w-58 bg-white shadow-2xl"
@@ -66,9 +78,9 @@ const Deposit = () => {
                     //   value: item.firstName,
                     // }))}
                     isSearchable
-                    isDisabled={!isActive}
                   />
                 </div>
+
                 <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1 ">
                     {t('Amount')}:
@@ -103,19 +115,6 @@ const Deposit = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="w-30 mt-1">
-                    {t('Date')}:
-                  </label>
-                  <input
-                    type="date"
-                    id="number"
-                    aria-describedby="helper-text-explanation"
-                    class="border border-gray-300 shadow-cyan-400 max-w-58 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
-                    required
-                  />
-                </div>
-
                 <div className="flex gap-10 justify-center md:block lg:flex ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
                     {t('Description')}:
@@ -124,7 +123,7 @@ const Deposit = () => {
                     id="message"
                     rows="4"
                     class="border border-gray-300 shadow-cyan-400 max-w-58 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
-                    placeholder="بشتر ..........."
+                    placeholder="more..."
                   ></textarea>
                 </div>
                 <div className="mt-4 flex mb-2 justify-center ml-3">
@@ -147,6 +146,89 @@ const Deposit = () => {
                   )}
                 </div>
               </div>
+              <div className="w-100 p-3">
+                <ul class="grid  gap-6 md:grid-cols-2 mb-2">
+                  <li>
+                    <input
+                      type="radio"
+                      id="react-option"
+                      value=""
+                      class="hidden peer"
+                      required=""
+                      name="daily"
+                    />
+                    <label
+                      for="react-option"
+                      class="inline-flex items-center shadow-xl justify-between w-full p-5 text-gray-500 bg-white border-3 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-red-600 peer-checked:text-red-600 dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300  hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                    >
+                      <div class="block">
+                        <div class="w-full text-lg font-semibold">
+                          {t('Withdraw')}
+                        </div>
+                        <div class="w-full text-sm">JavaScript</div>
+                      </div>
+                    </label>
+                  </li>
+                  <li>
+                    <input
+                      type="radio"
+                      id="flowbite-option"
+                      value=""
+                      class="hidden peer"
+                      name="daily"
+                    />
+                    <label
+                      for="flowbite-option"
+                      class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border-3 border-gray-200 shadow-xl rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600  dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-blue-600 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                    >
+                      <div class="block">
+                        <div class="w-full text-lg font-semibold">
+                          {t('Deposit')}
+                        </div>
+                        <div class="w-full text-sm">Vue.js is</div>
+                      </div>
+                    </label>
+                  </li>
+                </ul>
+
+                <div class="relative overflow-x-auto shadow-2xl sm:rounded-lg">
+                  <table class="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
+                    <thead class="text-xs text-white uppercase bg-blue-600 dark:text-white">
+                      <tr>
+                        <th scope="col" class="px-3 py-1">
+                          {t('Credit')}
+                        </th>
+                        <th scope="col" class="px-3 py-1">
+                          {t('Owe')}
+                        </th>
+                        <th scope="col" class="px-3 py-1">
+                          {t('Currency')}
+                        </th>
+                        <th scope="col" class="px-3 py-1">
+                          {t('Total')}
+                        </th>
+                        <th scope="col" class="px-3 py-1">
+                          {t('Status')}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="bg-blue-500 border-b border-blue-400">
+                        <th
+                          scope="row"
+                          class="px-3 py-2 font-medium text-blue-50 whitespace-nowrap dark:text-blue-100"
+                        >
+                          50000
+                        </th>
+                        <td class="">30000</td>
+                        <td class="">AFG</td>
+                        <td class="">4300</td>
+                        <td class="">بدهکار</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </form>
         </div>
@@ -155,4 +237,4 @@ const Deposit = () => {
   );
 };
 
-export default Deposit;
+export default DailyTransaction;

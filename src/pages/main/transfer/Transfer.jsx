@@ -158,8 +158,8 @@ const Transfer = () => {
                   </div>
                 </div>
                 <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="w-30 mt-1 ">
-                    {t('place charges')}:
+                  <label htmlFor="" className="w-30 mt-1">
+                    {t('place charge')}:
                   </label>
                   <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
                     <div className="shrink-0 text-base pl-1 rtl:mr-5 text-gray-500 select-none sm:text-sm/6">

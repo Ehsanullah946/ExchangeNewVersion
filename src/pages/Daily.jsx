@@ -1,10 +1,12 @@
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import React from 'react';
+import { Outlet } from 'react-router-dom';
 
 const Daily = () => {
   return (
-    <div>daily</div>
-  )
-}
+    <div>
+      <Outlet />
+    </div>
+  );
+};
 
-export default Daily
+export default Daily;

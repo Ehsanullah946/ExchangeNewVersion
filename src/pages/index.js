@@ -23,3 +23,6 @@ export { default as TransferToAccount } from './main/transferToAccount/TransferT
 export { default as Languages } from './settings/Languages';
 
 export { default as Accounts } from './Accounts';
+
+//Daily
+export { default as DailyTransaction } from './daily/DailyTransaction';
