@@ -34,79 +34,60 @@ const Deposit = () => {
         </div>
         <div>
           <form>
-            <div className="font-extrabold bg-blue-400  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
+            <div className="font-extrabold bg-blue-400 w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
               <span className="flex justify-center gap-3 ">
                 {t('Deposit')} <FaRegArrowAltCircleDown className="mt-1" />
               </span>
             </div>
-            <div className="grid justify-around sm:grid-cols-2 rounded-b-2xl ltr:mr-4 rtl:ml-4 md:pl-0 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl  ">
-              <div className="w-100">
-                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="w-30 mt-1">
-                    {t('Account No')}:
-                  </label>
+
+            <div className="grid sm:grid-cols-2 gap-6 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl w-full max-w-7xl mx-auto">
+              <div className=" space-y-1 w-full">
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Account No')}:</label>
                   <input
                     type="text"
-                    id="number"
-                    aria-describedby="helper-text-explanation"
-                    class="border border-gray-300 shadow-cyan-400 max-w-58 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
+                    className="border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
                     required
                   />
                 </div>
-                <div className="flex gap-10 lg:flex md:block justify-center ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="mt-1 w-30">
-                    {t('Account')}:
-                  </label>
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Account')}:</label>
                   <Select
-                    className="w-full max-w-58 shadow-2xl"
+                    className="w-full shadow-sm "
                     name="branch"
-                    // value={{ label: formData.branch, value: formData.branch }}
-                    // options={branch.map((item) => ({
-                    //   label: item.firstName,
-                    //   value: item.firstName,
-                    // }))}
                     isSearchable
                     isDisabled={!isActive}
                   />
                 </div>
-                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="w-30 mt-1">
-                    {t('Amount')}:
-                  </label>
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Amount')}:</label>
                   <input
                     type="text"
-                    id="number"
-                    aria-describedby="helper-text-explanation"
-                    class="border border-gray-300 shadow-cyan-400 max-w-58 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
+                    className=" w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
-
-                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="w-30 mt-1">
-                    {t('Date')}:
-                  </label>
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Date')}:</label>
                   <input
                     type="date"
-                    id="number"
-                    aria-describedby="helper-text-explanation"
-                    class="border border-gray-300 shadow-cyan-400 max-w-58 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
+                    className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
 
-                <div className="flex gap-10 justify-center md:block lg:flex  ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="mt-1 w-30">
-                    {t('Description')}:
-                  </label>
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32 mt-1">{t('Description')}:</label>
                   <textarea
-                    id="message"
                     rows="4"
-                    class="border border-gray-300 shadow-cyan-400 max-w-58 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
+                    className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     placeholder="بشتر ..........."
-                  ></textarea>
+                  />
                 </div>
-                <div className="mt-4 flex mb-2 justify-center ml-3">
+
+                <div className="flex flex-wrap gap-3 mt-3 justify-center sm:justify-start">
                   {isActive ? (
                     <>
                       <Button type="primary" htmlType="submit">
@@ -125,42 +106,28 @@ const Deposit = () => {
                   )}
                 </div>
               </div>
-              <div className="w-100 p-3">
+
+              <div className="w-full p-3">
                 <p className="text-md mb-1 font-semibold">{t('Account')}</p>
                 <hr className="mb-3" />
-                <div class="relative overflow-x-auto shadow-2xl sm:rounded-lg">
-                  <table class="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
-                    <thead class="text-xs text-white uppercase bg-blue-600 dark:text-white">
+                <div className="relative overflow-x-auto shadow-2xl sm:rounded-lg">
+                  <table className="w-full text-sm text-left rtl:text-right text-blue-100">
+                    <thead className="text-xs text-center text-white uppercase bg-blue-600">
                       <tr>
-                        <th scope="col" class="px-3 py-1">
-                          {t('Credit')}
-                        </th>
-                        <th scope="col" class="px-3 py-1">
-                          {t('Owe')}
-                        </th>
-                        <th scope="col" class="px-3 py-1">
-                          {t('Currency')}
-                        </th>
-                        <th scope="col" class="px-3 py-1">
-                          {t('Total')}
-                        </th>
-                        <th scope="col" class="px-3 py-1">
-                          {t('Status')}
-                        </th>
+                        <th className="px-3 py-1">{t('Credit')}</th>
+                        <th className="px-3 py-1">{t('Owe')}</th>
+                        <th className="px-3 py-1">{t('Currency')}</th>
+                        <th className="px-3 py-1">{t('Total')}</th>
+                        <th className="px-3 py-1">{t('Status')}</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr class="bg-blue-500 border-b border-blue-400">
-                        <th
-                          scope="row"
-                          class="px-3 py-2 font-medium text-blue-50 whitespace-nowrap dark:text-blue-100"
-                        >
-                          50000
-                        </th>
-                        <td class="">30000</td>
-                        <td class="">AFG</td>
-                        <td class="">4300</td>
-                        <td class="">بدهکار</td>
+                      <tr className="bg-blue-500 text-center border-b border-blue-400">
+                        <td className="px-3 py-2">50000</td>
+                        <td>30000</td>
+                        <td>AFG</td>
+                        <td>4300</td>
+                        <td>بدهکار</td>
                       </tr>
                     </tbody>
                   </table>
