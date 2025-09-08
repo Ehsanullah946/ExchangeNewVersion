@@ -39,7 +39,7 @@ const Deposit = () => {
                 {t('Deposit')} <FaRegArrowAltCircleDown className="mt-1" />
               </span>
             </div>
-            <div className="grid justify-center items-center p-4 rounded-b-2xl ltr:mr-4 rtl:ml-4 md:pl-0 pr-10 border-b-2 shadow-2xl ">
+            <div className="grid justify-around sm:grid-cols-2 rounded-b-2xl ltr:mr-4 rtl:ml-4 md:pl-0 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl  ">
               <div className="w-100">
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
@@ -58,7 +58,7 @@ const Deposit = () => {
                     {t('Account')}:
                   </label>
                   <Select
-                    className="w-full max-w-58 bg-white shadow-2xl"
+                    className="w-full max-w-58 shadow-2xl"
                     name="branch"
                     // value={{ label: formData.branch, value: formData.branch }}
                     // options={branch.map((item) => ({
@@ -81,6 +81,7 @@ const Deposit = () => {
                     required
                   />
                 </div>
+
                 <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
                   <label htmlFor="" className="w-30 mt-1">
                     {t('Date')}:
@@ -94,7 +95,7 @@ const Deposit = () => {
                   />
                 </div>
 
-                <div className="flex gap-10 justify-center md:block lg:flex ml-5 mr-5 mt-1">
+                <div className="flex gap-10 justify-center md:block lg:flex  ml-5 mr-5 mt-1">
                   <label htmlFor="" className="mt-1 w-30">
                     {t('Description')}:
                   </label>
@@ -120,9 +121,49 @@ const Deposit = () => {
                       </Button>
                       <Button type="primary">{t('Edit')}</Button>
                       <Button type="primary">{t('Delete')}</Button>
-                      <Button type="primary">{t('Complete')}</Button>
                     </>
                   )}
+                </div>
+              </div>
+              <div className="w-100 p-3">
+                <p className="text-md mb-1 font-semibold">{t('Account')}</p>
+                <hr className="mb-3" />
+                <div class="relative overflow-x-auto shadow-2xl sm:rounded-lg">
+                  <table class="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
+                    <thead class="text-xs text-white uppercase bg-blue-600 dark:text-white">
+                      <tr>
+                        <th scope="col" class="px-3 py-1">
+                          {t('Credit')}
+                        </th>
+                        <th scope="col" class="px-3 py-1">
+                          {t('Owe')}
+                        </th>
+                        <th scope="col" class="px-3 py-1">
+                          {t('Currency')}
+                        </th>
+                        <th scope="col" class="px-3 py-1">
+                          {t('Total')}
+                        </th>
+                        <th scope="col" class="px-3 py-1">
+                          {t('Status')}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="bg-blue-500 border-b border-blue-400">
+                        <th
+                          scope="row"
+                          class="px-3 py-2 font-medium text-blue-50 whitespace-nowrap dark:text-blue-100"
+                        >
+                          50000
+                        </th>
+                        <td class="">30000</td>
+                        <td class="">AFG</td>
+                        <td class="">4300</td>
+                        <td class="">بدهکار</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
