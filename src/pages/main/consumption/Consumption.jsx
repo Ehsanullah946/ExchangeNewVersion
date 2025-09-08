@@ -62,7 +62,7 @@ const Consumption = () => {
                   <label htmlFor="" className="sm:w-32">
                     {t('Amount')}:
                   </label>
-                  <div className="flex items-center w-full rounded-md bg-white px-2 py-1.5 outline outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-indigo-600">
+                  <div className="flex items-center w-full rounded-md bg-white px-1 py-0.5 outline outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-indigo-600">
                     <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm rtl:ml-3 ltr:mr-3">
                       $
                     </div>
