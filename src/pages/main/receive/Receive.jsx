@@ -9,13 +9,14 @@ import { BsPrinter } from 'react-icons/bs';
 import { BiSearch, BiSearchAlt, BiSolidSearch } from 'react-icons/bi';
 import { useStateContext } from '../../../context/contextProvider';
 import { useTranslation } from 'react-i18next';
+import { RiDownload2Line } from 'react-icons/ri';
 const Receive = () => {
   const { currentColor } = useStateContext();
   const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
   return (
     <>
-      <div>
+      <div className="grid justify-center">
         <div className=" flex mt-1 mb-1">
           <Button type="secondry">
             <span className="flex justify-between">
@@ -36,117 +37,111 @@ const Receive = () => {
         </div>
         <div>
           <form>
-            <div className="font-extrabold bg-blue-400 p-2.5 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
-              <span>{t('Receive')}</span>
+            <div className="font-extrabold bg-blue-400 w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
+              <span className="flex justify-center gap-3 ">
+                {t('Receive')} <RiDownload2Line className="mt-1" />
+              </span>
             </div>
-            <div className="grid justify-around sm:grid-cols-2 rounded-b-2xl ltr:mr-4 rtl:ml-4 md:pl-0 pl-10 pr-10 border-b-2 border-t-2 shadow-2xl ">
-              <div className="w-100">
-                <div className="flex gap-10 lg:flex md:block justify-center ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="mt-1 w-30">
-                    {t('Branch')}:
-                  </label>
+
+            <div className="grid sm:grid-cols-2 gap-6 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl w-full max-w-7xl mx-auto">
+              <div className=" space-y-1 w-full">
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Account')}:</label>
                   <Select
-                    className="w-full max-w-58 bg-white shadow-2xl"
+                    className="w-full shadow-sm"
                     name="branch"
-                    // value={{ label: formData.branch, value: formData.branch }}
-                    // options={branch.map((item) => ({
-                    //   label: item.firstName,
-                    //   value: item.firstName,
-                    // }))}
                     isSearchable
                     isDisabled={!isActive}
                   />
                 </div>
-                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="w-30 mt-1">
-                    {t('Number')}:
-                  </label>
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Number')}:</label>
                   <input
                     type="text"
-                    id="number"
-                    aria-describedby="helper-text-explanation"
-                    class="border border-gray-300 shadow-cyan-400 max-w-58 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
+                    className="border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
                     required
                   />
                 </div>
-                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="w-30 mt-1">
-                    {t('Transfer')}:
-                  </label>
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Transfer')}:</label>
                   <input
                     type="text"
-                    id="transfer"
-                    aria-describedby="helper-text-explanation"
-                    class="bg-gray-50 border max-w-58 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
+                    className=" w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
-                <div className="flex gap-10 lg:flex  md:block justify-center ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="w-30 mt-1">
-                    {t('Receiver')}:
-                  </label>
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Receiver')}:</label>
                   <input
                     type="text"
-                    id="receiver"
-                    aria-describedby="helper-text-explanation"
-                    class="bg-gray-50 border border-gray-300 max-w-58 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
+                    className=" w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
-                <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="w-30 mt-1 ">
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
+                  <label htmlFor="" className="sm:w-32">
                     {t('Amount')}:
                   </label>
-                  <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
-                    <div className="shrink-0 text-base pl-1 rtl:mr-5 text-gray-500 select-none sm:text-sm/6">
+                  <div className="flex items-center w-full rounded-md bg-white px-1 py-0.5 outline outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-indigo-600">
+                    <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm rtl:ml-3 ltr:mr-3">
                       $
                     </div>
                     <input
                       id="price"
                       name="price"
-                      type="text"
+                      type="number"
+                      step="0.01"
                       placeholder="0.00"
-                      className="block min-w-0 grow py-1.5 pr-2 w-48 ltr:w-53 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      className="block w-full grow border-0 bg-transparent text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm"
                     />
-                    <div className="grid shrink-0 grid-cols-1 focus-within:relative">
+
+                    {/* Currency dropdown */}
+                    <div className="relative shrink-0">
                       <select
                         id="currency"
                         name="currency"
                         aria-label="Currency"
-                        className="col-start-1 row-start-1 ltr:mr-3  appearance-none rounded-md py-1.5 pr-3 ml-2 pl-2 text-base text-gray-500 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                        className="appearance-none rounded-md bg-transparent py-1.5 pr-6 pl-2 text-base text-gray-700 focus:outline-none sm:text-sm"
                       >
                         <option>USD</option>
                         <option>CAD</option>
                         <option>EUR</option>
                       </select>
+
+                      {/* Dropdown icon */}
                       <BiChevronDown
                         aria-hidden="true"
-                        className="pointer-events-none col-start-1 row-start-1 mr-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+                        className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 size-5 text-gray-500 sm:size-4"
                       />
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="w-30 mt-1 ">
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
+                  <label htmlFor="" className="sm:w-32">
                     {t('charges')}:
                   </label>
-                  <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
-                    <div className="shrink-0 text-base pl-1 rtl:mr-5 text-gray-500 select-none sm:text-sm/6">
+                  <div className="flex items-center w-full rounded-md bg-white px-1 py-0.5 outline outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-indigo-600">
+                    <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm rtl:ml-3 ltr:mr-3">
                       $
                     </div>
                     <input
                       id="price"
                       name="price"
-                      type="text"
+                      type="number"
+                      step="0.01"
                       placeholder="0.00"
-                      className="block min-w-0 grow py-1.5 pr-2 w-48 ltr:w-53 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      className="block w-full grow border-0 bg-transparent text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm"
                     />
-                    <div className="grid shrink-0 grid-cols-1 focus-within:relative">
+
+                    <div className="relative shrink-0">
                       <select
                         id="currency"
                         name="currency"
                         aria-label="Currency"
-                        className="col-start-1 row-start-1 ltr:mr-3  appearance-none rounded-md py-1.5 pr-3 ml-2 pl-2 text-base text-gray-500 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                        className="appearance-none rounded-md bg-transparent py-1.5 pr-6 pl-2 text-base text-gray-700 focus:outline-none sm:text-sm"
                       >
                         <option>USD</option>
                         <option>CAD</option>
@@ -154,144 +149,127 @@ const Receive = () => {
                       </select>
                       <BiChevronDown
                         aria-hidden="true"
-                        className="pointer-events-none col-start-1 row-start-1 mr-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+                        className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 size-5 text-gray-500 sm:size-4"
                       />
                     </div>
                   </div>
                 </div>
-                <div className="flex gap-10 lg:flex  md:block justify-center  ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="w-30 mt-1 ">
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
+                  <label htmlFor="" className="sm:w-32">
                     {t('pass charges')}:
                   </label>
-                  <div className="flex items-center max-w-60  rounded-md bg-white pl-2 outline-1 -outline-offset-1 outline-gray-300 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-600">
-                    <div className="shrink-0 text-base pl-1 rtl:mr-5 text-gray-500 select-none sm:text-sm/6">
+                  <div className="flex items-center w-full rounded-md bg-white px-1 py-0.5 outline outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-indigo-600">
+                    <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm rtl:ml-3 ltr:mr-3">
                       $
                     </div>
                     <input
                       id="price"
                       name="price"
-                      type="text"
+                      type="number"
+                      step="0.01"
                       placeholder="0.00"
-                      className="block min-w-0 grow py-1.5 pr-2 w-48 ltr:w-53 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6"
+                      className="block w-full grow border-0 bg-transparent text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm"
                     />
-                    <div className="grid shrink-0 grid-cols-1 focus-within:relative">
+
+                    <div className="relative shrink-0">
                       <select
                         id="currency"
                         name="currency"
                         aria-label="Currency"
-                        className="col-start-1 row-start-1  ltr:mr-3 appearance-none rounded-md py-1.5 pr-3 ml-2 pl-2 text-base text-gray-500 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                        className="appearance-none rounded-md bg-transparent py-1.5 pr-6 pl-2 text-base text-gray-700 focus:outline-none sm:text-sm"
                       >
                         <option>USD</option>
                         <option>CAD</option>
                         <option>EUR</option>
                       </select>
+
+                      {/* Dropdown icon */}
                       <BiChevronDown
                         aria-hidden="true"
-                        className="pointer-events-none col-start-1 row-start-1 mr-1 size-5 self-center justify-self-end text-gray-500 sm:size-4"
+                        className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 size-5 text-gray-500 sm:size-4"
                       />
                     </div>
                   </div>
+                </div>
+
+                <div className="flex flex-wrap gap-3 mt-3 justify-center sm:justify-start">
+                  {isActive ? (
+                    <>
+                      <Button type="primary" htmlType="submit">
+                        {t('Save')}
+                      </Button>
+                      <Button type="primary">{t('Cancel')}</Button>
+                    </>
+                  ) : (
+                    <>
+                      <Button type="primary" onClick={() => setIsActive(true)}>
+                        {t('New')}
+                      </Button>
+                      <Button type="primary">{t('Edit')}</Button>
+                      <Button type="primary">{t('Delete')}</Button>
+                    </>
+                  )}
                 </div>
               </div>
 
-              <div className="w-100">
-                <div className="flex gap-10 md:block lg:flex  justify-center  md:gap-0  ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="w-30 mt-1">
-                    {t('Date')}:
-                  </label>
+              <div className="w-full space-y-1  p-3">
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Date')}:</label>
                   <input
                     type="date"
-                    id="transfer"
-                    aria-describedby="helper-text-explanation"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-58 p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
-                <div className="flex gap-10 md:block lg:flex   justify-center  md:gap-0 ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="mt-1 w-30">
-                    {t('Customer')}:
-                  </label>
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Customer')}:</label>
                   <Select
-                    className="w-full max-w-58"
-                    name="Customer"
-                    // value={{ label: formData.branch, value: formData.branch }}
-                    // options={branch.map((item) => ({
-                    //   label: item.firstName,
-                    //   value: item.firstName,
-                    // }))}
+                    className="w-full shadow-sm"
+                    name="branch"
                     isSearchable
                     isDisabled={!isActive}
                   />
                 </div>
-                <div className="flex gap-10 md:block  lg:flex  justify-center  md:gap-0  ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="mt-1 w-30">
-                    {t('pass to')}:
-                  </label>
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('pass to')}:</label>
                   <Select
-                    className="w-full max-w-58"
-                    name="passTo"
-                    // value={{ label: formData.branch, value: formData.branch }}
-                    // options={branch.map((item) => ({
-                    //   label: item.firstName,
-                    //   value: item.firstName,
-                    // }))}
+                    className="w-full shadow-sm"
+                    name="branch"
                     isSearchable
                     isDisabled={!isActive}
                   />
                 </div>
-                <div className="flex gap-10 justify-center md:block lg:flex  md:gap-0  ml-5 mr-5 mt-1">
-                  <label htmlFor="" className="mt-1 w-30">
-                    {t('Description')}:
-                  </label>
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32 mt-1">{t('Description')}:</label>
                   <textarea
-                    id="message"
                     rows="4"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full max-w-58  p-1 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 focus:outline-indigo-600"
-                    placeholder="بشتر ..........."
-                  ></textarea>
+                    className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    placeholder="more...."
+                  />
                 </div>
-                <div className="flex gap-10 justify-center md:block lg:flex  md:gap-0">
-                  <ul class="grid  gap-6 md:grid-cols-3 mt-4">
-                    <li>
-                      <input
-                        type="checkbox"
-                        id="react-option"
-                        value=""
-                        class="hidden peer"
-                        required=""
-                      />
-                      <label
-                        for="react-option"
-                        class="inline-flex items-center justify-between w-full p-2 text-gray-500 bg-white border-1 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-blue-600 dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300 peer-checked:text-white peer-checked:bg-red-400 hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
-                      >
-                        <div class="block">
-                          <div class="w-full text-md font-semibold">
-                            {t('Completed')}
-                          </div>
-                        </div>
-                      </label>
-                    </li>
-                  </ul>
+                <div>
+                  <input
+                    type="checkbox"
+                    id="react-option"
+                    value=""
+                    class="hidden peer"
+                    required=""
+                    name="daily"
+                  />
+                  <label
+                    for="react-option"
+                    class="inline-flex items-center shadow-xl justify-between p-2 text-gray-500 bg-white border-3 border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 peer-checked:border-red-600 peer-checked:text-red-600 dark:peer-checked:border-blue-600 hover:text-gray-600 dark:peer-checked:text-gray-300  hover:bg-gray-50 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700"
+                  >
+                    <div class="block">
+                      <div class="w-full text-lg font-semibold">
+                        {t('Completed')}
+                      </div>
+                      <div class="w-full text-sm">complete</div>
+                    </div>
+                  </label>
                 </div>
-              </div>
-              <div className="mt-4 flex mb-2 ml-3">
-                {isActive ? (
-                  <>
-                    <Button type="primary" htmlType="submit">
-                      {t('Save')}
-                    </Button>
-                    <Button type="primary">{t('Cancel')}</Button>
-                    <Button type="primary">{t('Complete')}</Button>
-                  </>
-                ) : (
-                  <>
-                    <Button type="primary" onClick={() => setIsActive(true)}>
-                      {t('New')}
-                    </Button>
-                    <Button type="primary">{t('Edit')}</Button>
-                    <Button type="primary">{t('Delete')}</Button>
-                  </>
-                )}
               </div>
             </div>
           </form>

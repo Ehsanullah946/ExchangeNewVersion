@@ -29,10 +29,12 @@ import {
   Accounts,
   Languages,
   DailyTransaction,
+  Login,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 import Navbar from './components/layout/Navbar';
 import { ContextProvider } from './context/contextProvider.jsx';
+import PrivateRoute from './routes/PrivateRoute.jsx';
 
 const App = () => {
   return (
@@ -71,6 +73,7 @@ const App = () => {
               <Route path="/settings" element={<Settings />}>
                 <Route path="languages" element={<Languages />} />
               </Route>
+              <Route path="/login" element={<Login />} />
               <Route path="*" element={<PageNotF />} />
             </Routes>
           </div>
