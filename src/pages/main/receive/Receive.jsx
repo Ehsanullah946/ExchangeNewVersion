@@ -44,8 +44,8 @@ const Receive = () => {
             </div>
 
             <div className="grid sm:grid-cols-2 gap-6 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl w-full max-w-7xl mx-auto">
-              <div className=" space-y-1 w-full">
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+              <div className="space-y-1 w-full">
+                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('Account')}:</label>
                   <Select
                     className="w-full shadow-sm"
@@ -55,7 +55,7 @@ const Receive = () => {
                   />
                 </div>
 
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('Number')}:</label>
                   <input
                     type="text"
@@ -63,7 +63,7 @@ const Receive = () => {
                     required
                   />
                 </div>
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('Transfer')}:</label>
                   <input
                     type="text"
@@ -71,7 +71,7 @@ const Receive = () => {
                     required
                   />
                 </div>
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('Receiver')}:</label>
                   <input
                     type="text"
@@ -80,7 +80,7 @@ const Receive = () => {
                   />
                 </div>
 
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
+                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between">
                   <label htmlFor="" className="sm:w-32">
                     {t('Amount')}:
                   </label>
@@ -119,7 +119,7 @@ const Receive = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
+                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between">
                   <label htmlFor="" className="sm:w-32">
                     {t('charges')}:
                   </label>
@@ -155,7 +155,7 @@ const Receive = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
+                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between">
                   <label htmlFor="" className="sm:w-32">
                     {t('pass charges')}:
                   </label>
@@ -192,29 +192,9 @@ const Receive = () => {
                     </div>
                   </div>
                 </div>
-
-                <div className="flex flex-wrap gap-3 mt-3 justify-center sm:justify-start">
-                  {isActive ? (
-                    <>
-                      <Button type="primary" htmlType="submit">
-                        {t('Save')}
-                      </Button>
-                      <Button type="primary">{t('Cancel')}</Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button type="primary" onClick={() => setIsActive(true)}>
-                        {t('New')}
-                      </Button>
-                      <Button type="primary">{t('Edit')}</Button>
-                      <Button type="primary">{t('Delete')}</Button>
-                    </>
-                  )}
-                </div>
               </div>
-
-              <div className="w-full space-y-1  p-3">
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+              <div className="w-full space-y-1">
+                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('Date')}:</label>
                   <input
                     type="date"
@@ -223,7 +203,7 @@ const Receive = () => {
                   />
                 </div>
 
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('Customer')}:</label>
                   <Select
                     className="w-full shadow-sm"
@@ -232,7 +212,7 @@ const Receive = () => {
                     isDisabled={!isActive}
                   />
                 </div>
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('pass to')}:</label>
                   <Select
                     className="w-full shadow-sm"
@@ -241,7 +221,7 @@ const Receive = () => {
                     isDisabled={!isActive}
                   />
                 </div>
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32 mt-1">{t('Description')}:</label>
                   <textarea
                     rows="4"
@@ -270,6 +250,24 @@ const Receive = () => {
                     </div>
                   </label>
                 </div>
+              </div>
+              <div className="flex flex-wrap  justify-center sm:justify-start">
+                {isActive ? (
+                  <>
+                    <Button type="primary" htmlType="submit">
+                      {t('Save')}
+                    </Button>
+                    <Button type="primary">{t('Cancel')}</Button>
+                  </>
+                ) : (
+                  <>
+                    <Button type="primary" onClick={() => setIsActive(true)}>
+                      {t('New')}
+                    </Button>
+                    <Button type="primary">{t('Edit')}</Button>
+                    <Button type="primary">{t('Delete')}</Button>
+                  </>
+                )}
               </div>
             </div>
           </form>

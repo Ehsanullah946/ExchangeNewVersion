@@ -1,10 +1,14 @@
 import React from 'react';
 import styles from './Button.module.css';
 
-const Button = ({ children, type, onClick }) => {
+const Button = ({ bgColor, children, type, onClick }) => {
   return (
     <div>
-      <button className={`${styles.btn} ${styles[type]}`} onClick={onClick}>
+      <button
+        style={{ backgroundColor: bgColor }}
+        className={`${styles.btn} ${styles[type]}`}
+        onClick={onClick}
+      >
         {children}
       </button>
     </div>

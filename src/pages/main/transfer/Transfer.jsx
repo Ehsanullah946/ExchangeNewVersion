@@ -36,7 +36,7 @@ const Transfer = () => {
           <form>
             <div className="font-extrabold bg-blue-400 w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
               <span className="flex justify-center gap-3 ">
-                {t('Transfer')} <RiSendPlaneLine className="mt-1" />
+                {t('Send')} <RiSendPlaneLine className="mt-1" />
               </span>
             </div>
 
@@ -189,25 +189,6 @@ const Transfer = () => {
                     </div>
                   </div>
                 </div>
-
-                <div className="flex flex-wrap gap-3 mt-3 justify-center sm:justify-start">
-                  {isActive ? (
-                    <>
-                      <Button type="primary" htmlType="submit">
-                        {t('Save')}
-                      </Button>
-                      <Button type="primary">{t('Cancel')}</Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button type="primary" onClick={() => setIsActive(true)}>
-                        {t('New')}
-                      </Button>
-                      <Button type="primary">{t('Edit')}</Button>
-                      <Button type="primary">{t('Delete')}</Button>
-                    </>
-                  )}
-                </div>
               </div>
 
               <div className="w-full  space-y-1 p-2">
@@ -246,6 +227,28 @@ const Transfer = () => {
                     placeholder="more...."
                   />
                 </div>
+              </div>
+              <div className="flex flex-wrap  justify-center sm:justify-start">
+                {isActive ? (
+                  <>
+                    <Button type="primary" htmlType="submit">
+                      {t('Save')}
+                    </Button>
+                    <Button type="primary">{t('Cancel')}</Button>
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      bgColor="rgba(244, 45, 0, 0.2)"
+                      type="primary"
+                      onClick={() => setIsActive(true)}
+                    >
+                      {t('New')}
+                    </Button>
+                    <Button type="primary">{t('Edit')}</Button>
+                    <Button type="primary">{t('Delete')}</Button>
+                  </>
+                )}
               </div>
             </div>
           </form>

@@ -32,19 +32,25 @@ import {
   Login,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
-import Navbar from './components/layout/Navbar';
+
 import { ContextProvider } from './context/contextProvider.jsx';
 import PrivateRoute from './routes/PrivateRoute.jsx';
+import ProtectedLayout from './components/layout/ProtectedLayout.jsx';
+import { AuthProvider } from './context/AuthContext.jsx';
 
 const App = () => {
   return (
-    <ContextProvider>
-      <Router>
-        <div className="flex justify-around">
-          <SideBar />
-          <div className="flex-1">
-            <Navbar />
-            <Routes>
+    <AuthProvider>
+      <ContextProvider>
+        <Router>
+          <Routes>
+            <Route
+              element={
+                <PrivateRoute>
+                  <ProtectedLayout />
+                </PrivateRoute>
+              }
+            >
               <Route path="/" element={<Dashboard />} />
               <Route path="/management" element={<Management />}>
                 <Route index element={<Navigate replace to="customer" />} />
@@ -65,7 +71,7 @@ const App = () => {
                   element={<TransferToAccount />}
                 />
               </Route>
-              <Route path="account" element={<Accounts />} />
+              <Route path="/account" element={<Accounts />} />
               <Route path="/daily" element={<Daily />}>
                 <Route path="dailyTransaction" element={<DailyTransaction />} />
               </Route>
@@ -73,13 +79,15 @@ const App = () => {
               <Route path="/settings" element={<Settings />}>
                 <Route path="languages" element={<Languages />} />
               </Route>
-              <Route path="/login" element={<Login />} />
-              <Route path="*" element={<PageNotF />} />
-            </Routes>
-          </div>
-        </div>
-      </Router>
-    </ContextProvider>
+            </Route>
+
+            {/* Public routes */}
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<PageNotF />} />
+          </Routes>
+        </Router>
+      </ContextProvider>
+    </AuthProvider>
   );
 };
 
