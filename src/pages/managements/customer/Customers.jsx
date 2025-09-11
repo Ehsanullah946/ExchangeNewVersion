@@ -1,124 +1,116 @@
-import React, { useState } from 'react';
-import { useStateContext } from '../../../context/contextProvider';
-import { BiSolidDetail } from 'react-icons/bi';
-import Button from '../../../components/layout/Button';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { BiSolidDetail, BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
-import { BiSolidEdit } from 'react-icons/bi';
+import Button from '../../../components/layout/Button';
+import { Link } from 'react-router-dom';
+import { PulseLoader } from 'react-spinners';
 
 const Customers = () => {
   const { t } = useTranslation();
+  const [customers, setCustomers] = useState([]);
+  const [search, setSearch] = useState(''); // search query
+  const [loading, setLoading] = useState(false);
+
+  // Fetch customers
+  const fetchCustomers = async (query = '') => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`http://localhost:3000/api/v1/customer`, {
+        params: { search: query },
+      });
+      const result = Array.isArray(res.data) ? res.data : res.data.data || [];
+      setCustomers(result);
+    } catch (err) {
+      console.error('Error fetching customers:', err);
+      setCustomers([]);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchCustomers('');
+  }, []);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+    fetchCustomers(value);
+  };
 
   return (
-    <div className="relative overflow-x-auto rtl:ml-4 shadow-md sm:rounded-lg">
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 hidden md:table-header-group">
-          <tr>
-            <th scope="col" className="px-6 py-3">
-              {t('FullName')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('Account No')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('User Name')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('Phone')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('Transactions')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('Details')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('Edit')}
-            </th>
-            <th scope="col" className="px-6 py-3">
-              {t('Delete')}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row">
-            <td
-              className="px-6 py-4 font-medium text-gray-900 dark:text-white"
-              data-label={t('FullName')}
-            >
-              احسان الله اکبری
-            </td>
-            <td className="px-6 py-4" data-label={t('Account No')}>
-              4
-            </td>
-            <td className="px-6 py-4" data-label={t('User Name')}>
-              Ehsan@
-            </td>
-            <td className="px-6 py-4" data-label={t('Phone')}>
-              0798987430
-            </td>
-            <td className="px-6 py-4" data-label={t('Transactions')}>
-              <Button type="primary">transactions</Button>
-            </td>
-            <td className="px-6 py-4" data-label={t('Details')}>
-              <BiSolidDetail className="text-lg text-blue-600 cursor-pointer" />
-            </td>
-            <td className="px-6 py-4" data-label={t('Edit')}>
-              <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
-            </td>
-            <td className="px-6 py-4" data-label={t('Delete')}>
-              ❌
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
+      {/* Search + Add button */}
+      <div className="flex mt-1 mb-2 gap-2">
+        <Link to="/management/customerAdd">
+          <Button type="primary">{t('add new customer')}</Button>
+        </Link>
 
-      {/* Pagination */}
-      <nav
-        className="flex items-center flex-col md:flex-row justify-between pt-4"
-        aria-label="Table navigation"
-      >
-        <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0">
-          Showing{' '}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            1-10
-          </span>{' '}
-          of{' '}
-          <span className="font-semibold text-gray-900 dark:text-white">
-            1000
-          </span>
-        </span>
-        <ul className="inline-flex -space-x-px text-sm h-8">
-          <li>
-            <a
-              href="#"
-              className="px-3 h-8 flex items-center border rounded-s-lg"
-            >
-              Prev
-            </a>
-          </li>
-          <li>
-            <a href="#" className="px-3 h-8 flex items-center border">
-              1
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="px-3 h-8 flex items-center border bg-blue-50 text-blue-600"
-            >
-              2
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              className="px-3 h-8 flex items-center border rounded-e-lg"
-            >
-              Next
-            </a>
-          </li>
-        </ul>
-      </nav>
+        <input
+          type="text"
+          placeholder={t('Search')}
+          value={search}
+          onChange={handleSearch}
+          className="border rounded p-2 flex-1"
+        />
+      </div>
+
+      {/* Table */}
+      {loading ? (
+        <p className="p-4">
+          {
+            <PulseLoader
+              color="green"
+              size={15}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          }
+        </p>
+      ) : (
+        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead className="text-xm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 hidden md:table-header-group">
+            <tr>
+              <th className="px-5 py-3">{t('ID')}</th>
+              <th className="px-5 py-3">{t('fullname')}</th>
+              <th className="px-5 py-3">{t('Account No')}</th>
+              <th className="px-5 py-3">{t('Phone')}</th>
+              <th className="px-5 py-3">{t('Transactions')}</th>
+              <th className="px-5 py-3">{t('Details')}</th>
+              <th className="px-5 py-3">{t('Edit')}</th>
+              <th className="px-5 py-3">{t('Delete')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {customers.map((c, index) => (
+              <tr
+                key={c.id}
+                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
+              >
+                <td className="px-5 py-4">{index + 1}</td>
+                <td className="px-5 py-4">
+                  {c.Stakeholder?.Person?.firstName}{' '}
+                  {c.Stakeholder?.Person?.lastName}
+                </td>
+                <td className="px-5 py-4">{c.orgCustomerId}</td>
+                <td className="px-5 py-4">
+                  {c.Stakeholder?.Person?.phone || '-'}
+                </td>
+                <td className="px-5 py-4">
+                  <Button type="primary">{t('Transactions')}</Button>
+                </td>
+                <td className="px-5 py-4">
+                  <BiSolidDetail className="text-lg text-blue-600 cursor-pointer" />
+                </td>
+                <td className="px-5 py-4">
+                  <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                </td>
+                <td className="px-5 py-4">❌</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

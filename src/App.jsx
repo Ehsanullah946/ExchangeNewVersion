@@ -30,6 +30,7 @@ import {
   Languages,
   DailyTransaction,
   Login,
+  CustomerAdd,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -55,6 +56,7 @@ const App = () => {
               <Route path="/management" element={<Management />}>
                 <Route index element={<Navigate replace to="customer" />} />
                 <Route path="customer" element={<Customers />} />
+                <Route path="customerAdd" element={<CustomerAdd />} />
                 <Route path="branch" element={<Branches />} />
                 <Route path="employee" element={<Employees />} />
                 <Route path="exchanger" element={<Exchangers />} />

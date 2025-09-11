@@ -10,6 +10,7 @@ export { default as Branches } from './managements/branch/Branches';
 export { default as Employees } from './managements/employee/Employees';
 export { default as Exchangers } from './managements/exchanger/Exchangers';
 export { default as SenderReceiver } from './managements/senderReceiver/SenderReceiver';
+export { default as CustomerAdd } from './managements/customer/CustomerAdd';
 
 /// main route
 export { default as Receive } from './main/receive/Receive';
