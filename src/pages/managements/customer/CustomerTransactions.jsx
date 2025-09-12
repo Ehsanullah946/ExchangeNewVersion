@@ -39,7 +39,7 @@ const CustomerTransactions = () => {
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
       {/* Search + Add button */}
       <div className="flex mt-1 mb-2 gap-0.2">
-        <Link to="/account">
+        <Link to="/accounts/accountAdd">
           <Button type="primary">
             <span className="flex gap-1">
               {t('Add New Account')} <BiSolidUserAccount className="mt-1" />

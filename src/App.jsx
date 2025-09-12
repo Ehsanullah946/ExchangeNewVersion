@@ -32,6 +32,8 @@ import {
   Login,
   CustomerAdd,
   CustomerTransactions,
+  Account,
+  AccountList,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -78,7 +80,10 @@ const App = () => {
                   element={<TransferToAccount />}
                 />
               </Route>
-              <Route path="/account" element={<Accounts />} />
+              <Route path="/accounts" element={<Accounts />}>
+                <Route path="accountAdd" element={<Account />} />
+                <Route path="accountList" element={<AccountList />} />
+              </Route>
               <Route path="/daily" element={<Daily />}>
                 <Route path="dailyTransaction" element={<DailyTransaction />} />
               </Route>

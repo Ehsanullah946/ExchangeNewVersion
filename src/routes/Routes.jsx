@@ -110,7 +110,7 @@ export const routes = [
     ],
   },
   {
-    path: '/account',
+    path: 'accounts/accountAdd',
     nameKey: 'Account',
     icon: <FiUser />,
   },

@@ -25,6 +25,8 @@ export { default as TransferToAccount } from './main/transferToAccount/TransferT
 export { default as Languages } from './settings/Languages';
 
 export { default as Accounts } from './Accounts';
+export { default as Account } from './account/Account';
+export { default as AccountList } from './account/AccountList';
 
 //Daily
 export { default as DailyTransaction } from './daily/DailyTransaction';
