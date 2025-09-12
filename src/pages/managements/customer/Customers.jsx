@@ -8,7 +8,10 @@ import { PulseLoader } from 'react-spinners';
 
 const Customers = () => {
   const { t } = useTranslation();
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState([
+    { id: 1, firstName: 'Ehsan', lastName: 'Akbari', phone: '0790686384' },
+    { id: 2, firstName: 'Ahmad', lastName: 'Amiri', phone: '0790686384' },
+  ]);
   const [search, setSearch] = useState(''); // search query
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +26,20 @@ const Customers = () => {
       setCustomers(result);
     } catch (err) {
       console.error('Error fetching customers:', err);
-      setCustomers([]);
+      // keep default instead of clearing
+      if (query === '') {
+        setCustomers([
+          {
+            id: 1,
+            firstName: 'Ehsan',
+            lastName: 'Akbari',
+            phone: '0790686384',
+          },
+          { id: 2, firstName: 'Ahmad', lastName: 'Amiri', phone: '0790686384' },
+        ]);
+      } else {
+        setCustomers([]);
+      }
     }
     setLoading(false);
   };
@@ -89,15 +105,17 @@ const Customers = () => {
               >
                 <td className="px-5 py-4">{index + 1}</td>
                 <td className="px-5 py-4">
-                  {c.Stakeholder?.Person?.firstName}{' '}
-                  {c.Stakeholder?.Person?.lastName}
+                  {c.Stakeholder?.Person?.firstName || c.firstName}{' '}
+                  {c.Stakeholder?.Person?.lastName || c.lastName}
                 </td>
                 <td className="px-5 py-4">{c.orgCustomerId}</td>
                 <td className="px-5 py-4">
-                  {c.Stakeholder?.Person?.phone || '-'}
+                  {c.Stakeholder?.Person?.phone || c.phone || '-'}
                 </td>
                 <td className="px-5 py-4">
-                  <Button type="primary">{t('Transactions')}</Button>
+                  <Link to={`/management/customer/${c.id}/transactions`}>
+                    <Button type="primary">{t('Transactions')}</Button>
+                  </Link>
                 </td>
                 <td className="px-5 py-4">
                   <BiSolidDetail className="text-lg text-blue-600 cursor-pointer" />
