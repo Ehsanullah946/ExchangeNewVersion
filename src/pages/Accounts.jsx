@@ -35,11 +35,6 @@ const Accounts = () => {
               <BsSearch className="mt-1 ml-3" /> {t('Transactions')}
             </span>
           </Button>
-          <Button type="secondry">
-            <span className="flex justify-between ">
-              <BsSearch className="mt-1 ml-3" /> {t('add')}
-            </span>
-          </Button>
         </div>
         <div>
           <form>

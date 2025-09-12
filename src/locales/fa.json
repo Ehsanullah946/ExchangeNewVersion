@@ -31,7 +31,7 @@
   "Prev": "قبلی",
   "Next": "بعدی",
   "Phone": "شماره تماس",
-  "Owe": "قرضدار",
+  "Owe": "بدهکار",
   "fullname": "اسم و تخلص",
   "add new customer": "افزودن مشتری جدید",
   "Status": "وضعیت",
@@ -86,10 +86,16 @@
   "N-Card": "نمبر تذکره",
   "perAddress": "آدرس دایمی",
   "curAddress": "آدرس فعلی",
+  "Remain": "باقی مانده",
   "Loan Limit": "اندازه قرض",
   "charge": "کمیشن",
   "PhoneNo": "نمبر تلفون",
+  "User": "کاربر",
+  "Liquidate": "تسویه حساب",
   "WhatsApp": "واتساب",
+  "Add New Account": "افزودن حساب جدید",
+  "Share": "اشتراک گزاری",
   "Email Address": "ایمل",
-  "Telegram": "تلیگرام"
+  "Telegram": "تلیگرام",
+  "Limit Search": "محدوده جستجو"
 }
