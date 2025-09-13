@@ -1,17 +1,13 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import { BiChevronDown } from 'react-icons/bi';
-import { BiDetail } from 'react-icons/bi';
 import Button from '../../../components/layout/Button';
 import { BsSearch, BsSearchHeartFill } from 'react-icons/bs';
 import { BsListCheck } from 'react-icons/bs';
 import { BsPrinter } from 'react-icons/bs';
-import { BiSearch, BiSearchAlt, BiSolidSearch } from 'react-icons/bi';
-import { useStateContext } from '../../../context/contextProvider';
 import { useTranslation } from 'react-i18next';
 import { RiDownload2Line } from 'react-icons/ri';
 const Receive = () => {
-  const { currentColor } = useStateContext();
   const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
   return (

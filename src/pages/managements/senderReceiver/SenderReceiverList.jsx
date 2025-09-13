@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
-import {
-  BiShare,
-  BiSolidDetail,
-  BiSolidEdit,
-  BiSolidUserAccount,
-} from 'react-icons/bi';
+import { BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
 import { Link } from 'react-router-dom';
-import { ImMinus } from 'react-icons/im';
-import { RiAddBoxFill } from 'react-icons/ri';
 import { BsPrinter, BsSearch, BsShare } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 const SenderReceiverList = () => {
