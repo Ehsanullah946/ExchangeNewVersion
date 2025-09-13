@@ -12,6 +12,7 @@ export { default as Exchangers } from './managements/exchanger/Exchangers';
 export { default as SenderReceiver } from './managements/senderReceiver/SenderReceiver';
 export { default as CustomerAdd } from './managements/customer/CustomerAdd';
 export { default as CustomerTransactions } from './managements/customer/CustomerTransactions';
+export { default as BranchTransaction } from './managements/branch/BranchTransaction';
 
 /// main route
 export { default as Receive } from './main/receive/Receive';

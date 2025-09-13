@@ -44,7 +44,7 @@ const CustomerAdd = () => {
           <form>
             <div className="font-extrabold bg-blue-400 w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
               <span className="flex justify-center gap-3 ">
-                {t('Send')} <RiSendPlaneLine className="mt-1" />
+                {t('Add New Customer')} <RiSendPlaneLine className="mt-1" />
               </span>
             </div>
 

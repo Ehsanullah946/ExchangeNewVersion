@@ -34,6 +34,7 @@ import {
   CustomerTransactions,
   Account,
   AccountList,
+  BranchTransaction,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -65,6 +66,10 @@ const App = () => {
                   element={<CustomerTransactions />}
                 />
                 <Route path="branch" element={<Branches />} />
+                <Route
+                  path="branch/:id/transaction"
+                  element={<BranchTransaction />}
+                />
                 <Route path="employee" element={<Employees />} />
                 <Route path="exchanger" element={<Exchangers />} />
                 <Route path="senderReceiver" element={<SenderReceiver />} />

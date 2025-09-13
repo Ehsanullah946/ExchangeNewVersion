@@ -75,7 +75,7 @@ const Customers = () => {
       {/* Search + Add button */}
       <div className="flex mt-1 mb-2">
         <Link to="/management/customerAdd">
-          <Button type="primary">{t('add new customer')}</Button>
+          <Button type="primary">{t('Add New Customer')}</Button>
         </Link>
 
         <input

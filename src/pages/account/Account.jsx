@@ -7,8 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { RiAccountBox2Fill } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 const Accounts = () => {
-  const { currentColor } = useStateContext();
-  const [isActive, setIsActive] = useState(false);
+  const { currentColor, isActive, setIsActive } = useStateContext();
   const { t } = useTranslation();
   return (
     <>
@@ -32,11 +31,6 @@ const Accounts = () => {
               <BsSearch className="mt-1 ml-3" /> {t('Search')}
             </span>
           </Button>
-          <Button type="secondry">
-            <span className="flex justify-between ">
-              <BsSearch className="mt-1 ml-3" /> {t('Transactions')}
-            </span>
-          </Button>
         </div>
         <div>
           <form>
@@ -48,7 +42,7 @@ const Accounts = () => {
             <div className="grid sm:grid-cols-2 gap-6 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl w-full max-w-7xl mx-auto">
               <div className=" space-y-1 w-full">
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
-                  <label className="sm:w-32">{t('Number')}:</label>
+                  <label className="sm:w-32 mt-2">{t('Number')}:</label>
                   <input
                     type="text"
                     className="border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
@@ -56,7 +50,7 @@ const Accounts = () => {
                   />
                 </div>
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('Customer')}:</label>
+                  <label className="sm:w-32  mt-2">{t('Customer')}:</label>
                   <Select
                     className="w-full shadow-sm"
                     name="branch"
@@ -65,7 +59,7 @@ const Accounts = () => {
                   />
                 </div>
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('Money Type')}:</label>
+                  <label className="sm:w-32 mt-2">{t('Account Type')}:</label>
                   <Select
                     className="w-full shadow-sm"
                     name="branch"
@@ -74,7 +68,7 @@ const Accounts = () => {
                   />
                 </div>
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
-                  <label className="sm:w-32">{t('Blance')}:</label>
+                  <label className="sm:w-32 mt-2">{t('Blance')}:</label>
                   <input
                     type="text"
                     className="border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
@@ -82,7 +76,7 @@ const Accounts = () => {
                   />
                 </div>
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('Date')}:</label>
+                  <label className="sm:w-32 mt-2">{t('Date')}:</label>
                   <input
                     type="date"
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
