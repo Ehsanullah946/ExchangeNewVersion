@@ -20,10 +20,10 @@ const EmployeeList = () => {
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
       {/* Search + Add button */}
       <div className="flex mt-1 mb-2 gap-0.2">
-        <Link to="">
+        <Link to="/management/employeeAdd">
           <Button type="primary">
             <span className="flex gap-1">
-              {t('Add New Account')} <BiSolidUserAccount className="mt-1" />
+              {t('Add New Employee')} <BiSolidUserAccount className="mt-1" />
             </span>
           </Button>
         </Link>
@@ -34,35 +34,15 @@ const EmployeeList = () => {
             </span>
           </Button>
         </Link>
-        <Link to="">
-          <Button type="primary">
-            <span className="flex gap-1">
-              {t('Liquidate')} <BiSolidUserAccount className="mt-1" />
-            </span>
-          </Button>
-        </Link>
-        <Link to="">
-          <Button type="primary">
-            <span className="flex gap-1">
-              {t('Print')} <BsPrinter className="mt-1" />
-            </span>
-          </Button>
-        </Link>
-        <Link to="">
-          <Button type="primary">
-            <span className="flex gap-1">
-              {t('Share')} <BsShare className="mt-1" />
-            </span>
-          </Button>
-        </Link>
-
-        <input
-          type="text"
-          placeholder={t('Search')}
-          //   value={search}
-          //   onChange={handleSearch}
-          className="border rounded-2xl px-1 flex-1"
-        />
+        <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
+          <input
+            type="text"
+            name="text"
+            id="input"
+            placeholder={t('Search')}
+            class="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+          />
+        </div>
       </div>
 
       {/* Table */}
@@ -81,16 +61,15 @@ const EmployeeList = () => {
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className=" text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 hidden md:table-header-group">
             <tr>
-              <th className="px-3 py-2">{t('Transaction No')}</th>
-              <th className="px-3 py-2">{t('Transfer')}</th>
-              <th className="px-3 py-2">{t('Receiver')}</th>
-              <th className="px-3 py-2">{t('Withdraw')}</th>
-              <th className="px-3 py-2">{t('Deposit')}</th>
-              <th className="px-3 py-2">{t('Currency')}</th>
-              <th className="px-3 py-2">{t('charges')}</th>
-              <th className="px-3 py-2">{t('charges Type')}</th>
-              <th className="px-3 py-2">{t('Date')}</th>
-              <th className="px-3 py-2">{t('Print')}</th>
+              <th className="px-3 py-2">{t('ID')}</th>
+              <th className="px-3 py-2">{t('First Name')}</th>
+              <th className="px-3 py-2">{t('Last Name')}</th>
+              <th className="px-3 py-2">{t('Father Name')}</th>
+              <th className="px-3 py-2">{t('Job')}</th>
+              <th className="px-3 py-2">{t('N-Card')}</th>
+              <th className="px-3 py-2">{t('Phone')}</th>
+              <th className="px-3 py-2">{t('Net Salary')}</th>
+              <th className="px-3 py-2">{t('Account Type')}</th>
               <th className="px-3 py-2">{t('Edit')}</th>
               <th className="px-3 py-2">{t('Delete')}</th>
             </tr>
@@ -99,16 +78,13 @@ const EmployeeList = () => {
             <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row">
               <td className="px-3 py-2">1</td>
               <td className="px-3 py-2">احسان الله</td>
-              <td className="px-3 py-2">سردار</td>
+              <td className="px-3 py-2">اکبری</td>
+              <td className="px-3 py-2">ابراهیم</td>
+              <td className="px-3 py-2">ٍEn</td>
+              <td className="px-3 py-2">97290473</td>
+              <td className="px-3 py-2">0790074323</td>
               <td className="px-3 py-2">40000</td>
-              <td className="px-3 py-2">0</td>
-              <td className="px-3 py-2">AFG</td>
-              <td className="px-3 py-2">100</td>
               <td className="px-3 py-2">{t('AFG')}</td>
-              <td className="px-3 py-2">{`${new Date().toLocaleDateString()}`}</td>
-              <td className="px-3 py-2">
-                <BsPrinter color="green" />
-              </td>
               <td className="px-3 py-2">
                 <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
               </td>

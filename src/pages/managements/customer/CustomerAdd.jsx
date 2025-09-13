@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useStateContext } from '../../../context/contextProvider';
 import Button from '../../../components/layout/Button';
 
 import {
@@ -14,7 +13,6 @@ import { useTranslation } from 'react-i18next';
 import { RiMailFill, RiSendPlaneLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 const CustomerAdd = () => {
-  const { currentColor } = useStateContext();
   const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
   return (
@@ -42,13 +40,13 @@ const CustomerAdd = () => {
         </div>
         <div>
           <form>
-            <div className="font-extrabold bg-blue-400 w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
+            <div className="font-extrabold bg-blue-400  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
               <span className="flex justify-center gap-3 ">
                 {t('Add New Customer')} <RiSendPlaneLine className="mt-1" />
               </span>
             </div>
 
-            <div className="grid sm:grid-cols-3 gap-8 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl w-full max-w-7xl mx-auto">
+            <div className="grid sm:grid-cols-3 gap-8 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl max-w-7xl mx-auto">
               <div className=" space-y-1 w-full">
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('ID')}:</label>
