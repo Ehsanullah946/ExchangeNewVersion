@@ -81,7 +81,7 @@ export const routes = [
         icon: <MdAccountTree />,
       },
       {
-        path: '/management/employee',
+        path: '/management/employeeList',
         nameKey: 'Employees',
         icon: <FaUserTie />,
       },

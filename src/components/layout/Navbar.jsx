@@ -27,7 +27,7 @@ const NavButton = ({ title, customeFunc, icon, color, dotColor }) => {
 const Navbar = () => {
   const { handleClick, isClicked, currentColor } = useStateContext();
   return (
-    <div className="flex justify-end p-2 md:mx-6 relative z-50">
+    <div className="flex justify-end p-1 md:mx-6 relative bg-gray-50 z-50">
       <div className="flex">
         <NavButton
           dotColor="#03C907"

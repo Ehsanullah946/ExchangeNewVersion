@@ -11,7 +11,7 @@ import {
   BsPhone,
 } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
-import { RiSendPlaneLine } from 'react-icons/ri';
+import { RiMailFill, RiSendPlaneLine } from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 const CustomerAdd = () => {
   const { currentColor } = useStateContext();
@@ -129,7 +129,7 @@ const CustomerAdd = () => {
                 <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32 mt-1">{t('perAddress')}:</label>
                   <textarea
-                    rows="4"
+                    rows="3"
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     placeholder="more...."
                   />
@@ -137,7 +137,7 @@ const CustomerAdd = () => {
                 <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32 mt-1">{t('curAddress')}:</label>
                   <textarea
-                    rows="4"
+                    rows="3"
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     placeholder="more...."
                   />
@@ -189,6 +189,29 @@ const CustomerAdd = () => {
                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
                       placeholder="123-456-7890"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="flex gap-2 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32 mt-1">{t('Email')}:</label>
+                  <input
+                    id=""
+                    type="checkbox"
+                    value=""
+                    name="bordered-checkbox"
+                    class="w-4 h-4  bg-gray-100 mt-3 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800  dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <div class="relative">
+                    <div class="absolute  inset-y-0 start-0 top-0 flex items-center ps-3 pointer-events-none">
+                      <RiMailFill />
+                    </div>
+                    <input
+                      type="text"
+                      id="phone-input"
+                      aria-describedby="helper-text-explanation"
+                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="name@gmail.com"
                       required
                     />
                   </div>

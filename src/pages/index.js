@@ -7,12 +7,14 @@ export { default as Main } from './Main';
 
 export { default as Customers } from './managements/customer/Customers';
 export { default as Branches } from './managements/branch/Branches';
-export { default as Employees } from './managements/employee/Employees';
+export { default as EmployeeAdd } from './managements/employee/EmployeeAdd';
+export { default as EmployeeList } from './managements/employee/EmployeeList';
 export { default as Exchangers } from './managements/exchanger/Exchangers';
 export { default as SenderReceiver } from './managements/senderReceiver/SenderReceiver';
 export { default as CustomerAdd } from './managements/customer/CustomerAdd';
 export { default as CustomerTransactions } from './managements/customer/CustomerTransactions';
 export { default as BranchTransaction } from './managements/branch/BranchTransaction';
+export { default as BranchAdd } from './managements/branch/BranchAdd';
 
 /// main route
 export { default as Receive } from './main/receive/Receive';

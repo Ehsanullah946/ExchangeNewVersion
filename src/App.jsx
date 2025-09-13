@@ -16,7 +16,6 @@ import {
   Rates,
   Customers,
   Branches,
-  Employees,
   Exchangers,
   SenderReceiver,
   Main,
@@ -35,6 +34,9 @@ import {
   Account,
   AccountList,
   BranchTransaction,
+  BranchAdd,
+  EmployeeAdd,
+  EmployeeList,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -66,11 +68,13 @@ const App = () => {
                   element={<CustomerTransactions />}
                 />
                 <Route path="branch" element={<Branches />} />
+                <Route path="branchAdd" element={<BranchAdd />} />
                 <Route
                   path="branch/:id/transaction"
                   element={<BranchTransaction />}
                 />
-                <Route path="employee" element={<Employees />} />
+                <Route path="employeeAdd" element={<EmployeeAdd />} />
+                <Route path="employeeList" element={<EmployeeList />} />
                 <Route path="exchanger" element={<Exchangers />} />
                 <Route path="senderReceiver" element={<SenderReceiver />} />
               </Route>

@@ -74,7 +74,7 @@ const Branches = () => {
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
       {/* Search + Add button */}
       <div className="flex mt-1 mb-2">
-        <Link to="/management/customerAdd">
+        <Link to="/management/branchAdd">
           <Button type="primary">{t('Add New Branch')}</Button>
         </Link>
 
