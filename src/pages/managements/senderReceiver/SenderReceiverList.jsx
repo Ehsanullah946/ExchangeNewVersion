@@ -1,21 +1,29 @@
 import React, { useState } from 'react';
-import { BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
+import {
+  BiShare,
+  BiSolidDetail,
+  BiSolidEdit,
+  BiSolidUserAccount,
+} from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
 import { Link } from 'react-router-dom';
-import { BsSearch } from 'react-icons/bs';
+import { ImMinus } from 'react-icons/im';
+import { RiAddBoxFill } from 'react-icons/ri';
+import { BsPrinter, BsSearch, BsShare } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
-const EmployeeList = () => {
+const SenderReceiverList = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
       {/* Search + Add button */}
       <div className="flex mt-1 mb-2 gap-0.2">
-        <Link to="/management/employeeAdd">
+        <Link to="/management/senderReceiverAdd">
           <Button type="primary">
             <span className="flex gap-1">
-              {t('Add New Employee')} <BiSolidUserAccount className="mt-1" />
+              {t('Add New SenderReceiver')}{' '}
+              <BiSolidUserAccount className="mt-1" />
             </span>
           </Button>
         </Link>
@@ -56,11 +64,9 @@ const EmployeeList = () => {
               <th className="px-3 py-2">{t('First Name')}</th>
               <th className="px-3 py-2">{t('Last Name')}</th>
               <th className="px-3 py-2">{t('Father Name')}</th>
-              <th className="px-3 py-2">{t('Job')}</th>
+              <th className="px-3 py-2">{t('Marital')}</th>
               <th className="px-3 py-2">{t('N-Card')}</th>
               <th className="px-3 py-2">{t('Phone')}</th>
-              <th className="px-3 py-2">{t('Net Salary')}</th>
-              <th className="px-3 py-2">{t('Account Type')}</th>
               <th className="px-3 py-2">{t('Edit')}</th>
               <th className="px-3 py-2">{t('Delete')}</th>
             </tr>
@@ -71,11 +77,9 @@ const EmployeeList = () => {
               <td className="px-3 py-2">احسان الله</td>
               <td className="px-3 py-2">اکبری</td>
               <td className="px-3 py-2">ابراهیم</td>
-              <td className="px-3 py-2">ٍEn</td>
+              <td className="px-3 py-2">مذکر</td>
               <td className="px-3 py-2">97290473</td>
               <td className="px-3 py-2">0790074323</td>
-              <td className="px-3 py-2">40000</td>
-              <td className="px-3 py-2">{t('AFG')}</td>
               <td className="px-3 py-2">
                 <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
               </td>
@@ -88,4 +92,4 @@ const EmployeeList = () => {
   );
 };
 
-export default EmployeeList;
+export default SenderReceiverList;

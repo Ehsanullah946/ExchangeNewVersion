@@ -17,7 +17,6 @@ import {
   Customers,
   Branches,
   Exchangers,
-  SenderReceiver,
   Main,
   Receive,
   Transfer,
@@ -37,6 +36,8 @@ import {
   BranchAdd,
   EmployeeAdd,
   EmployeeList,
+  SenderReceiverList,
+  SenderReceiverAdd,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -76,7 +77,14 @@ const App = () => {
                 <Route path="employeeAdd" element={<EmployeeAdd />} />
                 <Route path="employeeList" element={<EmployeeList />} />
                 <Route path="exchanger" element={<Exchangers />} />
-                <Route path="senderReceiver" element={<SenderReceiver />} />
+                <Route
+                  path="senderReceiverList"
+                  element={<SenderReceiverList />}
+                />
+                <Route
+                  path="senderReceiverAdd"
+                  element={<SenderReceiverAdd />}
+                />
               </Route>
               <Route path="/main" element={<Main />}>
                 <Route path="receive" element={<Receive />} />

@@ -91,7 +91,7 @@ export const routes = [
         icon: <FaUser />,
       },
       {
-        path: '/management/senderReceiver',
+        path: '/management/senderReceiverList',
         nameKey: 'SenderReceiver',
         icon: <BiTransferAlt />,
       },
