@@ -101,7 +101,7 @@ const App = () => {
               <Route path="/main" element={<Main />}>
                 <Route path="receive" element={<Receive />} />
                 <Route path="receiveList" element={<ReceiveList />} />
-                <Route path="transerList" element={<TransferList />} />
+                <Route path="transferList" element={<TransferList />} />
                 <Route path="transfer" element={<Transfer />} />
                 <Route path="deposit" element={<Deposit />} />
                 <Route path="depositList" element={<DepositList />} />

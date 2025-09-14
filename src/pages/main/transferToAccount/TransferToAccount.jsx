@@ -14,23 +14,23 @@ const TransferToAccount = () => {
         <div className="flex mt-1 mb-1">
           <Link to="/main/transferToAccountList">
             <Button type="primary">
-              <span className="flex justify-between">
-                <BsListCheck className="mt-1 ml-3" />
+              <span className="flex justify-between gap-2">
+                <BsListCheck className="mt-1" />
                 {t('List')}
               </span>
             </Button>
           </Link>
           <Button type="primary">
-            <span className="flex justify-between ">
-              <BsPrinter className="mt-1 ml-3" /> {t('Print')}
+            <span className="flex justify-between gap-2 ">
+              <BsPrinter className="mt-1 bg-transparent" /> {t('Print')}
             </span>
           </Button>
           <Button type="primary">
-            <span className="flex justify-between ">
-              <BsSearch className="mt-1 ml-3" /> {t('Limit Search')}
+            <span className="flex justify-between gap-2 ">
+              <BsSearch className="mt-1 " /> {t('Limit Search')}
             </span>
           </Button>
-          <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
+          <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#b34cfd] to-[#6048f9] rounded-2xl overflow-hidden cursor-pointer shadow-md">
             <input
               type="text"
               name="text"
@@ -42,7 +42,7 @@ const TransferToAccount = () => {
         </div>
         <div>
           <form>
-            <div className="font-extrabold  bg-gradient-to-b from-[#b34cfd] to-[#6048f9]  w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
+            <div className="font-extrabold  bg-gradient-to-b from-[#ba61fa] to-[#6d57fa]  w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
               <span className="flex justify-center gap-3 ">
                 {t('Transfer To Account')} <MdCompareArrows className="mt-1" />
               </span>
@@ -128,8 +128,8 @@ const TransferToAccount = () => {
                   <p className="text-md mb-1 font-semibold">{t('Account')}</p>
                   <hr className="mb-2" />
                   <div className="relative overflow-x-auto shadow-2xl sm:rounded-lg">
-                    <table className="w-full text-sm text-left rtl:text-right text-blue-100">
-                      <thead className="text-xs text-center text-white uppercase bg-blue-600">
+                    <table className="w-full text-sm text-left bg-gradient-to-b  from-[#b55df5] to-[#725ef4]  rtl:text-right text-blue-100">
+                      <thead className="text-xs text-center text-white uppercase  bg-gradient-to-b  ">
                         <tr>
                           <th className="px-3 py-1">{t('Credit')}</th>
                           <th className="px-3 py-1">{t('Owe')}</th>
@@ -139,7 +139,7 @@ const TransferToAccount = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="bg-blue-500 text-sm text-center border-b border-blue-400">
+                        <tr className=" text-sm text-center border-b  ">
                           <td className="px-3 py-2">50000</td>
                           <td>30000</td>
                           <td>AFG</td>
@@ -154,8 +154,8 @@ const TransferToAccount = () => {
                   <p className="text-md mb-1 font-semibold">{t('Account')}</p>
                   <hr className="mb-2" />
                   <div className="relative overflow-x-auto shadow-2xl sm:rounded-lg">
-                    <table className="w-full text-sm text-left rtl:text-right text-blue-100">
-                      <thead className="text-xs text-center text-white uppercase bg-blue-600">
+                    <table className="w-full text-sm text-left rtl:text-right bg-gradient-to-b from-[#ba61fa] to-[#6d57fa] text-blue-100">
+                      <thead className="text-xs text-center text-white uppercase ">
                         <tr>
                           <th className="px-3 py-1">{t('Credit')}</th>
                           <th className="px-3 py-1">{t('Owe')}</th>
@@ -165,7 +165,7 @@ const TransferToAccount = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="bg-blue-500 text-sm text-center border-b border-blue-400">
+                        <tr className="  text-sm text-center border-b border-blue-400">
                           <td className="px-3 py-2">50000</td>
                           <td>30000</td>
                           <td>AFG</td>
