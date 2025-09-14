@@ -4,7 +4,12 @@ import { BiChevronDown } from 'react-icons/bi';
 import Button from '../../components/layout/Button';
 import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
-import { RiSendPlaneLine } from 'react-icons/ri';
+import {
+  RiExchangeCnyFill,
+  RiExchangeDollarFill,
+  RiExchangeFundsFill,
+  RiSendPlaneLine,
+} from 'react-icons/ri';
 import { Link } from 'react-router-dom';
 const Exchange = () => {
   const [isActive, setIsActive] = useState(false);
@@ -14,7 +19,7 @@ const Exchange = () => {
     <>
       <div className="grid justify-center">
         <div className=" flex mt-1 mb-1">
-          <Link to="/main/exchangeList">
+          <Link to="/rates/exchangeList">
             <Button type="primary">
               <span className="flex justify-between">
                 <BsListCheck className="mt-1 ml-3" />
@@ -45,8 +50,9 @@ const Exchange = () => {
         <div>
           <form>
             <div className="font-extrabold bg-blue-400 w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
-              <span className="flex justify-center gap-3 ">
-                {t('Exchange')} <RiSendPlaneLine className="mt-1" />
+              <span className="flex justify-center gap-2 ">
+                {t('Exchange')}{' '}
+                <RiExchangeDollarFill className="mt-0.5 text-xl" />
               </span>
             </div>
 

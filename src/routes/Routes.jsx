@@ -13,12 +13,13 @@ import {
   MdRateReview,
   MdToday,
 } from 'react-icons/md';
-import { BiTransferAlt } from 'react-icons/bi';
+import { BiListCheck, BiTransferAlt } from 'react-icons/bi';
 import { BiCog } from 'react-icons/bi';
 import { AiFillHome, AiOutlineDashboard, AiOutlineRise } from 'react-icons/ai';
 import {
   RiDownloadLine,
   RiExchange2Fill,
+  RiExchangeDollarFill,
   RiSendPlaneLine,
 } from 'react-icons/ri';
 import { FiUser, FiUsers } from 'react-icons/fi';
@@ -124,9 +125,14 @@ export const routes = [
     icon: <AiOutlineRise />,
     subRoutes: [
       {
-        path: '/rates/Exchange',
+        path: '/rates/exchange',
         nameKey: 'Exchange',
-        icon: <RiExchange2Fill />,
+        icon: <RiExchangeDollarFill />,
+      },
+      {
+        path: '/rates/exchangeList',
+        nameKey: 'Exchange List',
+        icon: <BiListCheck />,
       },
       {
         path: '/rates/rate',

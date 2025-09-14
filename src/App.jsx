@@ -49,6 +49,7 @@ import {
   Rate,
   ExchangerList,
   ExchangerAdd,
+  ExchangeList,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -135,6 +136,7 @@ const App = () => {
               </Route>
               <Route path="/rates" element={<Rates />}>
                 <Route path="exchange" element={<Exchange />} />
+                <Route path="exchangeList" element={<ExchangeList />} />
                 <Route path="rate" element={<Rate />} />
               </Route>
               <Route path="/settings" element={<Settings />}>
