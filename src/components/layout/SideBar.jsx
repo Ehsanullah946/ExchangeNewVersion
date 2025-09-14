@@ -144,7 +144,7 @@ const SideBar = ({ children }) => {
 
           {isOpen && (
             <>
-              <div className="search">
+              <div className="search flex gap-2">
                 <div className="search_icon">
                   <BiSearch />
                 </div>

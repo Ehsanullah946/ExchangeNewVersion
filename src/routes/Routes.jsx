@@ -1,12 +1,9 @@
 import {
-  FaBars,
-  FaHome,
   FaLock,
   FaMoneyBill,
   FaRegArrowAltCircleUp,
   FaUser,
   FaUserTie,
-  FaTimes,
   FaArrowAltCircleDown,
 } from 'react-icons/fa';
 import {
@@ -15,12 +12,13 @@ import {
   MdManageAccounts,
   MdToday,
 } from 'react-icons/md';
-import { BiAnalyse, BiSearch, BiTransferAlt } from 'react-icons/bi';
+import { BiTransferAlt } from 'react-icons/bi';
 import { BiCog } from 'react-icons/bi';
 import { AiFillHome, AiOutlineDashboard, AiOutlineRise } from 'react-icons/ai';
 import { RiDownloadLine, RiSendPlaneLine } from 'react-icons/ri';
 import { FiUser, FiUsers } from 'react-icons/fi';
 import { GiPayMoney } from 'react-icons/gi';
+import { BsListCheck, BsViewList } from 'react-icons/bs';
 
 export const routes = [
   {
@@ -106,6 +104,11 @@ export const routes = [
         path: '/daily/dailyTransaction',
         nameKey: 'Daily Transaction',
         icon: <MdToday />,
+      },
+      {
+        path: '/daily/dailyTransactionList',
+        nameKey: 'Daily Transaction List',
+        icon: <BsListCheck />,
       },
     ],
   },

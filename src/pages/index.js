@@ -25,6 +25,7 @@ export { default as TransferList } from './main/transfer/TransferList';
 export { default as Deposit } from './main/depositWithdraw/Deposit';
 export { default as DepositList } from './main/depositWithdraw/DepositList';
 export { default as Withdraw } from './main/depositWithdraw/Withdraw';
+export { default as WithdrawList } from './main/depositWithdraw/WithdrawList';
 export { default as Consumption } from './main/consumption/Consumption';
 export { default as TransferToAccount } from './main/transferToAccount/TransferToAccount';
 
@@ -37,6 +38,7 @@ export { default as AccountList } from './account/AccountList';
 
 //Daily
 export { default as DailyTransaction } from './daily/DailyTransaction';
+export { default as DailyTransactionList } from './daily/DailyTransactionList';
 
 //login
 export { default as Login } from './Login';

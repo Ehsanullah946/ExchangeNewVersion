@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
-import { BiSolidEdit } from 'react-icons/bi';
+import { BiListPlus, BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
-import Button from '../../../components/layout/Button';
+import Button from '../../components/layout/Button';
 import { Link } from 'react-router-dom';
 import { BsPrinter, BsSearch } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
-import { FaRegArrowAltCircleDown } from 'react-icons/fa';
-const DepositList = () => {
+import { MdToday } from 'react-icons/md';
+
+const DailyTransactionList = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   return (
-    <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
+    <div className="relative overflow-x-auto bg-amber-400 rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
       <div className="flex mt-1 mb-1">
-        <Link to="/main/deposit">
+        <Link to="/daily/dailyTransaction">
           <Button type="primary">
             <span className="flex gap-1">
-              {t('Deposit')} <FaRegArrowAltCircleDown className="mt-1" />
+              {t('Daily Transaction')} <BiListPlus className="mt-1" />
             </span>
           </Button>
         </Link>
@@ -54,10 +55,11 @@ const DepositList = () => {
             <tr>
               <th className="px-3 py-2">{t('Number')}</th>
               <th className="px-3 py-2">{t('Customer')}</th>
-              <th className="px-3 py-2">{t('Amount')}</th>
+              <th className="px-3 py-2">{t('Withdraw')}</th>
+              <th className="px-3 py-2">{t('Deposit')}</th>
               <th className="px-3 py-2">{t('Currency')}</th>
-              <th className="px-3 py-2">{t('Description')}</th>
               <th className="px-3 py-2">{t('Date')}</th>
+              <th className="px-3 py-2">{t('Description')}</th>
               <th className="px-3 py-2">{t('Print')}</th>
               <th className="px-3 py-2">{t('Edit')}</th>
               <th className="px-3 py-2">{t('Delete')}</th>
@@ -68,9 +70,10 @@ const DepositList = () => {
               <td className="px-3 py-2">1</td>
               <td className="px-3 py-2">احسان الله</td>
               <td className="px-3 py-2">30000</td>
+              <td className="px-3 py-2">0</td>
               <td className="px-3 py-2">AFG</td>
-              <td className="px-3 py-2">نقد آورده</td>
               <td className="px-3 py-2">{`${new Date().toLocaleDateString()}`}</td>
+              <td className="px-3 py-2">نقد آورده</td>
               <td className="px-3 py-2">
                 <BsPrinter className="text-lg text-blue-600 cursor-pointer" />
               </td>
@@ -86,4 +89,4 @@ const DepositList = () => {
   );
 };
 
-export default DepositList;
+export default DailyTransactionList;

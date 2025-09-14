@@ -40,8 +40,9 @@ import {
   SenderReceiverAdd,
   TransferList,
   ReceiveList,
-  DespositList,
   DepositList,
+  WithdrawList,
+  DailyTransactionList,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -98,6 +99,7 @@ const App = () => {
                 <Route path="deposit" element={<Deposit />} />
                 <Route path="depositList" element={<DepositList />} />
                 <Route path="withdraw" element={<Withdraw />} />
+                <Route path="withdrawList" element={<WithdrawList />} />
                 <Route path="consumption" element={<Consumption />} />
                 <Route
                   path="transferToAccount"
@@ -110,6 +112,10 @@ const App = () => {
               </Route>
               <Route path="/daily" element={<Daily />}>
                 <Route path="dailyTransaction" element={<DailyTransaction />} />
+                <Route
+                  path="dailyTransactionList"
+                  element={<DailyTransactionList />}
+                />
               </Route>
               <Route path="/rates" element={<Rates />} />
               <Route path="/settings" element={<Settings />}>

@@ -5,17 +5,17 @@ import Button from '../../../components/layout/Button';
 import { Link } from 'react-router-dom';
 import { BsPrinter, BsSearch } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
-import { FaRegArrowAltCircleDown } from 'react-icons/fa';
-const DepositList = () => {
+import { FaRegArrowAltCircleDown, FaRegArrowAltCircleUp } from 'react-icons/fa';
+const WithdrawList = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
-      <div className="flex mt-1 mb-1">
-        <Link to="/main/deposit">
+      <div className="flex mt-1 mb-2 gap-0.2">
+        <Link to="/main/withdraw">
           <Button type="primary">
             <span className="flex gap-1">
-              {t('Deposit')} <FaRegArrowAltCircleDown className="mt-1" />
+              {t('Withdraw')} <FaRegArrowAltCircleUp className="mt-1" />
             </span>
           </Button>
         </Link>
@@ -86,4 +86,4 @@ const DepositList = () => {
   );
 };
 
-export default DepositList;
+export default WithdrawList;
