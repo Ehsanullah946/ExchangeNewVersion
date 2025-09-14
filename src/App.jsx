@@ -16,7 +16,6 @@ import {
   Rates,
   Customers,
   Branches,
-  Exchangers,
   Main,
   Receive,
   Transfer,
@@ -45,6 +44,11 @@ import {
   DailyTransactionList,
   AccountTransaction,
   ConsumptionList,
+  TransferToAccountList,
+  Exchange,
+  Rate,
+  ExchangerList,
+  ExchangerAdd,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -83,7 +87,8 @@ const App = () => {
                 />
                 <Route path="employeeAdd" element={<EmployeeAdd />} />
                 <Route path="employeeList" element={<EmployeeList />} />
-                <Route path="exchanger" element={<Exchangers />} />
+                <Route path="exchangerList" element={<ExchangerList />} />
+                <Route path="exchangerAdd" element={<ExchangerAdd />} />
                 <Route
                   path="senderReceiverList"
                   element={<SenderReceiverList />}
@@ -108,6 +113,10 @@ const App = () => {
                   path="transferToAccount"
                   element={<TransferToAccount />}
                 />
+                <Route
+                  path="transferToAccountList"
+                  element={<TransferToAccountList />}
+                />
               </Route>
               <Route path="/accounts" element={<Accounts />}>
                 <Route path="accountAdd" element={<Account />} />
@@ -124,7 +133,10 @@ const App = () => {
                   element={<DailyTransactionList />}
                 />
               </Route>
-              <Route path="/rates" element={<Rates />} />
+              <Route path="/rates" element={<Rates />}>
+                <Route path="exchange" element={<Exchange />} />
+                <Route path="rate" element={<Rate />} />
+              </Route>
               <Route path="/settings" element={<Settings />}>
                 <Route path="languages" element={<Languages />} />
               </Route>

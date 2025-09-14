@@ -84,7 +84,7 @@ const Accounts = () => {
                   />
                 </div>
 
-                <div className="flex flex-wrap gap-3 mt-3 justify-center sm:justify-start">
+                <div className="flex flex-wrap mt-3 justify-center sm:justify-start">
                   {isActive ? (
                     <>
                       <Button type="primary" htmlType="submit">

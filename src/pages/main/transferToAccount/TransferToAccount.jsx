@@ -1,26 +1,25 @@
 import React, { useState } from 'react';
-import { useStateContext } from '../../../context/contextProvider';
 import Select from 'react-select';
-import { BiChevronDown } from 'react-icons/bi';
 import Button from '../../../components/layout/Button';
 import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
 import { MdCompareArrows } from 'react-icons/md';
-
+import { Link } from 'react-router-dom';
 const TransferToAccount = () => {
-  const { currentColor } = useStateContext();
   const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
   return (
     <>
       <div className="grid justify-center">
-        <div className=" flex mt-1 mb-1">
-          <Button type="primary">
-            <span className="flex justify-between">
-              <BsListCheck className="mt-1 ml-3" />
-              {t('List')}
-            </span>
-          </Button>
+        <div className="flex mt-1 mb-1">
+          <Link to="/main/transferToAccountList">
+            <Button type="primary">
+              <span className="flex justify-between">
+                <BsListCheck className="mt-1 ml-3" />
+                {t('List')}
+              </span>
+            </Button>
+          </Link>
           <Button type="primary">
             <span className="flex justify-between ">
               <BsPrinter className="mt-1 ml-3" /> {t('Print')}
@@ -43,7 +42,7 @@ const TransferToAccount = () => {
         </div>
         <div>
           <form>
-            <div className="font-extrabold bg-blue-400 w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
+            <div className="font-extrabold  bg-gradient-to-b from-[#b34cfd] to-[#6048f9]  w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
               <span className="flex justify-center gap-3 ">
                 {t('Transfer To Account')} <MdCompareArrows className="mt-1" />
               </span>
@@ -99,7 +98,7 @@ const TransferToAccount = () => {
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32 mt-1">{t('Description')}:</label>
                   <textarea
-                    rows="4"
+                    rows="3"
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     placeholder="بشتر ..........."
                   />

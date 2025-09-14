@@ -9,7 +9,8 @@ export { default as Customers } from './managements/customer/Customers';
 export { default as Branches } from './managements/branch/Branches';
 export { default as EmployeeAdd } from './managements/employee/EmployeeAdd';
 export { default as EmployeeList } from './managements/employee/EmployeeList';
-export { default as Exchangers } from './managements/exchanger/Exchangers';
+export { default as ExchangerList } from './managements/exchanger/ExchangerList';
+export { default as ExchangerAdd } from './managements/exchanger/ExchangerAdd';
 export { default as SenderReceiverList } from './managements/senderReceiver/SenderReceiverList';
 export { default as SenderReceiverAdd } from './managements/senderReceiver/SenderReceiverAdd';
 export { default as CustomerAdd } from './managements/customer/CustomerAdd';
@@ -30,6 +31,7 @@ export { default as WithdrawList } from './main/depositWithdraw/WithdrawList';
 export { default as Consumption } from './main/consumption/Consumption';
 export { default as ConsumptionList } from './main/consumption/ConsumptionList';
 export { default as TransferToAccount } from './main/transferToAccount/TransferToAccount';
+export { default as TransferToAccountList } from './main/transferToAccount/TransferToAccountList';
 
 //setting
 export { default as Languages } from './settings/Languages';
@@ -44,3 +46,7 @@ export { default as DailyTransactionList } from './daily/DailyTransactionList';
 
 //login
 export { default as Login } from './Login';
+
+// Rate
+export { default as Exchange } from './rates/Exchange';
+export { default as Rate } from './rates/Rate';

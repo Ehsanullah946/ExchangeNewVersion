@@ -10,12 +10,17 @@ import {
   MdAccountTree,
   MdCompareArrows,
   MdManageAccounts,
+  MdRateReview,
   MdToday,
 } from 'react-icons/md';
 import { BiTransferAlt } from 'react-icons/bi';
 import { BiCog } from 'react-icons/bi';
 import { AiFillHome, AiOutlineDashboard, AiOutlineRise } from 'react-icons/ai';
-import { RiDownloadLine, RiSendPlaneLine } from 'react-icons/ri';
+import {
+  RiDownloadLine,
+  RiExchange2Fill,
+  RiSendPlaneLine,
+} from 'react-icons/ri';
 import { FiUser, FiUsers } from 'react-icons/fi';
 import { GiPayMoney } from 'react-icons/gi';
 import { BsListCheck, BsViewList } from 'react-icons/bs';
@@ -84,7 +89,7 @@ export const routes = [
         icon: <FaUserTie />,
       },
       {
-        path: '/management/exchanger',
+        path: '/management/exchangerList',
         nameKey: 'Exchanger',
         icon: <FaUser />,
       },
@@ -112,15 +117,28 @@ export const routes = [
       },
     ],
   },
-  {
-    path: 'accounts/accountList',
-    nameKey: 'Account',
-    icon: <FiUser />,
-  },
+
   {
     path: '/rates',
     nameKey: 'Rates',
     icon: <AiOutlineRise />,
+    subRoutes: [
+      {
+        path: '/rates/Exchange',
+        nameKey: 'Exchange',
+        icon: <RiExchange2Fill />,
+      },
+      {
+        path: '/rates/rate',
+        nameKey: 'Rates',
+        icon: <MdRateReview />,
+      },
+    ],
+  },
+  {
+    path: 'accounts/accountList',
+    nameKey: 'Account',
+    icon: <FiUser />,
   },
   {
     path: '/settings',
