@@ -20,6 +20,7 @@ export { default as BranchAdd } from './managements/branch/BranchAdd';
 /// main route
 export { default as Receive } from './main/receive/Receive';
 export { default as Transfer } from './main/transfer/Transfer';
+export { default as TransferList } from './main/transfer/TransferList';
 export { default as Deposit } from './main/depositWithdraw/Deposit';
 export { default as Withdraw } from './main/depositWithdraw/Withdraw';
 export { default as Consumption } from './main/consumption/Consumption';

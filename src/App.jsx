@@ -38,6 +38,7 @@ import {
   EmployeeList,
   SenderReceiverList,
   SenderReceiverAdd,
+  TransferList,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -89,6 +90,7 @@ const App = () => {
               <Route path="/main" element={<Main />}>
                 <Route path="receive" element={<Receive />} />
                 <Route path="transfer" element={<Transfer />} />
+                <Route path="transferList" element={<TransferList />} />
                 <Route path="deposit" element={<Deposit />} />
                 <Route path="withdraw" element={<Withdraw />} />
                 <Route path="consumption" element={<Consumption />} />

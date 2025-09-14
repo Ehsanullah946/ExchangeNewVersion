@@ -36,7 +36,7 @@ const SenderReceiverAdd = () => {
           <form>
             <div className="font-extrabold bg-gradient-to-b from-[#b34cfd] to-[#6048f9] p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
               <span className="flex justify-center gap-3 ">
-                {t('Add New Employee')} <RiUserAddFill className="mt-1" />
+                {t('Add New SenderReceiver')} <RiUserAddFill className="mt-1" />
               </span>
             </div>
 
