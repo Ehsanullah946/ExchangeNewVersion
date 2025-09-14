@@ -14,6 +14,7 @@ export { default as SenderReceiverList } from './managements/senderReceiver/Send
 export { default as SenderReceiverAdd } from './managements/senderReceiver/SenderReceiverAdd';
 export { default as CustomerAdd } from './managements/customer/CustomerAdd';
 export { default as CustomerTransactions } from './managements/customer/CustomerTransactions';
+export { default as AccountTransaction } from './account/AccountTransaction';
 export { default as BranchTransaction } from './managements/branch/BranchTransaction';
 export { default as BranchAdd } from './managements/branch/BranchAdd';
 

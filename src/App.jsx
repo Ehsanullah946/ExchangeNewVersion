@@ -43,6 +43,7 @@ import {
   DepositList,
   WithdrawList,
   DailyTransactionList,
+  AccountTransaction,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -109,6 +110,10 @@ const App = () => {
               <Route path="/accounts" element={<Accounts />}>
                 <Route path="accountAdd" element={<Account />} />
                 <Route path="accountList" element={<AccountList />} />
+                <Route
+                  path="account/:id/transactions"
+                  element={<AccountTransaction />}
+                />
               </Route>
               <Route path="/daily" element={<Daily />}>
                 <Route path="dailyTransaction" element={<DailyTransaction />} />

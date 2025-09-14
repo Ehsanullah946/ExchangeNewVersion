@@ -85,7 +85,7 @@ const AccountList = () => {
               <td className="px-3 py-2">AFG</td>
               <td className="px-3 py-2">{`${new Date().toLocaleDateString()}`}</td>
               <td className="px-3 py-2">
-                <Link to={`/management/customer/1/transactions`}>
+                <Link to={`/accounts/account/1/transactions`}>
                   <Button type="primary">{t('Transactions')}</Button>
                 </Link>
               </td>

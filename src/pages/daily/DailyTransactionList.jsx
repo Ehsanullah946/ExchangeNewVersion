@@ -11,7 +11,7 @@ const DailyTransactionList = () => {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   return (
-    <div className="relative overflow-x-auto bg-amber-400 rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
+    <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
       <div className="flex mt-1 mb-1">
         <Link to="/daily/dailyTransaction">
           <Button type="primary">
