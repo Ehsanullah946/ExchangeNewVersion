@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { useStateContext } from '../../../context/contextProvider';
 import Select from 'react-select';
-import { BiChevronDown } from 'react-icons/bi';
 import Button from '../../../components/layout/Button';
 import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
 
@@ -9,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { FaRegArrowAltCircleDown } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 const Deposit = () => {
-  const { currentColor } = useStateContext();
   const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
   return (

@@ -58,7 +58,7 @@ export const routes = [
       },
       {
         path: '/main/transferToAccount',
-        nameKey: 'TransferToAccount',
+        nameKey: 'Transfer To Account',
         icon: <MdCompareArrows />,
       },
     ],

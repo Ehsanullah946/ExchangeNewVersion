@@ -28,6 +28,7 @@ export { default as DepositList } from './main/depositWithdraw/DepositList';
 export { default as Withdraw } from './main/depositWithdraw/Withdraw';
 export { default as WithdrawList } from './main/depositWithdraw/WithdrawList';
 export { default as Consumption } from './main/consumption/Consumption';
+export { default as ConsumptionList } from './main/consumption/ConsumptionList';
 export { default as TransferToAccount } from './main/transferToAccount/TransferToAccount';
 
 //setting
