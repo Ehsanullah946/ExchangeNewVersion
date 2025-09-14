@@ -39,6 +39,7 @@ import {
   SenderReceiverList,
   SenderReceiverAdd,
   TransferList,
+  ReceiveList,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -89,6 +90,7 @@ const App = () => {
               </Route>
               <Route path="/main" element={<Main />}>
                 <Route path="receive" element={<Receive />} />
+                <Route path="receiveList" element={<ReceiveList />} />
                 <Route path="transfer" element={<Transfer />} />
                 <Route path="transferList" element={<TransferList />} />
                 <Route path="deposit" element={<Deposit />} />

@@ -17,21 +17,21 @@ const Transfer = () => {
       <div className="grid justify-center">
         <div className=" flex mt-1 mb-1">
           <Link to="/main/transferList">
-            <Button type="secondry">
+            <Button type="primary">
               <span className="flex justify-between">
                 <BsListCheck className="mt-1 ml-3" />
                 {t('List')}
               </span>
             </Button>
           </Link>
-          <Button type="secondry">
+          <Button type="primary">
             <span className="flex justify-between ">
               <BsPrinter className="mt-1 ml-3" /> {t('Print')}
             </span>
           </Button>
-          <Button type="secondry">
+          <Button type="primary">
             <span className="flex justify-between ">
-              <BsSearch className="mt-1 ml-3" /> {t('Search')}
+              <BsSearch className="mt-1 ml-3" /> {t('Limit Search')}
             </span>
           </Button>
           <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
@@ -214,7 +214,7 @@ const Transfer = () => {
                 </div>
 
                 <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('Account')}:</label>
+                  <label className="sm:w-32">{t('Customer')}:</label>
                   <Select
                     className="w-full shadow-sm"
                     name="branch"
@@ -223,7 +223,7 @@ const Transfer = () => {
                   />
                 </div>
                 <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('Account')}:</label>
+                  <label className="sm:w-32">{t('Exchange')}:</label>
                   <Select
                     className="w-full shadow-sm"
                     name="branch"
