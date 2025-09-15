@@ -21,23 +21,32 @@ const BranchAdd = () => {
       <div className="grid justify-center">
         <div className=" flex mt-1 mb-1">
           <Link to="/management/branch">
-            <Button type="secondry">
+            <Button type="primary">
               <span className="flex justify-between">
                 <BsListCheck className="mt-1 ml-3" />
                 {t('List')}
               </span>
             </Button>
           </Link>
-          <Button type="secondry">
+          <Button type="primary">
             <span className="flex justify-between ">
               <BsPrinter className="mt-1 ml-3" /> {t('Print')}
             </span>
           </Button>
-          <Button type="secondry">
+          <Button type="primary">
             <span className="flex justify-between ">
               <BsSearch className="mt-1 ml-3" /> {t('Search')}
             </span>
           </Button>
+          <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
+            <input
+              type="text"
+              name="text"
+              id="input"
+              placeholder={t('Search')}
+              class="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+            />
+          </div>
         </div>
         <div>
           <form>
