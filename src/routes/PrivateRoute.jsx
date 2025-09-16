@@ -1,14 +1,15 @@
-import { Navigate, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Navigate } from 'react-router-dom';
 import ProtectedLayout from '../components/layout/ProtectedLayout';
+import { useSelector } from 'react-redux';
 
 export default function PrivateRoute({ roles }) {
-  const { user, loading } = useAuth();
+  const { isAuthenticated, user, loading } = useSelector((state) => state.auth);
 
-  if (loading) return <div>loading....</div>;
-  if (!user) return <Navigate to="/login" replace />;
+  if (loading) return <div>Loading...</div>;
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
 
-  if (roles && !roles.includes(user.role)) {
+  // Role-based protection
+  if (roles && !roles.includes(user?.role)) {
     return <Navigate to="/" replace />;
   }
 
