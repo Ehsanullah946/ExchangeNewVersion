@@ -4,6 +4,9 @@ import { RiNotification3Line } from 'react-icons/ri';
 import { MdKeyboardArrowDown } from 'react-icons/md';
 import avatar from '../../data/admin.jpg';
 
+import { useLogout } from '../../hooks/useAuth.js';
+import { useSelector } from 'react-redux';
+
 import NotificationPanel from './NotificationPanel.jsx';
 import Message from './Message.jsx';
 import UserProfile from './UserProfile.jsx';
@@ -25,6 +28,8 @@ const NavButton = ({ title, customeFunc, icon, color, dotColor }) => {
 };
 
 const Navbar = () => {
+  const logout = useLogout();
+  const { user } = useSelector((state) => state.auth);
   const { handleClick, isClicked, currentColor } = useStateContext();
   return (
     <div className="flex justify-end p-1 md:mx-6 relative bg-gray-50 z-50">
@@ -43,6 +48,7 @@ const Navbar = () => {
           color="blue"
           icon={<RiNotification3Line />}
         />
+        <button onClick={logout}>logout</button>
 
         <div
           className="flex items-center gap-2 cursor-pointer p-1 hover:bg-light-gray rounded-lg"
@@ -50,8 +56,10 @@ const Navbar = () => {
         >
           <img src={avatar} alt="" className="rounded-full h-8 w-8 " />
           <p>
-            <span className="text-gray-400 text-14">Hi, </span>{' '}
-            <span className="text-gray-400 text-14 font-bold">Ehsanullah</span>
+            <span className="text-gray-400 text-14">Hi,</span>{' '}
+            <span className="text-gray-400 text-14 font-bold">
+              {user?.username}
+            </span>
           </p>
           <MdKeyboardArrowDown />
         </div>

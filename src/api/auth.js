@@ -6,5 +6,5 @@ export const loginUser = async (credentials) => {
 };
 
 export const logoutUser = () => {
-  return true;
+  return axiosClient.post('/auth/logout');
 };
