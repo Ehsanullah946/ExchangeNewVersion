@@ -6,73 +6,27 @@ import Button from '../../../components/layout/Button';
 import { Link } from 'react-router-dom';
 import { PulseLoader } from 'react-spinners';
 import { useCustomers } from '../../../hooks/useCustomers';
-import { useSelector, useDispatch } from 'react-redux';
 const Customers = () => {
   const { t } = useTranslation();
-  const { data: customers } = useCustomers();
+  const [search, setSearch] = useState('');
+  const [phone, setPhone] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
 
-  const dispatch = useDispatch();
-  // const [customers, setCustomers] = useState([
-  //   { id: 1, firstName: 'Ehsan', lastName: 'Akbari', phone: '0790686384' },
-  //   { id: 2, firstName: 'Ahmad', lastName: 'Amiri', phone: '0790686384' },
-  //   { id: 3, firstName: 'Ali', lastName: 'Hosaini', phone: '0794324323' },
-  //   { id: 4, firstName: 'kamal', lastName: 'Jamali', phone: '07903243243' },
-  //   { id: 5, firstName: 'Mahmod', lastName: 'Safari', phone: '0793243244' },
-  // ]);
-  // const [search, setSearch] = useState(''); // search query
-  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedSearch(search), 500); // 500ms delay
+    return () => clearTimeout(handler);
+  }, [search]);
 
-  // Fetch customers
-  // const fetchCustomers = async (query = '') => {
-  //   setLoading(true);
-  //   try {
-  //     const res = await axios.get(`http://localhost:3000/api/v1/customer`, {
-  //       params: { search: query },
-  //     });
-  //     const result = Array.isArray(res.data) ? res.data : res.data.data || [];
-  //     setCustomers(result);
-  //   } catch (err) {
-  //     console.error('Error fetching customers:', err);
-  //     // keep default instead of clearing
-  //     if (query === '') {
-  //       setCustomers([
-  //         {
-  //           id: 1,
-  //           firstName: 'Ehsan',
-  //           lastName: 'Akbari',
-  //           phone: '0790686384',
-  //         },
-  //         { id: 2, firstName: 'Ahmad', lastName: 'Amiri', phone: '0790686384' },
-  //         { id: 3, firstName: 'Ali', lastName: 'Hosaini', phone: '0794324323' },
-  //         {
-  //           id: 4,
-  //           firstName: 'kamal',
-  //           lastName: 'Jamali',
-  //           phone: '07903243243',
-  //         },
-  //         {
-  //           id: 5,
-  //           firstName: 'Mahmod',
-  //           lastName: 'Safari',
-  //           phone: '0793243244',
-  //         },
-  //       ]);
-  //     } else {
-  //       setCustomers([]);
-  //     }
-  //   }
-  //   setLoading(false);
-  // };
+  const [debouncedPhone, setDebouncedPhone] = useState(phone);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedPhone(phone), 500);
+    return () => clearTimeout(handler);
+  }, [phone]);
 
-  // useEffect(() => {
-  //   fetchCustomers('');
-  // }, []);
-
-  // const handleSearch = (e) => {
-  //   const value = e.target.value;
-  //   setSearch(value);
-  //   fetchCustomers(value);
-  // };
+  const { data: customers, isLoading } = useCustomers(
+    debouncedSearch,
+    debouncedPhone
+  );
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
@@ -81,18 +35,24 @@ const Customers = () => {
         <Link to="/management/customerAdd">
           <Button type="primary">{t('Add New Customer')}</Button>
         </Link>
-
-        {/* <input
+        <input
           type="text"
           placeholder={t('Search')}
           value={search}
-          onChange={handleSearch}
+          onChange={(e) => setSearch(e.target.value)}
           className="border rounded px-1 py-1 flex-1"
-        /> */}
+        />
+        <input
+          type="text"
+          placeholder="Phone"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          className="border rounded px-1 py-1 flex-1"
+        />
       </div>
 
       {/* Table */}
-      {loading ? (
+      {isLoading ? (
         <p className="p-4">
           {
             <PulseLoader
