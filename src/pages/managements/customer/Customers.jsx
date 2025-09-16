@@ -5,70 +5,74 @@ import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
 import { Link } from 'react-router-dom';
 import { PulseLoader } from 'react-spinners';
-
+import { useCustomers } from '../../../hooks/useCustomers';
+import { useSelector, useDispatch } from 'react-redux';
 const Customers = () => {
   const { t } = useTranslation();
-  const [customers, setCustomers] = useState([
-    { id: 1, firstName: 'Ehsan', lastName: 'Akbari', phone: '0790686384' },
-    { id: 2, firstName: 'Ahmad', lastName: 'Amiri', phone: '0790686384' },
-    { id: 3, firstName: 'Ali', lastName: 'Hosaini', phone: '0794324323' },
-    { id: 4, firstName: 'kamal', lastName: 'Jamali', phone: '07903243243' },
-    { id: 5, firstName: 'Mahmod', lastName: 'Safari', phone: '0793243244' },
-  ]);
-  const [search, setSearch] = useState(''); // search query
+  const { data: customers } = useCustomers();
+
+  const dispatch = useDispatch();
+  // const [customers, setCustomers] = useState([
+  //   { id: 1, firstName: 'Ehsan', lastName: 'Akbari', phone: '0790686384' },
+  //   { id: 2, firstName: 'Ahmad', lastName: 'Amiri', phone: '0790686384' },
+  //   { id: 3, firstName: 'Ali', lastName: 'Hosaini', phone: '0794324323' },
+  //   { id: 4, firstName: 'kamal', lastName: 'Jamali', phone: '07903243243' },
+  //   { id: 5, firstName: 'Mahmod', lastName: 'Safari', phone: '0793243244' },
+  // ]);
+  // const [search, setSearch] = useState(''); // search query
   const [loading, setLoading] = useState(false);
 
   // Fetch customers
-  const fetchCustomers = async (query = '') => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`http://localhost:3000/api/v1/customer`, {
-        params: { search: query },
-      });
-      const result = Array.isArray(res.data) ? res.data : res.data.data || [];
-      setCustomers(result);
-    } catch (err) {
-      console.error('Error fetching customers:', err);
-      // keep default instead of clearing
-      if (query === '') {
-        setCustomers([
-          {
-            id: 1,
-            firstName: 'Ehsan',
-            lastName: 'Akbari',
-            phone: '0790686384',
-          },
-          { id: 2, firstName: 'Ahmad', lastName: 'Amiri', phone: '0790686384' },
-          { id: 3, firstName: 'Ali', lastName: 'Hosaini', phone: '0794324323' },
-          {
-            id: 4,
-            firstName: 'kamal',
-            lastName: 'Jamali',
-            phone: '07903243243',
-          },
-          {
-            id: 5,
-            firstName: 'Mahmod',
-            lastName: 'Safari',
-            phone: '0793243244',
-          },
-        ]);
-      } else {
-        setCustomers([]);
-      }
-    }
-    setLoading(false);
-  };
+  // const fetchCustomers = async (query = '') => {
+  //   setLoading(true);
+  //   try {
+  //     const res = await axios.get(`http://localhost:3000/api/v1/customer`, {
+  //       params: { search: query },
+  //     });
+  //     const result = Array.isArray(res.data) ? res.data : res.data.data || [];
+  //     setCustomers(result);
+  //   } catch (err) {
+  //     console.error('Error fetching customers:', err);
+  //     // keep default instead of clearing
+  //     if (query === '') {
+  //       setCustomers([
+  //         {
+  //           id: 1,
+  //           firstName: 'Ehsan',
+  //           lastName: 'Akbari',
+  //           phone: '0790686384',
+  //         },
+  //         { id: 2, firstName: 'Ahmad', lastName: 'Amiri', phone: '0790686384' },
+  //         { id: 3, firstName: 'Ali', lastName: 'Hosaini', phone: '0794324323' },
+  //         {
+  //           id: 4,
+  //           firstName: 'kamal',
+  //           lastName: 'Jamali',
+  //           phone: '07903243243',
+  //         },
+  //         {
+  //           id: 5,
+  //           firstName: 'Mahmod',
+  //           lastName: 'Safari',
+  //           phone: '0793243244',
+  //         },
+  //       ]);
+  //     } else {
+  //       setCustomers([]);
+  //     }
+  //   }
+  //   setLoading(false);
+  // };
 
-  useEffect(() => {
-    fetchCustomers('');
-  }, []);
+  // useEffect(() => {
+  //   fetchCustomers('');
+  // }, []);
 
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearch(value);
-    fetchCustomers(value);
-  };
+  // const handleSearch = (e) => {
+  //   const value = e.target.value;
+  //   setSearch(value);
+  //   fetchCustomers(value);
+  // };
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
@@ -78,13 +82,13 @@ const Customers = () => {
           <Button type="primary">{t('Add New Customer')}</Button>
         </Link>
 
-        <input
+        {/* <input
           type="text"
           placeholder={t('Search')}
           value={search}
           onChange={handleSearch}
           className="border rounded px-1 py-1 flex-1"
-        />
+        /> */}
       </div>
 
       {/* Table */}
@@ -114,7 +118,7 @@ const Customers = () => {
             </tr>
           </thead>
           <tbody>
-            {customers.map((c, index) => (
+            {customers?.map((c, index) => (
               <tr
                 key={c.id}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
