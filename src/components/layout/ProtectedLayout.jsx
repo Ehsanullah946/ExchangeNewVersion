@@ -2,6 +2,7 @@
 import SideBar from './SideBar';
 import Navbar from './Navbar';
 import { Outlet } from 'react-router-dom';
+import Toast from '../common/Toast';
 
 const ProtectedLayout = () => {
   return (
@@ -9,6 +10,7 @@ const ProtectedLayout = () => {
       <SideBar />
       <div className="flex-1">
         <Navbar />
+        <Toast />
         <Outlet />
       </div>
     </div>

@@ -56,7 +56,6 @@ import PageNotF from './components/common/PageNotF';
 import { ContextProvider } from './context/contextProvider.jsx';
 import PrivateRoute from './routes/PrivateRoute.jsx';
 import ProtectedLayout from './components/layout/ProtectedLayout.jsx';
-// import { AuthProvider } from './context/AuthContext.jsx';
 
 const App = () => {
   return (

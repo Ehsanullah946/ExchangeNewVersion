@@ -12,10 +12,11 @@ import { useTranslation } from 'react-i18next';
 import { RiMailFill, RiSendPlaneLine } from 'react-icons/ri';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCreateCustomer } from '../../../hooks/useCustomers';
+import { useToast } from '../../../hooks/useToast';
 
 const CustomerAdd = () => {
   const { t } = useTranslation();
-  const [isActive, setIsActive] = useState(true); // Set to true by default for adding
+  const [isActive, setIsActive] = useState(true);
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -28,75 +29,98 @@ const CustomerAdd = () => {
     job: '',
     language: '',
     loanLimit: '',
-    whatsAppEnabled: false, // Changed to boolean
-    telegramEnabled: false, // Changed to boolean
-    emailEnabled: false, // Changed to boolean
+    whatsAppEnabled: false,
+    telegramEnabled: false,
+    emailEnabled: false,
     whatsApp: '',
     telegram: '',
     email: '',
   });
 
   const { mutate, isLoading, error } = useCreateCustomer();
+  const toast = useToast();
   const navigate = useNavigate();
+  const [backendError, setBackendError] = useState('');
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm({
-      ...form,
+    setForm((prev) => ({
+      ...prev,
       [name]: type === 'checkbox' ? checked : value,
-    });
+    }));
   };
-  const [backendError, setBackendError] = useState('');
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setBackendError('');
 
-    // Prepare data for backend
+    const validateForm = () => {
+      const errors = {};
+
+      if (!form.firstName.trim()) errors.firstName = t('firstNameRequired');
+      if (!form.lastName.trim()) errors.lastName = t('lastNameRequired');
+      if (form.phone && !/^[\d\s\-\+\(\)]{10,15}$/.test(form.phone)) {
+        errors.phone = t('invalidPhoneFormat');
+      }
+      return errors;
+    };
+
     const submitData = {
-      firstName: form.firstName,
-      lastName: form.lastName,
-      fatherName: form.fatherName,
-      nationalCode: form.nationalCode,
-      phone: form.phone,
-      currentAddress: form.currentAddress,
-      permanentAddress: form.permanentAddress,
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      fatherName: form.fatherName.trim(),
+      nationalCode: form.nationalCode.trim(),
+      phone: form.phone.trim(),
+      currentAddress: form.currentAddress.trim(),
+      permanentAddress: form.permanentAddress.trim(),
       maritalStatus: form.maritalStatus,
-      job: form.job,
+      job: form.job.trim(),
       language: form.language,
-      loanLimit: parseFloat(form.loanLimit) || 0, // Convert to number
+      loanLimit: parseFloat(form.loanLimit) || 0,
       whatsAppEnabled: form.whatsAppEnabled,
       telegramEnabled: form.telegramEnabled,
       emailEnabled: form.emailEnabled,
-      // Only include these if they have values
-      ...(form.whatsApp && { whatsApp: form.whatsApp }),
-      ...(form.telegram && { telegram: form.telegram }),
-      ...(form.email && { email: form.email }),
+      whatsApp: form.whatsApp.trim(),
+      telegram: form.telegram.trim(),
+      email: form.email.trim(),
     };
 
+    // Remove empty strings
     const cleanData = Object.fromEntries(
-      Object.entries(submitData).filter(([_, v]) => v !== '')
+      Object.entries(submitData).filter(
+        ([_, v]) => v !== '' && v !== null && v !== undefined
+      )
     );
 
-    console.log('Submitting data:', submitData); // Debug log
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      toast.error(t('fixErrors') + '\n' + Object.values(errors).join('\n'));
+      return;
+    }
+
+    console.log('Submitting data:', cleanData);
 
     mutate(cleanData, {
       onSuccess: () => {
-        navigate('/management/customer');
+        toast.success(t('customerCreated'));
+        setTimeout(() => navigate('/management/customer'), 1000);
       },
       onError: (error) => {
         console.error('Backend error:', error);
+        let errorMessage = t('createCustomerFailed');
 
-        // Display detailed error message
         if (error.response?.data?.message) {
-          setBackendError(error.response.data.message);
+          errorMessage = error.response.data.message;
 
-          // Show specific error details
-          if (error.response.data.details) {
-            console.error('Error details:', error.response.data.details);
+          if (error.response.data.message.includes('duplicate')) {
+            errorMessage = t('customerDuplicate');
+          } else if (error.response.data.message.includes('validation')) {
+            errorMessage = t('invalidInputData');
           }
-        } else {
-          setBackendError('Failed to create customer. Please try again.');
         }
+
+        toast.error(errorMessage);
+        setBackendError(errorMessage);
       },
     });
   };
@@ -169,7 +193,7 @@ const CustomerAdd = () => {
                     name="lastName"
                     value={form.lastName}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    className="w-full border border-gray-300 shadow-sm text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
@@ -181,7 +205,7 @@ const CustomerAdd = () => {
                     name="fatherName"
                     value={form.fatherName}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                   />
                 </div>
 
@@ -191,13 +215,13 @@ const CustomerAdd = () => {
                     name="maritalStatus"
                     value={form.maritalStatus}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                   >
                     <option value="">Select Status</option>
-                    <option value="single">Single</option>
-                    <option value="married">Married</option>
-                    <option value="divorced">Divorced</option>
-                    <option value="widowed">Widowed</option>
+                    <option value={t('single')}>{t('single')}</option>
+                    <option value={t('married')}>{t('married')}</option>
+                    <option value={t('divorced')}>{t('divorced')}</option>
+                    <option value={t('widowed')}>{t('widowed')}</option>
                   </select>
                 </div>
 
@@ -208,7 +232,7 @@ const CustomerAdd = () => {
                     name="job"
                     value={form.job}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                   />
                 </div>
 
@@ -219,7 +243,7 @@ const CustomerAdd = () => {
                     name="loanLimit"
                     value={form.loanLimit}
                     onChange={handleChange}
-                    className="w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                   />
                 </div>
               </div>
