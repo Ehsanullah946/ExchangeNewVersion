@@ -46,9 +46,10 @@ const CustomerAdd = () => {
       [name]: type === 'checkbox' ? checked : value,
     });
   };
-
+  const [backendError, setBackendError] = useState('');
   const handleSubmit = (e) => {
     e.preventDefault();
+    setBackendError('');
 
     // Prepare data for backend
     const submitData = {
@@ -72,14 +73,30 @@ const CustomerAdd = () => {
       ...(form.email && { email: form.email }),
     };
 
+    const cleanData = Object.fromEntries(
+      Object.entries(submitData).filter(([_, v]) => v !== '')
+    );
+
     console.log('Submitting data:', submitData); // Debug log
 
-    mutate(submitData, {
+    mutate(cleanData, {
       onSuccess: () => {
-        navigate('/management/customers');
+        navigate('/management/customer');
       },
       onError: (error) => {
-        console.error('Mutation error:', error);
+        console.error('Backend error:', error);
+
+        // Display detailed error message
+        if (error.response?.data?.message) {
+          setBackendError(error.response.data.message);
+
+          // Show specific error details
+          if (error.response.data.details) {
+            console.error('Error details:', error.response.data.details);
+          }
+        } else {
+          setBackendError('Failed to create customer. Please try again.');
+        }
       },
     });
   };
@@ -88,7 +105,7 @@ const CustomerAdd = () => {
     <>
       <div className="grid justify-center">
         <div className="flex mt-1 mb-1">
-          <Link to="/management/customers">
+          <Link to="/management/customer">
             <Button type="primary">
               <span className="flex justify-between">
                 <BsListCheck className="mt-1 ml-3" />
