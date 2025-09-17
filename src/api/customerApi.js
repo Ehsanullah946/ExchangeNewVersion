@@ -1,9 +1,14 @@
 import axiosClient from './axiosClient';
 
 export const getCustomer = async (filters) => {
-  console.log('API call with filters:', filters); 
+  console.log('API call with filters:', filters);
   const params = new URLSearchParams(filters).toString();
   const { data } = await axiosClient.get(`/customer?${params}`);
-  console.log('API response:', data); 
+  console.log('API response:', data);
+  return data;
+};
+
+export const createCustomer = async (payload) => {
+  const { data } = await axiosClient.post('/customer', payload);
   return data;
 };
