@@ -10,6 +10,7 @@ const Customers = () => {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [phone, setPhone] = useState('');
+  const [open, setOpen] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
   useEffect(() => {
@@ -30,25 +31,36 @@ const Customers = () => {
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
+      {open && (
+        <div className="flex gap-2">
+          <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
+            <input
+              type="text"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+            />
+          </div>
+        </div>
+      )}
       {/* Search + Add button */}
       <div className="flex mt-1 mb-2">
         <Link to="/management/customerAdd">
           <Button type="primary">{t('Add New Customer')}</Button>
         </Link>
-        <input
-          type="text"
-          placeholder={t('Search')}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border rounded px-1 py-1 flex-1"
-        />
-        <input
-          type="text"
-          placeholder="Phone"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          className="border rounded px-1 py-1 flex-1"
-        />
+        <Button onClick={() => setOpen(!open)} type="primary">
+          {t('Limit Search')}
+        </Button>
+        <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
+          <input
+            type="text"
+            placeholder={t('Search By Name')}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+          />
+        </div>
       </div>
 
       {/* Table */}

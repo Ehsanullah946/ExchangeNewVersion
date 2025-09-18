@@ -121,5 +121,12 @@
   "Transaction No": "نمبر حواله",
   "Email Address": "ایمل",
   "Telegram": "تلیگرام",
-  "Limit Search": "محدوده جستجو"
+  "Limit Search": "محدوده جستجو",
+  "createCustomerFailed": "مشتری ساخته نشد! لطفا دوباره امتحان کنید",
+  "customerDuplicate": "نمبر تذکره ویا شماره تماس قبلا موجود است لطفا جدید وارد کنید",
+  "invalidInputData": "لطفا معلومات وارد شده را دوباره چک کنید!",
+  "firstNameRequired": "لطفا اسم را وارد کنید!",
+  "lastNameRequired": "لطفا تخلص را وارد کنید",
+  "fix Errors": "خطا!!!",
+  "Search By Name": "جستجو به اساس نام"
 }

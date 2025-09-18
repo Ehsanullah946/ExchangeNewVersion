@@ -32,6 +32,7 @@ const CustomerAdd = () => {
     whatsAppEnabled: false,
     telegramEnabled: false,
     emailEnabled: false,
+    phoneEnabled: false,
     whatsApp: '',
     telegram: '',
     email: '',
@@ -80,6 +81,7 @@ const CustomerAdd = () => {
       whatsAppEnabled: form.whatsAppEnabled,
       telegramEnabled: form.telegramEnabled,
       emailEnabled: form.emailEnabled,
+      phoneEnabled: form.phoneEnabled,
       whatsApp: form.whatsApp.trim(),
       telegram: form.telegram.trim(),
       email: form.email.trim(),
@@ -94,7 +96,7 @@ const CustomerAdd = () => {
 
     const errors = validateForm();
     if (Object.keys(errors).length > 0) {
-      toast.error(t('fixErrors') + '\n' + Object.values(errors).join('\n'));
+      toast.error(t('fix Errors') + '\n' + Object.values(errors).join('\n'));
       return;
     }
 
@@ -300,8 +302,15 @@ const CustomerAdd = () => {
 
               {/* Right Column - Contact Info */}
               <div className="w-full space-y-1 p-2">
-                <div className="flex gap-2 flex-wrap md:flex-nowrap justify-between">
-                  <label className="sm:w-32 mt-1">{t('PhoneNo')}:</label>
+                <div className="flex gap-2 flex-wrap md:flex-nowrap items-center justify-between">
+                  <label className="sm:w-10">{t('PhoneNo')}:</label>
+                  <input
+                    name="phoneEnabled"
+                    checked={form.phoneEnabled}
+                    onChange={handleChange}
+                    type="checkbox"
+                    className="w-4 h-4 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
+                  />
                   <div className="relative flex-1">
                     <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3 pointer-events-none">
                       <BsPhone />
@@ -319,7 +328,7 @@ const CustomerAdd = () => {
                 </div>
 
                 <div className="flex gap-2 flex-wrap md:flex-nowrap justify-between items-center">
-                  <label className="sm:w-32">{t('WhatsApp')}:</label>
+                  <label className="sm:w-10">{t('WhatsApp')}:</label>
                   <input
                     name="whatsAppEnabled"
                     checked={form.whatsAppEnabled}
@@ -343,7 +352,7 @@ const CustomerAdd = () => {
                 </div>
 
                 <div className="flex gap-2 flex-wrap md:flex-nowrap justify-between items-center">
-                  <label className="sm:w-32">{t('Email')}:</label>
+                  <label className="sm:w-10">{t('Email')}:</label>
                   <input
                     name="emailEnabled"
                     checked={form.emailEnabled}
@@ -367,7 +376,7 @@ const CustomerAdd = () => {
                 </div>
 
                 <div className="flex gap-2 flex-wrap md:flex-nowrap justify-between items-center">
-                  <label className="sm:w-32">{t('Telegram')}:</label>
+                  <label className="sm:w-10">{t('Telegram')}:</label>
                   <input
                     name="telegramEnabled"
                     checked={form.telegramEnabled}
