@@ -6,24 +6,33 @@ import { Link } from 'react-router-dom';
 import { PulseLoader } from 'react-spinners';
 import { useBranch } from '../../../hooks/useBranch';
 import { BiSolidDetail, BiSolidEdit } from 'react-icons/bi';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setDebouncedPhone,
+  setDebouncedSearch,
+  toggleOpen,
+  setSearch,
+  setPhone,
+} from '../../../features/ui/filterSlice';
 
 const Branches = () => {
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState('');
-  const [phone, setPhone] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState(search);
+
+  const dispatch = useDispatch();
+
+  const { debouncedPhone, debouncedSearch, phone, search, open } = useSelector(
+    (state) => state.filters
+  );
 
   useEffect(() => {
-    const handler = setTimeout(() => setDebouncedSearch(search), 500);
+    const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
     return () => clearTimeout(handler);
-  }, [search]);
+  }, [search, dispatch]);
 
-  const [debouncedPhone, setDebouncedPhone] = useState(phone);
   useEffect(() => {
-    const handler = setTimeout(() => setDebouncedPhone(phone), 500);
+    const handler = setTimeout(() => dispatch(setDebouncedPhone(phone)), 500);
     return () => clearTimeout(handler);
-  }, [phone]);
+  }, [phone, dispatch]);
 
   const {
     data: branches = [],
@@ -42,7 +51,7 @@ const Branches = () => {
               type="text"
               placeholder="Phone"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => dispatch(setPhone(e.target.value))}
               className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
             />
           </div>
@@ -53,7 +62,7 @@ const Branches = () => {
         <Link to="/management/branchAdd">
           <Button type="primary">{t('Add New Branch')}</Button>
         </Link>
-        <Button onClick={() => setOpen(!open)} type="primary">
+        <Button onClick={() => toggleOpen(!open)} type="primary">
           {t('Limit Search')}
         </Button>
         <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
@@ -61,7 +70,7 @@ const Branches = () => {
             type="text"
             placeholder={t('Search By Name')}
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => dispatch(setSearch(e.target.value))}
             className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
           />
         </div>

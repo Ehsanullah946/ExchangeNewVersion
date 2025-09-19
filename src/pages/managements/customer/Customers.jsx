@@ -6,29 +6,42 @@ import { PulseLoader } from 'react-spinners';
 import { useCustomers } from '../../../hooks/useCustomers';
 import { BiSolidDetail, BiSolidEdit } from 'react-icons/bi';
 
+import {
+  setDebouncedPhone,
+  setDebouncedSearch,
+  setPhone,
+  setSearch,
+  setPage,
+  toggleOpen,
+} from '../../../features/ui/filterSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
 const Customers = () => {
   const { t } = useTranslation();
-  const [search, setSearch] = useState('');
-  const [phone, setPhone] = useState('');
-  const [page, setPage] = useState(1);
-  const [limit] = useState(10);
-  const [open, setOpen] = useState(false);
-  const [debouncedSearch, setDebouncedSearch] = useState(search);
-  const [debouncedPhone, setDebouncedPhone] = useState(phone);
+  // const [search, setSearch] = useState('');
+  // const [phone, setPhone] = useState('');
+  // const [page, setPage] = useState(1);
+  // const [limit] = useState(10);
+  // const [open, setOpen] = useState(false);
+  // const [debouncedSearch, setDebouncedSearch] = useState(search);
+  // const [debouncedPhone, setDebouncedPhone] = useState(phone);
 
+  const { open, search, phone, limit, page, debouncedPhone, debouncedSearch } =
+    useSelector((state) => state.filters);
+  const dispatch = useDispatch();
   useEffect(() => {
-    const handler = setTimeout(() => setDebouncedSearch(search), 500);
+    const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
     return () => clearTimeout(handler);
-  }, [search]);
+  }, [search, dispatch]);
 
   useEffect(() => {
-    const handler = setTimeout(() => setDebouncedPhone(phone), 500);
+    const handler = setTimeout(() => dispatch(setDebouncedPhone(phone)), 500);
     return () => clearTimeout(handler);
-  }, [phone]);
+  }, [phone, dispatch]);
 
   useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch, debouncedPhone]);
+    dispatch(setPage(1));
+  }, [debouncedSearch, debouncedPhone, dispatch]);
 
   const { data, isLoading, error } = useCustomers(
     debouncedSearch,
@@ -44,12 +57,12 @@ const Customers = () => {
 
   useEffect(() => {
     if (total > 0 && page > totalPages) {
-      setPage(totalPages);
+      dispatch(setPage(totalPages));
     }
     if (total === 0 && page !== 1) {
       setPage(1);
     }
-  }, [total, totalPages, page]);
+  }, [total, totalPages, page, dispatch]);
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
@@ -60,7 +73,7 @@ const Customers = () => {
               type="text"
               placeholder="Phone"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => dispatch(setPhone(e.target.value))}
               className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
             />
           </div>
@@ -70,7 +83,7 @@ const Customers = () => {
         <Link to="/management/customerAdd">
           <Button type="primary">{t('Add New Customer')}</Button>
         </Link>
-        <Button onClick={() => setOpen(!open)} type="primary">
+        <Button onClick={() => dispatch(toggleOpen(!open))} type="primary">
           {t('Limit Search')}
         </Button>
         <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
@@ -78,7 +91,7 @@ const Customers = () => {
             type="text"
             placeholder={t('Search By Name')}
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => dispatch(setSearch(e.target.value))}
             className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
           />
         </div>
@@ -161,8 +174,8 @@ const Customers = () => {
               className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
               aria-label="Table navigation"
             >
-              <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
-                Showing{' '}
+              <span className="text-sm font-normal rtl:mr-2  text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+                {t('Showing')}{' '}
                 <span className="font-semibold text-gray-900 dark:text-white">
                   {(page - 1) * limit + 1}
                 </span>{' '}
@@ -170,17 +183,17 @@ const Customers = () => {
                 <span className="font-semibold text-gray-900 dark:text-white">
                   {Math.min(page * limit, total)}
                 </span>{' '}
-                of{' '}
+                {t('of')}{' '}
                 <span className="font-semibold text-gray-900 dark:text-white">
                   {total}
                 </span>
               </span>
 
-              <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+              <ul className="inline-flex -space-x-px mb-1 rtl:ml-2 rtl:space-x-reverse text-sm h-8">
                 {/* Previous */}
                 <li>
                   <button
-                    onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                    onClick={() => dispatch(setPage((p) => Math.max(p - 1, 1)))}
                     disabled={page === 1}
                     className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg 
                     ${
@@ -189,7 +202,7 @@ const Customers = () => {
                         : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                     }`}
                   >
-                    Previous
+                    {t('Prev')}
                   </button>
                 </li>
 
@@ -200,7 +213,7 @@ const Customers = () => {
                 ).map((pageNum) => (
                   <li key={pageNum}>
                     <button
-                      onClick={() => setPage(pageNum)}
+                      onClick={() => dispatch(setPage(pageNum))}
                       className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 
             ${
               page === pageNum
@@ -215,7 +228,11 @@ const Customers = () => {
                 <li>
                   <button
                     onClick={() =>
-                      setPage((p) => Math.min(p + 1, Math.ceil(total / limit)))
+                      dispatch(
+                        setPage((p) =>
+                          Math.min(p + 1, Math.ceil(total / limit))
+                        )
+                      )
                     }
                     disabled={page === Math.ceil(total / limit)}
                     className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg 
@@ -225,7 +242,7 @@ const Customers = () => {
                          : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
                      }`}
                   >
-                    Next
+                    {t('Next')}
                   </button>
                 </li>
               </ul>
