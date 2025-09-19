@@ -54,7 +54,7 @@ const Receive = () => {
             <div className="grid sm:grid-cols-2 gap-6 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl w-full max-w-7xl mx-auto">
               <div className="space-y-1 w-full">
                 <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('Account')}:</label>
+                  <label className="sm:w-32 mt-1">{t('Branch')}:</label>
                   <Select
                     className="w-full shadow-sm"
                     name="branch"

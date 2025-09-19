@@ -11,7 +11,6 @@ import {
 } from 'react-icons/bs';
 import { BsHouseAddFill } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
-import { RiSendPlaneLine } from 'react-icons/ri';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCreateBranch } from '../../../hooks/useBranch';
 import { useToast } from '../../../hooks/useToast';
@@ -74,8 +73,8 @@ const BranchAdd = () => {
       fatherName: form.fatherName.trim(),
       nationalCode: form.nationalCode.trim(),
       phone: form.phone.trim(),
-      currentAddress: form.currentAddress.trim(),
-      permanentAddress: form.permanentAddress.trim(),
+      currentAddress: form.currentAddress,
+      permanentAddress: form.permanentAddress,
       maritalStatus: form.maritalStatus,
       job: form.job.trim(),
       language: form.language,

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+
 import { BiSolidDetail, BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
@@ -25,10 +25,11 @@ const Customers = () => {
     return () => clearTimeout(handler);
   }, [phone]);
 
-  const { data: customers, isLoading } = useCustomers(
-    debouncedSearch,
-    debouncedPhone
-  );
+  const {
+    data: customers = [],
+    isLoading,
+    error,
+  } = useCustomers(debouncedSearch, debouncedPhone);
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
@@ -63,6 +64,14 @@ const Customers = () => {
           />
         </div>
       </div>
+
+      {error && (
+        <div className="bg-red-100 border text-center border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          {error.response?.status === 404
+            ? t('No customer found for your search')
+            : t('Something went wrong, please try again later')}
+        </div>
+      )}
 
       {/* Table */}
       {isLoading ? (
