@@ -10,6 +10,8 @@ const Customers = () => {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [phone, setPhone] = useState('');
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
   const [open, setOpen] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState(search);
 
@@ -25,11 +27,15 @@ const Customers = () => {
     return () => clearTimeout(handler);
   }, [phone]);
 
-  const {
-    data: customers = [],
-    isLoading,
-    error,
-  } = useCustomers(debouncedSearch, debouncedPhone);
+  const { data, isLoading, error } = useCustomers(
+    debouncedSearch,
+    debouncedPhone,
+    limit,
+    page
+  );
+
+  const customers = data?.data || [];
+  const total = data?.total || 0;
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
@@ -75,61 +81,82 @@ const Customers = () => {
 
       {/* Table */}
       {isLoading ? (
-        <p className="p-4">
-          {
-            <PulseLoader
-              color="green"
-              size={15}
-              aria-label="Loading Spinner"
-              data-testid="loader"
-            />
-          }
+        <p className="p-4 flex justify-center">
+          <PulseLoader color="green" size={15} />
         </p>
       ) : (
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 hidden md:table-header-group">
-            <tr>
-              <th className="px-4 py-2">{t('ID')}</th>
-              <th className="px-4 py-2">{t('fullname')}</th>
-              <th className="px-4 py-2">{t('Account No')}</th>
-              <th className="px-4 py-2">{t('Phone')}</th>
-              <th className="px-4 py-2">{t('Transactions')}</th>
-              <th className="px-4 py-2">{t('Details')}</th>
-              <th className="px-4 py-2">{t('Edit')}</th>
-              <th className="px-4 py-2">{t('Delete')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {customers?.map((c, index) => (
-              <tr
-                key={c.id}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
-              >
-                <td className="px-3 py-1">{index + 1}</td>
-                <td className="px-3 py-1">
-                  {c.Stakeholder?.Person?.firstName || c.firstName}{' '}
-                  {c.Stakeholder?.Person?.lastName || c.lastName}
-                </td>
-                <td className="px-3 py-1">{c.orgCustomerId}</td>
-                <td className="px-3 py-1">
-                  {c.Stakeholder?.Person?.phone || c.phone || '-'}
-                </td>
-                <td className="px-3 py-1">
-                  <Link to={`/management/customer/${c.id}/transactions`}>
-                    <Button type="primary">{t('Transactions')}</Button>
-                  </Link>
-                </td>
-                <td className="px-3 py-1">
-                  <BiSolidDetail className="text-lg text-blue-600 cursor-pointer" />
-                </td>
-                <td className="px-3 py-1">
-                  <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
-                </td>
-                <td className="px-3 py-1">❌</td>
+        <>
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className="text-xm text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 hidden md:table-header-group">
+              <tr>
+                <th className="px-4 py-2">{t('ID')}</th>
+                <th className="px-4 py-2">{t('fullname')}</th>
+                <th className="px-4 py-2">{t('Account No')}</th>
+                <th className="px-4 py-2">{t('Phone')}</th>
+                <th className="px-4 py-2">{t('Transactions')}</th>
+                <th className="px-4 py-2">{t('Details')}</th>
+                <th className="px-4 py-2">{t('Edit')}</th>
+                <th className="px-4 py-2">{t('Delete')}</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {customers?.map((c, index) => (
+                <tr
+                  key={c.id}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
+                >
+                  <td className="px-3 py-1">
+                    {index + 1 + (page - 1) * limit}
+                  </td>
+                  <td className="px-3 py-1">
+                    {c.Stakeholder?.Person?.firstName || c.firstName}{' '}
+                    {c.Stakeholder?.Person?.lastName || c.lastName}
+                  </td>
+                  <td className="px-3 py-1">{c.orgCustomerId}</td>
+                  <td className="px-3 py-1">
+                    {c.Stakeholder?.Person?.phone || c.phone || '-'}
+                  </td>
+                  <td className="px-3 py-1">
+                    <Link to={`/management/customer/${c.id}/transactions`}>
+                      <Button type="primary">{t('Transactions')}</Button>
+                    </Link>
+                  </td>
+                  <td className="px-3 py-1">
+                    <BiSolidDetail className="text-lg text-blue-600 cursor-pointer" />
+                  </td>
+                  <td className="px-3 py-1">
+                    <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                  </td>
+                  <td className="px-3 py-1">❌</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* ✅ Pagination controls outside table */}
+          <div className="flex justify-between items-center mt-4">
+            <span>
+              {t('Page')} {page} {t('of')} {Math.ceil(total / limit)}
+            </span>
+
+            <div className="flex gap-2">
+              <Button
+                type="primary"
+                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                disabled={page === 1}
+              >
+                {t('Previous')}
+              </Button>
+              <Button
+                type="primary"
+                onClick={() => setPage((prev) => prev + 1)}
+                disabled={page === total}
+              >
+                {t('Next')}
+              </Button>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

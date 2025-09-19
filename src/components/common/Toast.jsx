@@ -82,11 +82,11 @@ const Toast = () => {
           border rounded-lg shadow-lg ${styles.bg}`}
       >
         <div className="flex items-start p-4">
-          <div className={`flex-shrink-0 ${styles.icon}`}>
+          <div className={`flex-shrink-0 flex-1 ${styles.icon}`}>
             {styles.iconComponent}
           </div>
           <div className="ml-3 flex-1">
-            <p className={`text-sm font-medium ${styles.text}`}>{message}</p>
+            <p className={`text-sm font-bold  ${styles.text}`}>{message}</p>
           </div>
           <button
             onClick={handleClose}

@@ -129,10 +129,12 @@
   "firstNameRequired": "لطفا اسم را وارد کنید!",
   "lastNameRequired": "لطفا تخلص را وارد کنید",
   "fix Errors": "خطا!!!",
+  "branch created": "نمایندگی موفقانه ساخته شد",
   "Direct": "مستقیم",
   "Select Direct": "انتخاب ارتباط",
   "Undirect": "غیر مستقیم",
   "Select Status": "انتخاب حالت",
   "Search By Name": "جستجو به اساس نام",
-  "No branches found for your search": "نمایندگی یافت نشد🙃"
+  "No branches found for your search": "نمایندگی یافت نشد🙃",
+  "No customer found for your search": "مشتری یافت نشد🙃"
 }

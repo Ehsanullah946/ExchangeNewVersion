@@ -427,12 +427,9 @@ const BranchAdd = () => {
                 >
                   {isLoading ? 'Saving...' : t('Save')}
                 </Button>
-                <Link to="/management/customers">
-                  <Button type="secondary">{t('Cancel')}</Button>
+                <Link to="/management/branch">
+                  <Button type="primary">{t('Cancel')}</Button>
                 </Link>
-                <Button type="primary" onClick={() => setIsActive(!isActive)}>
-                  {isActive ? t('Cancel Edit') : t('Edit Mode')}
-                </Button>
               </div>
             </div>
           </form>
