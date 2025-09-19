@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-
-import { BiSolidDetail, BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
 import { Link } from 'react-router-dom';
 import { PulseLoader } from 'react-spinners';
 import { useCustomers } from '../../../hooks/useCustomers';
+import { BiSolidDetail, BiSolidEdit } from 'react-icons/bi';
+
 const Customers = () => {
   const { t } = useTranslation();
   const [search, setSearch] = useState('');
@@ -14,18 +14,21 @@ const Customers = () => {
   const [limit] = useState(10);
   const [open, setOpen] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const [debouncedPhone, setDebouncedPhone] = useState(phone);
 
   useEffect(() => {
-    const handler = setTimeout(() => setDebouncedSearch(search), 500); // 500ms delay
+    const handler = setTimeout(() => setDebouncedSearch(search), 500);
     return () => clearTimeout(handler);
   }, [search]);
-
-  const [debouncedPhone, setDebouncedPhone] = useState(phone);
 
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedPhone(phone), 500);
     return () => clearTimeout(handler);
   }, [phone]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, debouncedPhone]);
 
   const { data, isLoading, error } = useCustomers(
     debouncedSearch,
@@ -36,6 +39,17 @@ const Customers = () => {
 
   const customers = data?.data || [];
   const total = data?.total || 0;
+
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+
+  useEffect(() => {
+    if (total > 0 && page > totalPages) {
+      setPage(totalPages);
+    }
+    if (total === 0 && page !== 1) {
+      setPage(1);
+    }
+  }, [total, totalPages, page]);
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
@@ -52,7 +66,6 @@ const Customers = () => {
           </div>
         </div>
       )}
-      {/* Search + Add button */}
       <div className="flex mt-1 mb-2">
         <Link to="/management/customerAdd">
           <Button type="primary">{t('Add New Customer')}</Button>
@@ -100,61 +113,123 @@ const Customers = () => {
               </tr>
             </thead>
             <tbody>
-              {customers?.map((c, index) => (
-                <tr
-                  key={c.id}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
-                >
-                  <td className="px-3 py-1">
-                    {index + 1 + (page - 1) * limit}
+              {customers.length === 0 ? (
+                <tr>
+                  <td colSpan="8" className="px-4 py-4 text-center">
+                    {t('No customers found')}
                   </td>
-                  <td className="px-3 py-1">
-                    {c.Stakeholder?.Person?.firstName || c.firstName}{' '}
-                    {c.Stakeholder?.Person?.lastName || c.lastName}
-                  </td>
-                  <td className="px-3 py-1">{c.orgCustomerId}</td>
-                  <td className="px-3 py-1">
-                    {c.Stakeholder?.Person?.phone || c.phone || '-'}
-                  </td>
-                  <td className="px-3 py-1">
-                    <Link to={`/management/customer/${c.id}/transactions`}>
-                      <Button type="primary">{t('Transactions')}</Button>
-                    </Link>
-                  </td>
-                  <td className="px-3 py-1">
-                    <BiSolidDetail className="text-lg text-blue-600 cursor-pointer" />
-                  </td>
-                  <td className="px-3 py-1">
-                    <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
-                  </td>
-                  <td className="px-3 py-1">❌</td>
                 </tr>
-              ))}
+              ) : (
+                customers.map((c, index) => (
+                  <tr
+                    key={c.id}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
+                  >
+                    {/* index corrected for pagination */}
+                    <td className="px-3 py-1">
+                      {index + 1 + (page - 1) * limit}
+                    </td>
+                    <td className="px-3 py-1">
+                      {c.Stakeholder?.Person?.firstName || c.firstName}{' '}
+                      {c.Stakeholder?.Person?.lastName || c.lastName}
+                    </td>
+                    <td className="px-3 py-1">{c.orgCustomerId}</td>
+                    <td className="px-3 py-1">
+                      {c.Stakeholder?.Person?.phone || c.phone || '-'}
+                    </td>
+                    <td className="px-3 py-1">
+                      <Link to={`/management/customer/${c.id}/transactions`}>
+                        <Button type="primary">{t('Transactions')}</Button>
+                      </Link>
+                    </td>
+                    <td className="px-3 py-1">
+                      <BiSolidDetail className="text-lg text-blue-600 cursor-pointer" />
+                    </td>
+                    <td className="px-3 py-1">
+                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                    </td>
+                    <td className="px-3 py-1">❌</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
 
-          {/* ✅ Pagination controls outside table */}
-          <div className="flex justify-between items-center mt-4">
-            <span>
-              {t('Page')} {page} {t('of')} {Math.ceil(total / limit)}
-            </span>
+          <div className="">
+            {/* Pagination */}
+            <nav
+              className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+              aria-label="Table navigation"
+            >
+              <span className="text-sm font-normal text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+                Showing{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {(page - 1) * limit + 1}
+                </span>{' '}
+                -{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {Math.min(page * limit, total)}
+                </span>{' '}
+                of{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {total}
+                </span>
+              </span>
 
-            <div className="flex gap-2">
-              <Button
-                type="primary"
-                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                disabled={page === 1}
-              >
-                {t('Previous')}
-              </Button>
-              <Button
-                type="primary"
-                onClick={() => setPage((prev) => prev + 1)}
-                disabled={page === total}
-              >
-                {t('Next')}
-              </Button>
-            </div>
+              <ul className="inline-flex -space-x-px rtl:space-x-reverse text-sm h-8">
+                {/* Previous */}
+                <li>
+                  <button
+                    onClick={() => setPage((p) => Math.max(p - 1, 1))}
+                    disabled={page === 1}
+                    className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg 
+                    ${
+                      page === 1
+                        ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
+                        : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                    }`}
+                  >
+                    Previous
+                  </button>
+                </li>
+
+                {/* Page numbers */}
+                {Array.from(
+                  { length: Math.ceil(total / limit) },
+                  (_, i) => i + 1
+                ).map((pageNum) => (
+                  <li key={pageNum}>
+                    <button
+                      onClick={() => setPage(pageNum)}
+                      className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 
+            ${
+              page === pageNum
+                ? 'text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white'
+                : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+            }`}
+                    >
+                      {pageNum}
+                    </button>
+                  </li>
+                ))}
+                <li>
+                  <button
+                    onClick={() =>
+                      setPage((p) => Math.min(p + 1, Math.ceil(total / limit)))
+                    }
+                    disabled={page === Math.ceil(total / limit)}
+                    className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg 
+                     ${
+                       page === Math.ceil(total / limit)
+                         ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
+                         : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                     }`}
+                  >
+                    Next
+                  </button>
+                </li>
+              </ul>
+            </nav>
           </div>
         </>
       )}
