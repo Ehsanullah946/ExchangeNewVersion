@@ -12,10 +12,122 @@ import {
 import { BsHouseAddFill } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
 import { RiSendPlaneLine } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useCreateBranch } from '../../../hooks/useBranch';
+import { useToast } from '../../../hooks/useToast';
 const BranchAdd = () => {
   const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
+
+  const [form, setForm] = useState({
+    firstName: '',
+    lastName: '',
+    fatherName: '',
+    nationalCode: '',
+    currentAddress: '',
+    phone: '',
+    maritalStatus: '',
+    gender: '',
+    job: '',
+    language: '',
+    loanLimit: '',
+    whatsApp: '',
+    email: '',
+    telegram: '',
+    whatsAppEnabled: false,
+    telegramEnabled: false,
+    emailEnabled: false,
+    phoneEnabled: false,
+    faxNo: '',
+    direct: true,
+  });
+
+  const { mutate, isLoading, error } = useCreateBranch();
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, type, value, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const validateForm = () => {
+      const errors = {};
+
+      if (!form.firstName.trim()) errors.firstName = t('firstNameRequired');
+      if (!form.lastName.trim()) errors.lastName = t('lastNameRequired');
+      if (form.phone && !/^[\d\s\-\+\(\)]{10,15}$/.test(form.phone)) {
+        errors.phone = t('invalidPhoneFormat');
+      }
+      return errors;
+    };
+
+    const submitData = {
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      fatherName: form.fatherName.trim(),
+      nationalCode: form.nationalCode.trim(),
+      phone: form.phone.trim(),
+      currentAddress: form.currentAddress.trim(),
+      permanentAddress: form.permanentAddress.trim(),
+      maritalStatus: form.maritalStatus,
+      job: form.job.trim(),
+      language: form.language,
+      loanLimit: parseFloat(form.loanLimit) || 0,
+      whatsAppEnabled: form.whatsAppEnabled,
+      telegramEnabled: form.telegramEnabled,
+      emailEnabled: form.emailEnabled,
+      phoneEnabled: form.phoneEnabled,
+      whatsApp: form.whatsApp.trim(),
+      telegram: form.telegram.trim(),
+      email: form.email.trim(),
+      faxNo: form.faxNo.trim(),
+      direct: form.direct,
+    };
+
+    const cleanData = Object.fromEntries(
+      Object.entries(submitData).filter(
+        ([_, v]) => v !== '' && v !== null && v !== undefined
+      )
+    );
+
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      toast.error(t('fix Errors') + '\n' + Object.values(errors).join('\n'));
+      return;
+    }
+
+    console.log('Submitting data:', cleanData);
+
+    mutate(cleanData, {
+      onSuccess: () => {
+        toast.success(t('branch created'));
+        setTimeout(() => navigate('/management/branch'));
+      },
+      onError: (error) => {
+        console.error('Backend error:', error);
+        let errorMessage = t('createBranchFailed');
+
+        if (error.response?.data?.message) {
+          errorMessage = error.response.data.message;
+
+          if (error.response.data.message.includes('duplicate')) {
+            errorMessage = t('BranchDuplicate');
+          } else if (error.response.data.message.includes('validation')) {
+            errorMessage = t('invalidInputData');
+          }
+        }
+        toast.error(errorMessage);
+      },
+    });
+  };
+
   return (
     <>
       <div className="grid justify-center">
@@ -57,227 +169,271 @@ const BranchAdd = () => {
             </div>
 
             <div className="grid sm:grid-cols-3 gap-8 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl max-w-7xl mx-auto">
-              <div className=" space-y-1 w-full">
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('ID')}:</label>
-                  <input
-                    type="text"
-                    className="border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
-                    required
-                  />
-                </div>
-
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+              {/* Left Column */}
+              <div className="space-y-1 w-full">
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
                   <label className="sm:w-32">{t('First Name')}:</label>
                   <input
                     type="text"
+                    name="firstName"
+                    value={form.firstName}
+                    onChange={handleChange}
                     className="border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
                     required
                   />
                 </div>
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
                   <label className="sm:w-32">{t('Last Name')}:</label>
                   <input
                     type="text"
-                    className=" w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    name="lastName"
+                    value={form.lastName}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 shadow-sm text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
                   <label className="sm:w-32">{t('Father Name')}:</label>
                   <input
                     type="text"
-                    className=" w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
-                    required
+                    name="fatherName"
+                    value={form.fatherName}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                   />
                 </div>
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
                   <label className="sm:w-32">{t('Marital')}:</label>
-                  <input
-                    type="text"
-                    className=" w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
-                    required
-                  />
+                  <select
+                    name="maritalStatus"
+                    value={form.maritalStatus}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                  >
+                    <option value="">{t('Select Status')}</option>
+                    <option value={t('single')}>{t('single')}</option>
+                    <option value={t('married')}>{t('married')}</option>
+                    <option value={t('divorced')}>{t('divorced')}</option>
+                    <option value={t('widowed')}>{t('widowed')}</option>
+                  </select>
                 </div>
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
+                  <label className="sm:w-32">{t('Direction')}:</label>
+                  <select
+                    name="direct"
+                    value={form.direct}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                  >
+                    <option value="">{t('Select Direct')}</option>
+                    <option value={1}>{t('Direct')}</option>
+                    <option value={0}>{t('Undirect')}</option>
+                  </select>
+                </div>
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
                   <label className="sm:w-32">{t('Job')}:</label>
                   <input
                     type="text"
-                    className=" w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
-                    required
+                    name="job"
+                    value={form.job}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                   />
                 </div>
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
                   <label className="sm:w-32">{t('Loan Limit')}:</label>
                   <input
-                    type="text"
-                    className=" w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
-                    required
+                    type="number"
+                    name="loanLimit"
+                    value={form.loanLimit}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                   />
                 </div>
               </div>
 
-              <div className="w-full  space-y-1 p-2">
-                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
+              {/* Middle Column */}
+              <div className="w-full space-y-1 p-2">
+                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between">
                   <label className="sm:w-32">{t('N-Card')}:</label>
                   <input
                     type="text"
+                    name="nationalCode"
+                    value={form.nationalCode}
+                    onChange={handleChange}
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
-                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('Languages')}:</label>
-                  <input
-                    type="text"
-                    className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
-                    required
-                  />
-                </div>
-                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
+                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between">
                   <label className="sm:w-32">{t('FaxNo')}:</label>
                   <input
                     type="text"
+                    name="faxNo"
+                    value={form.faxNo}
+                    onChange={handleChange}
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
-                    required
                   />
                 </div>
-                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
+
+                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between">
+                  <label className="sm:w-32">{t('Languages')}:</label>
+                  <input
+                    type="text"
+                    name="language"
+                    value={form.language}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                  />
+                </div>
+
+                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between">
                   <label className="sm:w-32 mt-1">{t('perAddress')}:</label>
                   <textarea
                     rows="3"
+                    name="permanentAddress"
+                    value={form.permanentAddress}
+                    onChange={handleChange}
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     placeholder="more...."
                   />
                 </div>
-                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
+
+                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between">
                   <label className="sm:w-32 mt-1">{t('curAddress')}:</label>
                   <textarea
                     rows="3"
+                    name="currentAddress"
+                    value={form.currentAddress}
+                    onChange={handleChange}
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     placeholder="more...."
                   />
                 </div>
               </div>
 
-              <div className="w-full  space-y-1 p-2">
-                <div className="flex gap-2 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32 mt-1">{t('PhoneNo')}:</label>
+              {/* Right Column - Contact Info */}
+              <div className="w-full space-y-1 p-2">
+                <div className="flex gap-2 flex-wrap md:flex-nowrap items-center justify-between">
+                  <label className="sm:w-10">{t('PhoneNo')}:</label>
                   <input
-                    id=""
+                    name="phoneEnabled"
+                    checked={form.phoneEnabled}
+                    onChange={handleChange}
                     type="checkbox"
-                    value=""
-                    name="bordered-checkbox"
-                    class="w-4 h-4  bg-gray-100 mt-3 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800  dark:bg-gray-700 dark:border-gray-600"
+                    className="w-4 h-4 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
                   />
-                  <div class="relative">
-                    <div class="absolute  inset-y-0 start-0 top-0 flex items-center ps-3 pointer-events-none">
+                  <div className="relative flex-1">
+                    <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3 pointer-events-none">
                       <BsPhone />
                     </div>
                     <input
                       type="text"
-                      id="phone-input"
-                      aria-describedby="helper-text-explanation"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                      name="phone"
+                      value={form.phone}
+                      onChange={handleChange}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
                       placeholder="123-456-7890"
                       required
                     />
                   </div>
                 </div>
-                <div className="flex gap-2 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32 mt-1">{t('WhatsApp')}:</label>
+
+                <div className="flex gap-2 flex-wrap md:flex-nowrap justify-between items-center">
+                  <label className="sm:w-10">{t('WhatsApp')}:</label>
                   <input
-                    id=""
+                    name="whatsAppEnabled"
+                    checked={form.whatsAppEnabled}
+                    onChange={handleChange}
                     type="checkbox"
-                    value=""
-                    name="bordered-checkbox"
-                    class="w-4 h-4  bg-gray-100 mt-3 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800  dark:bg-gray-700 dark:border-gray-600"
+                    className="w-4 h-4 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
                   />
-                  <div class="relative">
-                    <div class="absolute  inset-y-0 start-0 top-0 flex items-center ps-3 pointer-events-none">
+                  <div className="relative flex-1">
+                    <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3 pointer-events-none">
                       <BsWhatsapp />
                     </div>
                     <input
                       type="text"
-                      id="whatsapp-input"
-                      aria-describedby="helper-text-explanation"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                      name="whatsApp"
+                      value={form.whatsApp}
+                      onChange={handleChange}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
                       placeholder="123-456-7890"
-                      required
                     />
                   </div>
                 </div>
-                <div className="flex gap-2 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32 mt-1">{t('Email')}:</label>
+
+                <div className="flex gap-2 flex-wrap md:flex-nowrap justify-between items-center">
+                  <label className="sm:w-10">{t('Email')}:</label>
                   <input
-                    id=""
+                    name="emailEnabled"
+                    checked={form.emailEnabled}
+                    onChange={handleChange}
                     type="checkbox"
-                    value=""
-                    name="bordered-checkbox"
-                    class="w-4 h-4  bg-gray-100 mt-3 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800  dark:bg-gray-700 dark:border-gray-600"
+                    className="w-4 h-4 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
                   />
-                  <div class="relative">
-                    <div class="absolute  inset-y-0 start-0 top-0 flex items-center ps-3 pointer-events-none">
+                  <div className="relative flex-1">
+                    <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3 pointer-events-none">
                       <RiMailFill />
                     </div>
                     <input
-                      type="text"
-                      id="phone-input"
-                      aria-describedby="helper-text-explanation"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      type="email"
+                      name="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
                       placeholder="name@gmail.com"
-                      required
                     />
                   </div>
                 </div>
-                <div className="flex gap-2 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32 mt-1">{t('Telegram')}:</label>
+
+                <div className="flex gap-2 flex-wrap md:flex-nowrap justify-between items-center">
+                  <label className="sm:w-10">{t('Telegram')}:</label>
                   <input
-                    id=""
+                    name="telegramEnabled"
+                    checked={form.telegramEnabled}
+                    onChange={handleChange}
                     type="checkbox"
-                    value=""
-                    name="bordered-checkbox"
-                    class="w-4 h-4  bg-gray-100 mt-3 border-gray-300 rounded-sm focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800  dark:bg-gray-700 dark:border-gray-600"
+                    className="w-4 h-4 bg-gray-100 border-gray-300 rounded-sm focus:ring-blue-500"
                   />
-                  <div class="relative">
-                    <div class="absolute  inset-y-0 start-0 top-0 flex items-center ps-3 pointer-events-none">
+                  <div className="relative flex-1">
+                    <div className="absolute inset-y-0 start-0 top-0 flex items-center ps-3 pointer-events-none">
                       <BsTelegram />
                     </div>
                     <input
                       type="text"
-                      id="phone-input"
-                      aria-describedby="helper-text-explanation"
-                      class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                      placeholder="Ehsan@"
-                      required
+                      name="telegram"
+                      value={form.telegram}
+                      onChange={handleChange}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5"
+                      placeholder="123-456-7890"
                     />
                   </div>
                 </div>
               </div>
-              <div className="flex flex-wrap  justify-center sm:justify-start">
-                {isActive ? (
-                  <>
-                    <Button type="primary" htmlType="submit">
-                      {t('Save')}
-                    </Button>
-                    <Button type="primary">{t('Cancel')}</Button>
-                  </>
-                ) : (
-                  <>
-                    <Button
-                      bgColor="rgba(244, 45, 0, 0.2)"
-                      type="primary"
-                      onClick={() => setIsActive(true)}
-                    >
-                      {t('New')}
-                    </Button>
-                    <Button type="primary">{t('Edit')}</Button>
-                    <Button type="primary">{t('Delete')}</Button>
-                  </>
-                )}
+
+              {/* Buttons */}
+              <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
+                <Button
+                  type="primary"
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Saving...' : t('Save')}
+                </Button>
+                <Link to="/management/customers">
+                  <Button type="secondary">{t('Cancel')}</Button>
+                </Link>
+                <Button type="primary" onClick={() => setIsActive(!isActive)}>
+                  {isActive ? t('Cancel Edit') : t('Edit Mode')}
+                </Button>
               </div>
             </div>
           </form>

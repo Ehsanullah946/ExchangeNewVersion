@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const branchSlice = createSlice({
+  name: 'branches',
   initialState: {
     selectedBranch: null,
   },

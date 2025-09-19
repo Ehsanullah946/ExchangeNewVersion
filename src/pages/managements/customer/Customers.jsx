@@ -19,6 +19,7 @@ const Customers = () => {
   }, [search]);
 
   const [debouncedPhone, setDebouncedPhone] = useState(phone);
+
   useEffect(() => {
     const handler = setTimeout(() => setDebouncedPhone(phone), 500);
     return () => clearTimeout(handler);

@@ -120,6 +120,7 @@
   "charges Type": "نوع کمیشن",
   "Transaction No": "نمبر حواله",
   "Email Address": "ایمل",
+  "Direction": "ارتباط",
   "Telegram": "تلیگرام",
   "Limit Search": "محدوده جستجو",
   "createCustomerFailed": "مشتری ساخته نشد! لطفا دوباره امتحان کنید",
@@ -128,5 +129,9 @@
   "firstNameRequired": "لطفا اسم را وارد کنید!",
   "lastNameRequired": "لطفا تخلص را وارد کنید",
   "fix Errors": "خطا!!!",
+  "Direct": "مستقیم",
+  "Select Direct": "انتخاب ارتباط",
+  "Undirect": "غیر مستقیم",
+  "Select Status": "انتخاب حالت",
   "Search By Name": "جستجو به اساس نام"
 }
