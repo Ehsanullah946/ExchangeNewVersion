@@ -116,7 +116,7 @@ const BranchAdd = () => {
         if (error.response?.data?.message) {
           errorMessage = error.response.data.message;
 
-          if (error.response.data.message.includes('duplicate')) {
+          if (error.response.data.message.includes('Validation error')) {
             errorMessage = t('BranchDuplicate');
           } else if (error.response.data.message.includes('validation')) {
             errorMessage = t('invalidInputData');

@@ -87,7 +87,7 @@ const EmployeeAdd = () => {
         if (error.response?.data?.message) {
           errorMessage = error.response.data.message;
 
-          if (error.response.data.message.includes('duplicate')) {
+          if (error.response.data.message.includes('Validation error')) {
             errorMessage = t('EmployeeDuplicate');
           } else if (error.response.data.message.includes('validation')) {
             errorMessage = t('invalidInputData');
@@ -137,11 +137,6 @@ const EmployeeAdd = () => {
               <span className="flex justify-center gap-3">
                 {t('Add New Employee')} <RiSendPlaneLine className="mt-1" />
               </span>
-              {error && (
-                <p className="text-red-300 text-sm mt-2">
-                  Error: {error.message || 'Failed to create Employee'}
-                </p>
-              )}
             </div>
 
             <div className="grid sm:grid-cols-2 gap-6 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl max-w-7xl mx-auto">
@@ -206,7 +201,7 @@ const EmployeeAdd = () => {
                     onChange={handleChange}
                     className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                   >
-                    <option value="">Gender</option>
+                    <option value="">{t('Select')}</option>
                     <option value={t('M')}>{t('male')}</option>
                     <option value={t('F')}>{t('famale')}</option>
                     <option value={t('O')}>{t('other')}</option>
@@ -284,14 +279,14 @@ const EmployeeAdd = () => {
                   onClick={handleSubmit}
                   disabled={isLoading}
                   type="button"
-                  class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
+                  className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
                 >
                   {t('Save')}
                 </button>
                 <Link to="/management/employeeList">
                   <button
                     type="button"
-                    class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
+                    className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
                   >
                     {t('Cancel')}
                   </button>

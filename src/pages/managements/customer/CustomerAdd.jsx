@@ -116,7 +116,7 @@ const CustomerAdd = () => {
         if (error.response?.data?.message) {
           errorMessage = error.response.data.message;
 
-          if (error.response.data.message.includes('duplicate')) {
+          if (error.response.data.message.includes('Validation error')) {
             errorMessage = t('customerDuplicate');
           } else if (error.response.data.message.includes('validation')) {
             errorMessage = t('invalidInputData');
@@ -168,11 +168,6 @@ const CustomerAdd = () => {
               <span className="flex justify-center gap-3">
                 {t('Add New Customer')} <RiSendPlaneLine className="mt-1" />
               </span>
-              {error && (
-                <p className="text-red-300 text-sm mt-2">
-                  Error: {error.message || 'Failed to create customer'}
-                </p>
-              )}
             </div>
 
             <div className="grid sm:grid-cols-3 gap-8 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl max-w-7xl mx-auto">
@@ -423,14 +418,14 @@ const CustomerAdd = () => {
                   onClick={handleSubmit}
                   disabled={isLoading}
                   type="button"
-                  class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
+                  className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
                 >
                   {t('Save')}
                 </button>
                 <Link to="/management/customer">
                   <button
                     type="button"
-                    class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
+                    classname="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
                   >
                     {t('Cancel')}
                   </button>
