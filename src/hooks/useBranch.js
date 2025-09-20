@@ -1,11 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createBranch, getBranch } from '../api/branchApi';
 
-export const useBranch = (search = '', phone = '') => {
+export const useBranch = (search = '', phone = '', limit, page) => {
   return useQuery({
-    queryKey: ['branches', search, phone],
-    queryFn: () => getBranch({ search, phone }),
+    queryKey: ['branches', search, phone, limit, page],
+    queryFn: () => getBranch({ search, phone, limit, page }),
     staleTime: 1000 * 60 * 5,
+    keepPreviousData: true,
     onError: (error) => {
       console.log('Error fetching branches', error);
     },

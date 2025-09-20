@@ -18,16 +18,10 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const Customers = () => {
   const { t } = useTranslation();
-  // const [search, setSearch] = useState('');
-  // const [phone, setPhone] = useState('');
-  // const [page, setPage] = useState(1);
-  // const [limit] = useState(10);
-  // const [open, setOpen] = useState(false);
-  // const [debouncedSearch, setDebouncedSearch] = useState(search);
-  // const [debouncedPhone, setDebouncedPhone] = useState(phone);
 
   const { open, search, phone, limit, page, debouncedPhone, debouncedSearch } =
     useSelector((state) => state.filters);
+
   const dispatch = useDispatch();
   useEffect(() => {
     const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
@@ -60,7 +54,7 @@ const Customers = () => {
       dispatch(setPage(totalPages));
     }
     if (total === 0 && page !== 1) {
-      setPage(1);
+      dispatch(setPage(1));
     }
   }, [total, totalPages, page, dispatch]);
 

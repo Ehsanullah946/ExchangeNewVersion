@@ -42,5 +42,7 @@ export const {
   setPhone,
   toggleOpen,
   setSearch,
+  setPage,
+  resetFilter,
 } = filterSlice.actions;
 export default filterSlice.reducer;

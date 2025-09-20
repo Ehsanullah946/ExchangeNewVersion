@@ -13,17 +13,16 @@ import {
   toggleOpen,
   setSearch,
   setPhone,
+  setPage,
 } from '../../../features/ui/filterSlice';
 
 const Branches = () => {
   const { t } = useTranslation();
 
+  const { debouncedPhone, debouncedSearch, phone, search, open, page, limit } =
+    useSelector((state) => state.filters);
+
   const dispatch = useDispatch();
-
-  const { debouncedPhone, debouncedSearch, phone, search, open } = useSelector(
-    (state) => state.filters
-  );
-
   useEffect(() => {
     const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
     return () => clearTimeout(handler);
@@ -34,13 +33,30 @@ const Branches = () => {
     return () => clearTimeout(handler);
   }, [phone, dispatch]);
 
-  const {
-    data: branches = [],
-    isLoading,
-    error,
-  } = useBranch(debouncedSearch, debouncedPhone);
+  useEffect(() => {
+    dispatch(setPage(1));
+  }, [debouncedSearch, debouncedPhone, dispatch]);
 
-  console.log('Branches data:', branches);
+  const { data, isLoading, error } = useBranch(
+    debouncedSearch,
+    debouncedPhone,
+    limit,
+    page
+  );
+
+  const branches = data?.data || [];
+  const total = data?.total || 0;
+
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+
+  useEffect(() => {
+    if (total > 0 && page > totalPages) {
+      dispatch(setPage(totalPages));
+    }
+    if (total === 0 && page !== 1) {
+      dispatch(setPage(1));
+    }
+  }, [total, totalPages, page, dispatch]);
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
@@ -62,7 +78,7 @@ const Branches = () => {
         <Link to="/management/branchAdd">
           <Button type="primary">{t('Add New Branch')}</Button>
         </Link>
-        <Button onClick={() => toggleOpen(!open)} type="primary">
+        <Button onClick={() => dispatch(toggleOpen(!open))} type="primary">
           {t('Limit Search')}
         </Button>
         <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
@@ -154,6 +170,86 @@ const Branches = () => {
               )}
             </tbody>
           </table>
+          <div className="">
+            {/* Pagination */}
+            <nav
+              className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+              aria-label="Table navigation"
+            >
+              <span className="text-sm font-normal rtl:mr-2  text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+                {t('Showing')}{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {(page - 1) * limit + 1}
+                </span>{' '}
+                -{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {Math.min(page * limit, total)}
+                </span>{' '}
+                {t('of')}{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {total}
+                </span>
+              </span>
+
+              <ul className="inline-flex -space-x-px mb-1 rtl:ml-2 rtl:space-x-reverse text-sm h-8">
+                {/* Previous */}
+                <li>
+                  <button
+                    onClick={() => dispatch(setPage((p) => Math.max(p - 1, 1)))}
+                    disabled={page === 1}
+                    className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg 
+                                ${
+                                  page === 1
+                                    ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
+                                    : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                                }`}
+                  >
+                    {t('Prev')}
+                  </button>
+                </li>
+
+                {/* Page numbers */}
+                {Array.from(
+                  { length: Math.ceil(total / limit) },
+                  (_, i) => i + 1
+                ).map((pageNum) => (
+                  <li key={pageNum}>
+                    <button
+                      onClick={() => dispatch(setPage(pageNum))}
+                      className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 
+                        ${
+                          page === pageNum
+                            ? 'text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white'
+                            : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                        }`}
+                    >
+                      {pageNum}
+                    </button>
+                  </li>
+                ))}
+                <li>
+                  <button
+                    onClick={() =>
+                      dispatch(
+                        setPage((p) =>
+                          Math.min(p + 1, Math.ceil(total / limit))
+                        )
+                      )
+                    }
+                    disabled={page === Math.ceil(total / limit)}
+                    className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg 
+                                 ${
+                                   page === Math.ceil(total / limit)
+                                     ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
+                                     : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                                 }`}
+                  >
+                    {t('Next')}
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
         </div>
       )}
     </div>
