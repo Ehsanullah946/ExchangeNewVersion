@@ -16,11 +16,15 @@ export const getEmployee = async (filters = {}) => {
     const { data } = await axiosClient.get(
       `/employee${queryString ? `?${queryString}` : ''}`
     );
-
     console.log('API response:', data);
     return data;
   } catch (error) {
     console.error('API error:', error);
     throw error;
   }
+};
+
+export const createEmployee = async (payload) => {
+  const data = await axiosClient.post('/employee', payload);
+  return data;
 };

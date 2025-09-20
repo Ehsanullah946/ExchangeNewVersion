@@ -24,10 +24,8 @@
 
 .secondry {
   /* font-weight: 400; */
-  padding: 0.2rem 2.1rem;
-  /* background-image: linear-gradient(144deg, #46ff40, #5b42f3 50%, #41e9f5); */
+  background-image: linear-gradient(144deg, #f21919, #f39b42 50%, #f57441);
   box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 20px 10px -15px;
-  background-color: gray;
   color: white;
   margin-left: 10px;
   box-shadow: 0 0.4rem 1.2rem rgba(225, 233, 238, 0.16);

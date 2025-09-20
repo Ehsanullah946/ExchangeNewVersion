@@ -1,5 +1,4 @@
-// components/Branches.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
 import { Link } from 'react-router-dom';
@@ -195,10 +194,9 @@ const Branches = () => {
               </span>
 
               <ul className="inline-flex -space-x-px mb-1 rtl:ml-2 rtl:space-x-reverse text-sm h-8">
-                {/* Previous */}
                 <li>
                   <button
-                    onClick={() => dispatch(setPage((p) => Math.max(p - 1, 1)))}
+                    onClick={() => dispatch(setPage(Math.max(page - 1, 1)))}
                     disabled={page === 1}
                     className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg 
                       ${
@@ -232,9 +230,7 @@ const Branches = () => {
                   <button
                     onClick={() =>
                       dispatch(
-                        setPage((p) =>
-                          Math.min(p + 1, Math.ceil(total / limit))
-                        )
+                        setPage(Math.min(page + 1, Math.ceil(total / limit)))
                       )
                     }
                     disabled={page === Math.ceil(total / limit)}

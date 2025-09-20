@@ -29,6 +29,7 @@ const CustomerAdd = () => {
     job: '',
     language: '',
     loanLimit: '',
+    gender: '',
     whatsAppEnabled: false,
     telegramEnabled: false,
     emailEnabled: false,
@@ -76,6 +77,7 @@ const CustomerAdd = () => {
       permanentAddress: form.permanentAddress.trim(),
       maritalStatus: form.maritalStatus,
       job: form.job.trim(),
+      gender: form.gender.trim(),
       language: form.language,
       loanLimit: parseFloat(form.loanLimit) || 0,
       whatsAppEnabled: form.whatsAppEnabled,
@@ -224,6 +226,21 @@ const CustomerAdd = () => {
                     <option value={t('married')}>{t('married')}</option>
                     <option value={t('divorced')}>{t('divorced')}</option>
                     <option value={t('widowed')}>{t('widowed')}</option>
+                  </select>
+                </div>
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
+                  <label className="sm:w-32">{t('Gender')}:</label>
+                  <select
+                    name="gender"
+                    value={form.gender}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                  >
+                    <option value="">Gender</option>
+                    <option value={t('M')}>{t('male')}</option>
+                    <option value={t('F')}>{t('famale')}</option>
+                    <option value={t('O')}>{t('other')}</option>
                   </select>
                 </div>
 
@@ -402,19 +419,22 @@ const CustomerAdd = () => {
 
               {/* Buttons */}
               <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
-                <Button
-                  type="primary"
+                <button
                   onClick={handleSubmit}
                   disabled={isLoading}
+                  type="button"
+                  class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
                 >
-                  {isLoading ? 'Saving...' : t('Save')}
-                </Button>
-                <Link to="/management/customers">
-                  <Button type="secondary">{t('Cancel')}</Button>
+                  {t('Save')}
+                </button>
+                <Link to="/management/customer">
+                  <button
+                    type="button"
+                    class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
+                  >
+                    {t('Cancel')}
+                  </button>
                 </Link>
-                <Button type="primary" onClick={() => setIsActive(!isActive)}>
-                  {isActive ? t('Cancel Edit') : t('Edit Mode')}
-                </Button>
               </div>
             </div>
           </form>

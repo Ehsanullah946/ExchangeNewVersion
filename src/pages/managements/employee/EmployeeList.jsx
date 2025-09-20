@@ -35,10 +35,10 @@ const EmployeeList = () => {
   }, [search, dispatch]);
 
   const { data, isLoading, error } = useEmployee(
-    debouncedPhone,
     debouncedSearch,
-    page,
-    limit
+    debouncedPhone,
+    limit,
+    page
   );
 
   useEffect(() => {

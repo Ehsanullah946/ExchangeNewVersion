@@ -123,7 +123,10 @@ const Customers = () => {
             <tbody>
               {customers.length === 0 ? (
                 <tr>
-                  <td colSpan="8" className="px-4 py-4 text-center">
+                  <td
+                    colSpan="8"
+                    className="px-4 py-4 font-bold text-xl text-center"
+                  >
                     {t('No customer found for your search')}
                   </td>
                 </tr>
@@ -188,7 +191,7 @@ const Customers = () => {
                 {/* Previous */}
                 <li>
                   <button
-                    onClick={() => dispatch(setPage((p) => Math.max(p - 1, 1)))}
+                    onClick={() => dispatch(setPage(Math.max(page - 1, 1)))}
                     disabled={page === 1}
                     className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg 
                     ${
@@ -224,9 +227,7 @@ const Customers = () => {
                   <button
                     onClick={() =>
                       dispatch(
-                        setPage((p) =>
-                          Math.min(p + 1, Math.ceil(total / limit))
-                        )
+                        setPage(Math.min(page + 1, Math.ceil(total / limit)))
                       )
                     }
                     disabled={page === Math.ceil(total / limit)}

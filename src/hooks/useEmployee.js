@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
-import { getEmployee } from '../api/employeeApi';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createEmployee, getEmployee } from '../api/employeeApi';
+import { use } from 'react';
 
 export const useEmployee = (search = '', phone = '', limit = 10, page = 1) => {
   return useQuery({
@@ -8,7 +9,17 @@ export const useEmployee = (search = '', phone = '', limit = 10, page = 1) => {
     staleTime: 1000 * 60 * 5,
     keepPreviousData: true,
     onError: (error) => {
-      console.log('fail to fetch Employee', error);
+      console.log('failed to fetch Employee', error);
+    },
+  });
+};
+
+export const useCreateEmployee = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createEmployee,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['employees']);
     },
   });
 };
