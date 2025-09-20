@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { getExchanger } from '../api/exchangerApi';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createExchanger, getExchanger } from '../api/exchangerApi';
 
 export const useExchanger = (search = '', phone = '', limit = 10, page = 1) => {
   return useQuery({
@@ -9,6 +9,16 @@ export const useExchanger = (search = '', phone = '', limit = 10, page = 1) => {
     keepPreviousData: true,
     onError: (error) => {
       console.log('failed to fetch exchanger', error);
+    },
+  });
+};
+
+export const useCreateExchanger = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createExchanger,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['exchangers']);
     },
   });
 };

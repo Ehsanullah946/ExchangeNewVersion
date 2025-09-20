@@ -106,7 +106,7 @@ const CustomerAdd = () => {
 
     mutate(cleanData, {
       onSuccess: () => {
-        toast.success(t('customerCreated'));
+        toast.success(t('Customer Created'));
         setTimeout(() => navigate('/management/customer'), 1000);
       },
       onError: (error) => {

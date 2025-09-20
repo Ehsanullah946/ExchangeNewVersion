@@ -106,7 +106,7 @@ const BranchAdd = () => {
 
     mutate(cleanData, {
       onSuccess: () => {
-        toast.success(t('branch created'));
+        toast.success(t('Branch Created'));
         setTimeout(() => navigate('/management/branch'));
       },
       onError: (error) => {

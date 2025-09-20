@@ -24,3 +24,8 @@ export const getExchanger = async (filters = {}) => {
     throw error;
   }
 };
+
+export const createExchanger = async (payload) => {
+  const { data } = await axiosClient.post('/exchanger', payload);
+  return data;
+};

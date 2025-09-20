@@ -77,7 +77,7 @@ const EmployeeAdd = () => {
 
     mutate(cleanData, {
       onSuccess: () => {
-        toast.success(t('EmployeeCreated'));
+        toast.success(t('Employee Created'));
         setTimeout(() => navigate('/management/employeeList'), 1000);
       },
       onError: (error) => {
