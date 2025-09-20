@@ -138,7 +138,10 @@ const Branches = () => {
                     key={branch.id}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
-                    <td className="px-4 py-2">{index + 1}</td>
+                    <td className="px-4 py-2">
+                      {' '}
+                      {index + 1 + (page - 1) * limit}
+                    </td>
                     <td className="px-4 py-2">
                       {branch.Customer?.Stakeholder?.Person?.firstName || 'N/A'}{' '}
                       {branch.Customer?.Stakeholder?.Person?.lastName || ''}
@@ -170,8 +173,8 @@ const Branches = () => {
               )}
             </tbody>
           </table>
+
           <div className="">
-            {/* Pagination */}
             <nav
               className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
               aria-label="Table navigation"
@@ -198,17 +201,15 @@ const Branches = () => {
                     onClick={() => dispatch(setPage((p) => Math.max(p - 1, 1)))}
                     disabled={page === 1}
                     className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg 
-                                ${
-                                  page === 1
-                                    ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
-                                    : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
-                                }`}
+                      ${
+                        page === 1
+                          ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
+                          : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                      }`}
                   >
                     {t('Prev')}
                   </button>
                 </li>
-
-                {/* Page numbers */}
                 {Array.from(
                   { length: Math.ceil(total / limit) },
                   (_, i) => i + 1
@@ -238,11 +239,11 @@ const Branches = () => {
                     }
                     disabled={page === Math.ceil(total / limit)}
                     className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg 
-                                 ${
-                                   page === Math.ceil(total / limit)
-                                     ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
-                                     : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
-                                 }`}
+                      ${
+                        page === Math.ceil(total / limit)
+                          ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
+                          : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                      }`}
                   >
                     {t('Next')}
                   </button>

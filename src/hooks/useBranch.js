@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createBranch, getBranch } from '../api/branchApi';
 
-export const useBranch = (search = '', phone = '', limit, page) => {
+export const useBranch = (search = '', phone = '', limit = 10, page = 1) => {
   return useQuery({
     queryKey: ['branches', search, phone, limit, page],
     queryFn: () => getBranch({ search, phone, limit, page }),
