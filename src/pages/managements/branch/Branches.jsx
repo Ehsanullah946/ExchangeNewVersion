@@ -129,7 +129,7 @@ const Branches = () => {
               {branches.length === 0 ? (
                 <tr>
                   <td colSpan="8" className="px-4 py-4 text-center">
-                    {t('No branches found')}
+                    {t('No branches found for your search')}
                   </td>
                 </tr>
               ) : (

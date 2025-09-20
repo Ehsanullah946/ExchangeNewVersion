@@ -23,6 +23,7 @@ const Customers = () => {
     useSelector((state) => state.filters);
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
     return () => clearTimeout(handler);
@@ -123,7 +124,7 @@ const Customers = () => {
               {customers.length === 0 ? (
                 <tr>
                   <td colSpan="8" className="px-4 py-4 text-center">
-                    {t('No customers found')}
+                    {t('No customer found for your search')}
                   </td>
                 </tr>
               ) : (
@@ -132,9 +133,9 @@ const Customers = () => {
                     key={c.id}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
                   >
-                    {/* index corrected for pagination */}
                     <td className="px-3 py-1">
                       {index + 1 + (page - 1) * limit}
+                      {/* {c.id} */}
                     </td>
                     <td className="px-3 py-1">
                       {c.Stakeholder?.Person?.firstName || c.firstName}{' '}

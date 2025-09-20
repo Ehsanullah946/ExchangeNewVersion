@@ -10,7 +10,7 @@ const store = configureStore({
     customer: customerReducer,
     toast: toastReducer,
     filters: filterReducer,
-    employee: employeeReducer,
+    employees: employeeReducer,
   },
 });
 
