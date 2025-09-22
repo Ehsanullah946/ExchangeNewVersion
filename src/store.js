@@ -7,6 +7,7 @@ import employeeReducer from './features/employee/employeeSlice';
 import exchangerReducer from './features/exchanger/exchangerSlice';
 import senderReceiverReducer from './features/senderReceiver/senderReceiverSlice';
 import accountReducer from './features/account/accountSlice';
+import moneyTypeReducer from './features/moneyType/moneyTypeSlice';
 const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -17,6 +18,7 @@ const store = configureStore({
     exchanger: exchangerReducer,
     senderReceiver: senderReceiverReducer,
     account: accountReducer,
+    moneyType: moneyTypeReducer,
   },
 });
 

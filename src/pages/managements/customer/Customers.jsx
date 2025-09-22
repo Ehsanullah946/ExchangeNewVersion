@@ -137,8 +137,8 @@ const Customers = () => {
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
                   >
                     <td className="px-3 py-1">
-                      {index + 1 + (page - 1) * limit}
-                      {/* {c.id} */}
+                      {/* {index + 1 + (page - 1) * limit} */}
+                      {c.id}
                     </td>
                     <td className="px-3 py-1">
                       {c.Stakeholder?.Person?.firstName || c.firstName}{' '}

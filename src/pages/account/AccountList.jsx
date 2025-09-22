@@ -6,41 +6,30 @@ import { Link } from 'react-router-dom';
 import { BsPrinter, BsSearch, BsShare } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 import {
-  setPhone,
-  setDebouncedPhone,
   setDebouncedSearch,
-  toggleOpen,
   setPage,
+  setSearch,
 } from '../../features/ui/filterSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAccount } from '../../hooks/useAccount';
 const AccountList = () => {
   const { t } = useTranslation();
 
-  const { page, limit, phone, search, debouncedPhone, debouncedSearch } =
-    useSelector((state) => state.filters);
+  const { page, limit, search, debouncedSearch } = useSelector(
+    (state) => state.filters
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const handler = setTimeout(() => dispatch(setDebouncedPhone(phone)), 500);
-    return () => clearTimeout(handler);
-  }, [phone, dispatch]);
-
-  useEffect(() => {
-    const handler = setTimeout(() => dispatch(setDebouncedPhone(search)), 500);
+    const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
     return () => clearTimeout(handler);
   }, [search, dispatch]);
 
   useEffect(() => {
     dispatch(setPage(1));
-  }, [debouncedSearch, debouncedPhone, dispatch]);
+  }, [debouncedSearch, dispatch]);
 
-  const { data, isLoading, error } = useAccount(
-    debouncedPhone,
-    debouncedSearch,
-    limit,
-    page
-  );
+  const { data, isLoading, error } = useAccount(debouncedSearch, limit, page);
 
   const accounts = data?.data || [];
   const total = data?.total || 0;
@@ -89,13 +78,15 @@ const AccountList = () => {
           </Button>
         </Link>
 
-        <input
-          type="text"
-          placeholder={t('Search')}
-          //   value={search}
-          //   onChange={handleSearch}
-          className="border rounded px-1 flex-1"
-        />
+        <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
+          <input
+            type="text"
+            placeholder={t('Search By Name')}
+            value={search}
+            onChange={(e) => dispatch(setSearch(e.target.value))}
+            className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+          />
+        </div>
       </div>
 
       {/* Table */}
@@ -117,7 +108,7 @@ const AccountList = () => {
               <tr>
                 <th className="px-3 py-2">{t('Account No')}</th>
                 <th className="px-3 py-2">{t('Customer')}</th>
-                <th className="px-3 py-2">{t('Blance')}</th>
+                <th className="px-3 py-2">{t('Balance')}</th>
                 <th className="px-3 py-2">{t('Account Type')}</th>
                 <th className="px-3 py-2">{t('Date of Creation')}</th>
                 <th className="px-3 py-2">{t('Transactions')}</th>
@@ -139,7 +130,7 @@ const AccountList = () => {
               ) : (
                 accounts.map((c, index) => (
                   <tr
-                    key={c.id}
+                    key={c.No}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
                   >
                     <td className="px-3 py-2">{c.No}</td>

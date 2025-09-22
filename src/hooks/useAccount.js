@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createAccount, getAccounts } from '../api/accountApi';
 
-export const useAccount = (search = '', phone = '', limit = 10, page = 1) => {
+export const useAccount = (search = '', limit = 10, page = 1) => {
   return useQuery({
-    queryKey: ['accounts', search, phone, limit, page],
-    queryFn: () => getAccounts({ search, phone, limit, page }),
+    queryKey: ['accounts', search, limit, page],
+    queryFn: () => getAccounts({ search, limit, page }),
     staleTime: 0,
     refetchOnMount: 'always',
     onError: (error) => {
