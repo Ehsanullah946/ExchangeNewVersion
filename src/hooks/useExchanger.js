@@ -5,7 +5,8 @@ export const useExchanger = (search = '', phone = '', limit = 10, page = 1) => {
   return useQuery({
     queryKey: ['exchangers', search, phone, limit, page],
     queryFn: () => getExchanger({ search, phone, limit, page }),
-    staleTime: 1000 * 60 * 5,
+    staleTime: 0,
+    refetchOnMount: 'always',
     keepPreviousData: true,
     onError: (error) => {
       console.log('failed to fetch exchanger', error);

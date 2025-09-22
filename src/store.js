@@ -5,6 +5,7 @@ import toastReducer from './features/toast/toastSlice';
 import filterReducer from './features/ui/filterSlice';
 import employeeReducer from './features/employee/employeeSlice';
 import exchangerReducer from './features/exchanger/exchangerSlice';
+import senderReceiverReducer from './features/senderReceiver/senderReceiverSlice';
 const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -13,6 +14,7 @@ const store = configureStore({
     filters: filterReducer,
     employees: employeeReducer,
     exchanger: exchangerReducer,
+    senderReceiver: senderReceiverReducer,
   },
 });
 

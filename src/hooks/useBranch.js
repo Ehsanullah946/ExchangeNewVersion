@@ -5,7 +5,8 @@ export const useBranch = (search = '', phone = '', limit = 10, page = 1) => {
   return useQuery({
     queryKey: ['branches', search, phone, limit, page],
     queryFn: () => getBranch({ search, phone, limit, page }),
-    staleTime: 1000 * 60 * 5,
+    staleTime: 0,
+    refetchOnMount: 'always',
     keepPreviousData: true,
     onError: (error) => {
       console.log('Error fetching branches', error);

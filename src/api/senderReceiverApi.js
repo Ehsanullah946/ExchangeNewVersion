@@ -1,8 +1,11 @@
+import { useQueryClient } from '@tanstack/react-query';
 import axiosClient from './axiosClient';
 
-export const getExchanger = async (filters = {}) => {
+export const getSenderReceiver = async (filters = {}) => {
   console.log('api filter:', filters);
+
   const params = new URLSearchParams();
+
   Object.entries(filters).forEach(([key, value]) => {
     if (value) {
       params.append(key, value);
@@ -14,10 +17,10 @@ export const getExchanger = async (filters = {}) => {
 
   try {
     const { data } = await axiosClient.get(
-      `/exchanger${queryString ? `?${queryString}` : ''}`
+      `/senderReceiver${queryString ? `?${queryString}` : ''}`
     );
 
-    console.log('API response for exchanger:', data);
+    console.log('API response for senderReceiver:', data);
     return data;
   } catch (error) {
     console.error('API error:', error);
@@ -25,7 +28,7 @@ export const getExchanger = async (filters = {}) => {
   }
 };
 
-export const createExchanger = async (payload) => {
-  const { data } = await axiosClient.post('/exchanger', payload);
+export const createSenderReceiver = async (paylaod) => {
+  const { data } = await axiosClient.post('/senderReceiver', paylaod);
   return data;
 };

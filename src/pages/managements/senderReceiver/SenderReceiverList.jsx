@@ -1,44 +1,96 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
 import { Link } from 'react-router-dom';
 import { BsPrinter, BsSearch, BsShare } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setSearch,
+  setPhone,
+  setDebouncedPhone,
+  setDebouncedSearch,
+  toggleOpen,
+  setPage,
+} from '../../../features/ui/filterSlice';
+import { useSenderReceiver } from '../../../hooks/useSenderReceiver';
 const SenderReceiverList = () => {
   const { t } = useTranslation();
-  const [loading, setLoading] = useState(false);
+
+  const { phone, search, page, limit, debouncedSearch, debouncedPhone, open } =
+    useSelector((state) => state.filters);
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const handler = setTimeout(() => dispatch(setDebouncedPhone(phone)), 500);
+    return () => clearTimeout(handler);
+  }, [phone, dispatch]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
+    return () => clearTimeout(handler);
+  }, [search, dispatch]);
+
+  const { data, isLoading, error } = useSenderReceiver(
+    debouncedSearch,
+    debouncedPhone,
+    limit,
+    page
+  );
+
+  useEffect(() => {
+    dispatch(setPage(1));
+  }, [debouncedPhone, debouncedSearch, dispatch]);
+
+  const senderReceivers = data?.data || [];
+  const total = data?.total || 0;
+
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+
+  useEffect(() => {
+    if (total > 0 && page > totalPages) {
+      dispatch(setPage(totalPages));
+    }
+    if (total === 0 && page !== 1) {
+      dispatch(setPage(1));
+    }
+  }, [total, totalPages, page, dispatch]);
+
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
-      {/* Search + Add button */}
-      <div className="flex mt-1 mb-2 gap-0.2">
+      {open && (
+        <div className="flex gap-2">
+          <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
+            <input
+              type="text"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => dispatch(setPhone(e.target.value))}
+              className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+            />
+          </div>
+        </div>
+      )}
+      <div className="flex mt-1 mb-2">
         <Link to="/management/senderReceiverAdd">
-          <Button type="primary">
-            <span className="flex gap-1">
-              {t('Add New SenderReceiver')}{' '}
-              <BiSolidUserAccount className="mt-1" />
-            </span>
-          </Button>
+          <Button type="primary">{t('Add New SenderReceiver')}</Button>
         </Link>
-        <Link to="">
-          <Button type="primary">
-            <span className="flex gap-1">
-              {t('Limit Search')} <BsSearch className="mt-1" />
-            </span>
-          </Button>
-        </Link>
-        <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#b34cfd] to-[#6048f9]  rounded-2xl overflow-hidden cursor-pointer shadow-md">
+        <Button onClick={() => dispatch(toggleOpen(!open))} type="primary">
+          {t('Limit Search')}
+        </Button>
+        <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
           <input
             type="text"
-            name="text"
-            id="input"
-            placeholder={t('Search')}
-            class="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+            placeholder={t('Search By Name')}
+            value={search}
+            onChange={(e) => dispatch(setSearch(e.target.value))}
+            className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
           />
         </div>
       </div>
 
-      {loading ? (
+      {isLoading ? (
         <p className="p-4">
           {
             <PulseLoader
@@ -50,36 +102,149 @@ const SenderReceiverList = () => {
           }
         </p>
       ) : (
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className=" text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 hidden md:table-header-group">
-            <tr>
-              <th className="px-3 py-2">{t('ID')}</th>
-              <th className="px-3 py-2">{t('First Name')}</th>
-              <th className="px-3 py-2">{t('Last Name')}</th>
-              <th className="px-3 py-2">{t('Father Name')}</th>
-              <th className="px-3 py-2">{t('Marital')}</th>
-              <th className="px-3 py-2">{t('N-Card')}</th>
-              <th className="px-3 py-2">{t('Phone')}</th>
-              <th className="px-3 py-2">{t('Edit')}</th>
-              <th className="px-3 py-2">{t('Delete')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row">
-              <td className="px-3 py-2">1</td>
-              <td className="px-3 py-2">احسان الله</td>
-              <td className="px-3 py-2">اکبری</td>
-              <td className="px-3 py-2">ابراهیم</td>
-              <td className="px-3 py-2">مذکر</td>
-              <td className="px-3 py-2">97290473</td>
-              <td className="px-3 py-2">0790074323</td>
-              <td className="px-3 py-2">
-                <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
-              </td>
-              <td className="px-3 py-2">❌</td>
-            </tr>
-          </tbody>
-        </table>
+        <>
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className=" text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 hidden md:table-header-group">
+              <tr>
+                <th className="px-3 py-2">{t('ID')}</th>
+                <th className="px-3 py-2">{t('First Name')}</th>
+                <th className="px-3 py-2">{t('Last Name')}</th>
+                <th className="px-3 py-2">{t('Father Name')}</th>
+                <th className="px-3 py-2">{t('N-Card')}</th>
+                <th className="px-3 py-2">{t('Phone')}</th>
+                <th className="px-3 py-2">{t('Edit')}</th>
+                <th className="px-3 py-2">{t('Delete')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {senderReceivers.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="10"
+                    className="px-4 py-4 font-bold text-xl text-center"
+                  >
+                    {t('No Exchanger found for your search')}
+                  </td>
+                </tr>
+              ) : (
+                senderReceivers.map((e, index) => (
+                  <tr
+                    key={e.id}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
+                  >
+                    <td className="px-3 py-2">
+                      {' '}
+                      {index + 1 + (page - 1) * limit}
+                      {/* {e.id} */}
+                    </td>
+                    <td className="px-3 py-2">
+                      {' '}
+                      {e.Stakeholder?.Person?.firstName || e.firstName}{' '}
+                    </td>
+                    <td className="px-3 py-2">
+                      {' '}
+                      {e.Stakeholder?.Person?.lastName || e.lastName}
+                    </td>
+                    <td className="px-3 py-2">
+                      {' '}
+                      {e.Stakeholder?.Person?.fatherName || e.fatherName}
+                    </td>
+                    <td className="px-3 py-2">
+                      {' '}
+                      {e.Stakeholder?.Person?.nationalCode || e.nationalCode}
+                    </td>
+                    <td className="px-3 py-2">
+                      {' '}
+                      {e.Stakeholder?.Person?.phone || e.phone || '-'}
+                    </td>
+                    <td className="px-3 py-2">
+                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                    </td>
+                    <td className="px-3 py-2">❌</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+          <div className="">
+            {/* Pagination */}
+            <nav
+              className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+              aria-label="Table navigation"
+            >
+              <span className="text-sm font-normal rtl:mr-2  text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+                {t('Showing')}{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {(page - 1) * limit + 1}
+                </span>{' '}
+                -{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {Math.min(page * limit, total)}
+                </span>{' '}
+                {t('of')}{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {total}
+                </span>
+              </span>
+
+              <ul className="inline-flex -space-x-px mb-1 rtl:ml-2 rtl:space-x-reverse text-sm h-8">
+                {/* Previous */}
+                <li>
+                  <button
+                    onClick={() => dispatch(setPage(Math.max(page - 1, 1)))}
+                    disabled={page === 1}
+                    className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg 
+                                ${
+                                  page === 1
+                                    ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
+                                    : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                                }`}
+                  >
+                    {t('Prev')}
+                  </button>
+                </li>
+
+                {/* Page numbers */}
+                {Array.from(
+                  { length: Math.ceil(total / limit) },
+                  (_, i) => i + 1
+                ).map((pageNum) => (
+                  <li key={pageNum}>
+                    <button
+                      onClick={() => dispatch(setPage(pageNum))}
+                      className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 
+                                  ${
+                                    page === pageNum
+                                      ? 'text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white'
+                                      : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                                  }`}
+                    >
+                      {pageNum}
+                    </button>
+                  </li>
+                ))}
+                <li>
+                  <button
+                    onClick={() =>
+                      dispatch(
+                        setPage(Math.min(page + 1, Math.ceil(total / limit)))
+                      )
+                    }
+                    disabled={page === Math.ceil(total / limit)}
+                    className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg 
+                                ${
+                                  page === Math.ceil(total / limit)
+                                    ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
+                                    : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                                }`}
+                  >
+                    {t('Next')}
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </>
       )}
     </div>
   );

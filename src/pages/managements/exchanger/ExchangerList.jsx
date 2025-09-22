@@ -18,7 +18,6 @@ import {
 import { useExchanger } from '../../../hooks/useExchanger';
 const ExchangerList = () => {
   const { t } = useTranslation();
-  const [loading, setLoading] = useState(false);
 
   const { phone, search, page, limit, open, debouncedSearch, debouncedPhone } =
     useSelector((state) => state.filters);
