@@ -181,7 +181,6 @@ const SenderReceiverAdd = () => {
                     className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                   />
                 </div>
-
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
                   <label className="sm:w-32">{t('Marital')}:</label>
                   <select

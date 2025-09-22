@@ -6,6 +6,7 @@ import filterReducer from './features/ui/filterSlice';
 import employeeReducer from './features/employee/employeeSlice';
 import exchangerReducer from './features/exchanger/exchangerSlice';
 import senderReceiverReducer from './features/senderReceiver/senderReceiverSlice';
+import accountReducer from './features/account/accountSlice';
 const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -15,6 +16,7 @@ const store = configureStore({
     employees: employeeReducer,
     exchanger: exchangerReducer,
     senderReceiver: senderReceiverReducer,
+    account: accountReducer,
   },
 });
 
