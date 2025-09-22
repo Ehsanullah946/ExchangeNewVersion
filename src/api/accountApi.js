@@ -24,3 +24,8 @@ export const getAccounts = async (filters = {}) => {
     throw error;
   }
 };
+
+export const createAccount =async (payload) => {
+    const { data } = await axiosClient.post("/account", payload);
+    return data;
+}
