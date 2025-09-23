@@ -26,3 +26,8 @@ export const getExchange = async (filters = {}) => {
     throw error;
   }
 };
+
+export const createExchange = async (payload) => {
+  const { data } = await axiosClient.post('/exchange', payload);
+  return data;
+};
