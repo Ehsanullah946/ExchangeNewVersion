@@ -1,7 +1,8 @@
 import axiosClient from './axiosClient';
 
-export const getExchanger = async (filters = {}) => {
-  console.log('api filter:', filters);
+export const getExchange = async (filters = {}) => {
+  console.log('api filters', filters);
+
   const params = new URLSearchParams();
 
   Object.entries(filters).forEach(([key, value]) => {
@@ -15,19 +16,13 @@ export const getExchanger = async (filters = {}) => {
 
   try {
     const { data } = await axiosClient.get(
-      `/exchanger${queryString ? `?${queryString}` : ''}`
+      `/exchange${queryString ? `?${queryString}` : ''}`
     );
 
-    console.log('API response for exchanger:', data);
-
+    console.log('API response for exchange:', data);
     return data;
   } catch (error) {
     console.error('API error:', error);
     throw error;
   }
-};
-
-export const createExchanger = async (payload) => {
-  const { data } = await axiosClient.post('/exchanger', payload);
-  return data;
 };

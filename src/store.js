@@ -8,6 +8,7 @@ import exchangerReducer from './features/exchanger/exchangerSlice';
 import senderReceiverReducer from './features/senderReceiver/senderReceiverSlice';
 import accountReducer from './features/account/accountSlice';
 import moneyTypeReducer from './features/moneyType/moneyTypeSlice';
+import exchangeReducer from './features/exchange/exchangeSlice';
 const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -19,6 +20,7 @@ const store = configureStore({
     senderReceiver: senderReceiverReducer,
     account: accountReducer,
     moneyType: moneyTypeReducer,
+    exchange: exchangeReducer,
   },
 });
 
