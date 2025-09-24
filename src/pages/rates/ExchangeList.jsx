@@ -5,7 +5,6 @@ import Button from '../../components/layout/Button';
 import { Link } from 'react-router-dom';
 import { BsPrinter, BsSearch } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
-import { BsSend } from 'react-icons/bs';
 import { RiExchange2Fill } from 'react-icons/ri';
 import {
   setDebouncedSearch,
@@ -59,28 +58,33 @@ const ExchangeList = () => {
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
-      <div className="flex mt-1 mb-2 gap-0.2">
-        <Link to="/rates/exchange">
-          <Button type="primary">
-            <span className="flex gap-1">
-              {t('Exchange')} <RiExchange2Fill className="mt-1" />
-            </span>
-          </Button>
+      {open && (
+        <div className="flex gap-2">
+          <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
+            <input
+              type="text"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => dispatch(setPhone(e.target.value))}
+              className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+            />
+          </div>
+        </div>
+      )}
+      <div className="flex mt-1 mb-2">
+        <Link to="/management/exchangerAdd">
+          <Button type="primary">{t('Add New Exchanger')}</Button>
         </Link>
-        <Link to="">
-          <Button type="primary">
-            <span className="flex gap-1">
-              {t('Limit Search')} <BsSearch className="mt-1" />
-            </span>
-          </Button>
-        </Link>
-        <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
+        <Button onClick={() => dispatch(toggleOpen(!open))} type="primary">
+          {t('Limit Search')}
+        </Button>
+        <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
           <input
             type="text"
-            name="text"
-            id="input"
-            placeholder={t('Search')}
-            class="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+            placeholder={t('Search By Name')}
+            value={search}
+            onChange={(e) => dispatch(setSearch(e.target.value))}
+            className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
           />
         </div>
       </div>
@@ -97,70 +101,151 @@ const ExchangeList = () => {
           }
         </p>
       ) : (
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className=" text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 hidden md:table-header-group">
-            <tr>
-              <th className="px-3 py-2">{t('Number')}</th>
-              <th className="px-3 py-2">{t('Rates')}</th>
-              <th className="px-3 py-2">{t('Sel Amount')}</th>
-              <th className="px-3 py-2">{t('Sel Currency')}</th>
-              <th className="px-3 py-2">{t('Purches Amount')}</th>
-              <th className="px-3 py-2">{t('Purches Currency')}</th>
-              <th className="px-3 py-2">{t('Exchanger')}</th>
-              <th className="px-3 py-2">{t('Customer')}</th>
-              <th className="px-3 py-2">{t('Date')}</th>
-              <th className="px-3 py-2">{t('Description')}</th>
-              <th className="px-3 py-2">{t('Print')}</th>
-              <th className="px-3 py-2">{t('Edit')}</th>
-              <th className="px-3 py-2">{t('Delete')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {exchanges.length === 0 ? (
+        <>
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className=" text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 hidden md:table-header-group">
               <tr>
-                <td
-                  colSpan="8"
-                  className="px-4 py-4 font-bold text-xl text-center"
-                >
-                  {t('No exchang found for your search')}
-                </td>
+                <th className="px-3 py-2">{t('Number')}</th>
+                <th className="px-3 py-2">{t('Rates')}</th>
+                <th className="px-3 py-2">{t('Sel Amount')}</th>
+                <th className="px-3 py-2">{t('Sel Currency')}</th>
+                <th className="px-3 py-2">{t('Purches Amount')}</th>
+                <th className="px-3 py-2">{t('Purches Currency')}</th>
+                <th className="px-3 py-2">{t('Exchanger')}</th>
+                <th className="px-3 py-2">{t('Customer')}</th>
+                <th className="px-3 py-2">{t('Date')}</th>
+                <th className="px-3 py-2">{t('Description')}</th>
+                <th className="px-3 py-2">{t('Print')}</th>
+                <th className="px-3 py-2">{t('Edit')}</th>
+                <th className="px-3 py-2">{t('Delete')}</th>
               </tr>
-            ) : (
-              exchanges.map((c, index) => (
-                <tr
-                  key={c.id}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
-                >
-                  <td className="px-3 py-2">{c.id}</td>
-                  <td className="px-3 py-2">{c.rate}</td>
-                  <td className="px-3 py-2">{c.saleAmount}</td>
-                  <td className="px-3 py-2">{c.SaleType?.typeName}</td>
-                  <td className="px-3 py-2">{c.purchaseAmount}</td>
-                  <td className="px-3 py-2">{c.PurchaseType?.typeName}</td>
-                  <td className="px-3 py-2">null</td>
-                  <td className="px-3 py-2">
-                    {c.Customer?.Stakeholder?.Person?.firstName || c.firstName}
+            </thead>
+            <tbody>
+              {exchanges.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="8"
+                    className="px-4 py-4 font-bold text-xl text-center"
+                  >
+                    {t('No exchang found for your search')}
                   </td>
-                  <td dir="ltr" className="px-3 py-2">
-                    {' '}
-                    {new Date(c.eDate)
-                      .toISOString()
-                      .slice(0, 16)
-                      .replace('T', ' ')}
-                  </td>
-                  <td className="px-3 py-2">{c.description}</td>
-                  <td className="px-3 py-2">
-                    <BsPrinter className="text-lg text-blue-600 cursor-pointer" />
-                  </td>
-                  <td className="px-3 py-2">
-                    <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
-                  </td>
-                  <td className="px-3 py-2">❌</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                exchanges.map((c, index) => (
+                  <tr
+                    key={c.id}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
+                  >
+                    <td className="px-3 py-2">{c.id}</td>
+                    <td className="px-3 py-2">{c.rate}</td>
+                    <td className="px-3 py-2">{c.saleAmount}</td>
+                    <td className="px-3 py-2">{c.SaleType?.typeName}</td>
+                    <td className="px-3 py-2">{c.purchaseAmount}</td>
+                    <td className="px-3 py-2">{c.PurchaseType?.typeName}</td>
+                    <td className="px-3 py-2">null</td>
+                    <td className="px-3 py-2">
+                      {c.Customer?.Stakeholder?.Person?.firstName ||
+                        c.firstName}
+                    </td>
+                    <td dir="ltr" className="px-3 py-2">
+                      {' '}
+                      {new Date(c.eDate)
+                        .toISOString()
+                        .slice(0, 16)
+                        .replace('T', ' ')}
+                    </td>
+                    <td className="px-3 py-2">{c.description}</td>
+                    <td className="px-3 py-2">
+                      <BsPrinter className="text-lg text-blue-600 cursor-pointer" />
+                    </td>
+                    <td className="px-3 py-2">
+                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                    </td>
+                    <td className="px-3 py-2">❌</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+          <div className="">
+            {/* Pagination */}
+            <nav
+              className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+              aria-label="Table navigation"
+            >
+              <span className="text-sm font-normal rtl:mr-2  text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+                {t('Showing')}{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {(page - 1) * limit + 1}
+                </span>{' '}
+                -{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {Math.min(page * limit, total)}
+                </span>{' '}
+                {t('of')}{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {total}
+                </span>
+              </span>
+
+              <ul className="inline-flex -space-x-px mb-1 rtl:ml-2 rtl:space-x-reverse text-sm h-8">
+                {/* Previous */}
+                <li>
+                  <button
+                    onClick={() => dispatch(setPage(Math.max(page - 1, 1)))}
+                    disabled={page === 1}
+                    className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg 
+                              ${
+                                page === 1
+                                  ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
+                                  : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                              }`}
+                  >
+                    {t('Prev')}
+                  </button>
+                </li>
+
+                {/* Page numbers */}
+                {Array.from(
+                  { length: Math.ceil(total / limit) },
+                  (_, i) => i + 1
+                ).map((pageNum) => (
+                  <li key={pageNum}>
+                    <button
+                      onClick={() => dispatch(setPage(pageNum))}
+                      className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 
+                                ${
+                                  page === pageNum
+                                    ? 'text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white'
+                                    : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                                }`}
+                    >
+                      {pageNum}
+                    </button>
+                  </li>
+                ))}
+                <li>
+                  <button
+                    onClick={() =>
+                      dispatch(
+                        setPage(Math.min(page + 1, Math.ceil(total / limit)))
+                      )
+                    }
+                    disabled={page === Math.ceil(total / limit)}
+                    className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg 
+                              ${
+                                page === Math.ceil(total / limit)
+                                  ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
+                                  : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                              }`}
+                  >
+                    {t('Next')}
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </>
       )}
     </div>
   );

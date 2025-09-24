@@ -7,8 +7,9 @@ export const useAccount = (search = '', limit = 10, page = 1) => {
     queryFn: () => getAccounts({ search, limit, page }),
     staleTime: 0,
     refetchOnMount: 'always',
+    keepPreviousData: true,
     onError: (error) => {
-      console.log('some thing went worng:', error);
+      console.log('something went worng:', error);
     },
   });
 };

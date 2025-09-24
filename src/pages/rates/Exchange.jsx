@@ -45,7 +45,6 @@ const Exchange = () => {
 
   const handleChange = (e) => {
     const { name, value, checked, type } = e.target;
-
     setForm((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
@@ -62,30 +61,6 @@ const Exchange = () => {
       purchaseAmount: prev.saleAmount,
     }));
   };
-
-  useEffect(() => {
-    const { rate, saleAmount, purchaseAmount, swap } = form;
-    if (!rate) return;
-
-    // If user entered saleAmount only → calculate purchaseAmount
-    if (saleAmount && !purchaseAmount) {
-      setForm((prev) => ({
-        ...prev,
-        purchaseAmount: swap
-          ? (parseFloat(saleAmount) / parseFloat(rate)).toFixed(2) // reversed
-          : (parseFloat(saleAmount) * parseFloat(rate)).toFixed(2),
-      }));
-    }
-    // If user entered purchaseAmount only → calculate saleAmount
-    else if (!saleAmount && purchaseAmount) {
-      setForm((prev) => ({
-        ...prev,
-        saleAmount: swap
-          ? (parseFloat(purchaseAmount) * parseFloat(rate)).toFixed(2)
-          : (parseFloat(purchaseAmount) / parseFloat(rate)).toFixed(2),
-      }));
-    }
-  }, [form.rate, form.saleAmount, form.purchaseAmount, form.swap]);
 
   const { data: customerResponse } = useCustomers();
 
@@ -107,6 +82,49 @@ const Exchange = () => {
     value: String(c.id), // ✅ must be string
     label: c.typeName,
   }));
+
+  const isUSD = (typeId) => {
+    const type = moneyTypeOptions.find((opt) => opt.value === typeId);
+    return (
+      type?.label?.toLowerCase().includes('usd') ||
+      type?.label?.toLowerCase().includes('usa')
+    );
+  };
+
+  useEffect(() => {
+    const { rate, saleAmount, purchaseAmount, saleMoneyType } = form;
+    if (!rate) return;
+
+    const saleIsUSD = isUSD(form.saleMoneyType);
+    const purchaseIsUSD = isUSD(form.purchaseMoneyType);
+
+    // 🟢 Case 1: User typed SALE amount
+    if (saleAmount && !purchaseAmount) {
+      setForm((prev) => ({
+        ...prev,
+        purchaseAmount: saleIsUSD
+          ? (parseFloat(saleAmount) * parseFloat(rate)).toFixed(2) // USD → AFN
+          : (parseFloat(saleAmount) / parseFloat(rate)).toFixed(2), // AFN → USD
+      }));
+    }
+
+    // 🟢 Case 2: User typed PURCHASE amount
+    else if (!saleAmount && purchaseAmount) {
+      setForm((prev) => ({
+        ...prev,
+        saleAmount: purchaseIsUSD
+          ? (parseFloat(purchaseAmount) * parseFloat(rate)).toFixed(2) // USD → AFN
+          : (parseFloat(purchaseAmount) / parseFloat(rate)).toFixed(2), // AFN → USD
+      }));
+    }
+  }, [
+    form.rate,
+    form.saleAmount,
+    form.purchaseAmount,
+    form.saleMoneyType,
+    form.purchaseMoneyType,
+    moneyTypeOptions,
+  ]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -143,8 +161,6 @@ const Exchange = () => {
 
           if (error.response.data.message.includes('Validation error')) {
             errorMessage = t('ExchangeDuplicate');
-          } else if (error.response.data.message.includes('validation')) {
-            errorMessage = t('invalidInputData');
           }
         }
 
@@ -373,28 +389,28 @@ const Exchange = () => {
               </div>
               <div className="flex justify-center sm:justify-start gap-2 col-span-full">
                 <button
-                  type="button"
-                  onClick={handleSwapCurrencies}
-                  className="px-4 py-2 bg-blue-500 text-white rounded"
-                >
-                  Swap ↔
-                </button>
-                <button
                   type="submit"
                   onClick={handleSubmit}
                   disabled={isLoading}
-                  className="text-white bg-blue-600 hover:bg-blue-700 px-4 py-1 rounded-lg"
+                  className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
                 >
                   {t('Save')}
                 </button>
                 <Link to="/rates/exchangeList">
                   <button
                     type="button"
-                    className="text-white bg-red-500 hover:bg-red-600 px-4 py-1 rounded-lg"
+                    className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
                   >
                     {t('Cancel')}
                   </button>
                 </Link>
+                <button
+                  type="button"
+                  onClick={handleSwapCurrencies}
+                  className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
+                >
+                  Swap ↔
+                </button>
               </div>
             </div>
           </form>

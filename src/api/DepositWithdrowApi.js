@@ -1,6 +1,6 @@
 import axiosClient from './axiosClient';
 
-export const getAccounts = async (filters = {}) => {
+export const getDepositWithdraw = async (filters = {}) => {
   console.log('api filters', filters);
 
   const params = new URLSearchParams();
@@ -15,19 +15,17 @@ export const getAccounts = async (filters = {}) => {
 
   try {
     const { data } = await axiosClient.get(
-      `/account?${queryString ? `?${queryString}` : ' '}`
+      `/depositWithdraw?${queryString ? `?${queryString}` : ' '}`
     );
 
     console.log(queryString);
-    console.log('api response for account:', data);
+    console.log('api response for depositWithdraw:', data);
     return data;
   } catch (error) {
-    console.log('some thing went wrong with fetching the account', error);
+    console.log(
+      'some thing went wrong with fetching the depositWithdraw',
+      error
+    );
     throw error;
   }
-};
-
-export const createAccount = async (payload) => {
-  const { data } = await axiosClient.post('/account', payload);
-  return data;
 };
