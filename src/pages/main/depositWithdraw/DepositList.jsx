@@ -125,7 +125,9 @@ const DepositList = () => {
                       {c.Account?.Customer?.Stakeholder?.Person?.firstName}
                     </td>
                     <td className="px-3 py-2">{c.deposit}</td>
-                    <td className="px-3 py-2">AFG</td>
+                    <td className="px-3 py-2">
+                      {c.Account?.MoneyType.typeName}
+                    </td>
                     <td className="px-3 py-2">{c.description}</td>
                     <td dir="ltr" className="px-3 py-2">
                       {' '}

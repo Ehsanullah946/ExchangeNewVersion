@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { getDeposit } from '../api/DepositWithdrowApi';
+import { getWithdraw } from '../api/DepositWithdrowApi';
 
-export const useDeposit = (search = '', limit = 10, page = 1) => {
+export const useWithdraw = (search = '', limit = 10, page = 1) => {
   return useQuery({
-    queryKey: ['deposit', search, limit, page],
-    queryFn: () => getDeposit({ search, limit, page }),
+    queryKey: ['withdraw', search, limit, page],
+    queryFn: () => getWithdraw({ search, limit, page }),
     staleTime: 0,
     refetchOnMount: 'always',
     keepPreviousData: true,
