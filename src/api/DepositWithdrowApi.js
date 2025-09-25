@@ -15,7 +15,7 @@ export const getDepositWithdraw = async (filters = {}) => {
 
   try {
     const { data } = await axiosClient.get(
-      `/depositWithdraw?${queryString ? `?${queryString}` : ' '}`
+      `depositWithdraw/deposits?${queryString ? `?${queryString}` : ' '}`
     );
 
     console.log(queryString);

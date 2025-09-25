@@ -111,7 +111,7 @@ const DepositList = () => {
                     colSpan="8"
                     className="px-4 py-4 font-bold text-xl text-center"
                   >
-                    {t('No customer found for your search')}
+                    {t('No Deposit found for your search')}
                   </td>
                 </tr>
               ) : (
@@ -121,11 +121,19 @@ const DepositList = () => {
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
                   >
                     <td className="px-3 py-2">{c.No}</td>
-                    <td className="px-3 py-2">احسان الله</td>
-                    <td className="px-3 py-2">30000</td>
+                    <td className="px-3 py-2">
+                      {c.Account?.Customer?.Stakeholder?.Person?.firstName}
+                    </td>
+                    <td className="px-3 py-2">{c.deposit}</td>
                     <td className="px-3 py-2">AFG</td>
-                    <td className="px-3 py-2">نقد آورده</td>
-                    <td className="px-3 py-2">{`${new Date().toLocaleDateString()}`}</td>
+                    <td className="px-3 py-2">{c.description}</td>
+                    <td dir="ltr" className="px-3 py-2">
+                      {' '}
+                      {new Date(c.DWDate)
+                        .toISOString()
+                        .slice(0, 16)
+                        .replace('T', ' ')}
+                    </td>
                     <td className="px-3 py-2">
                       <BsPrinter className="text-lg text-blue-600 cursor-pointer" />
                     </td>

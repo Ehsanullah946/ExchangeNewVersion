@@ -1,10 +1,8 @@
 import axiosClient from './axiosClient';
 
 export const getAccounts = async (filters = {}) => {
-  console.log('api filters', filters);
-
+  console.log('API call with filters:', filters);
   const params = new URLSearchParams();
-
   Object.entries(filters).forEach(([key, value]) => {
     if (value) {
       params.append(key, value);
@@ -12,17 +10,17 @@ export const getAccounts = async (filters = {}) => {
   });
 
   const queryString = params.toString();
+  console.log('Query string:', queryString);
 
   try {
     const { data } = await axiosClient.get(
-      `/account?${queryString ? `?${queryString}` : ' '}`
+      `/account${queryString ? `?${queryString}` : ''}`
     );
 
-    console.log(queryString);
-    console.log('api response for account:', data);
+    console.log('API response:', data);
     return data;
   } catch (error) {
-    console.log('some thing went wrong with fetching the account', error);
+    console.error('API error:', error);
     throw error;
   }
 };
