@@ -15,7 +15,7 @@ export const getDeposit = async (filters = {}) => {
 
   try {
     const { data } = await axiosClient.get(
-      `depositWithdraw/deposits?${queryString ? `?${queryString}` : ' '}`
+      `depositWithdraw/deposits${queryString ? `?${queryString}` : ''}`
     );
 
     console.log(queryString);
@@ -45,17 +45,19 @@ export const getWithdraw = async (filters = {}) => {
 
   try {
     const { data } = await axiosClient.get(
-      `depositWithdraw/withdraws?${queryString ? `?${queryString}` : ' '}`
+      `depositWithdraw/withdraws${queryString ? `?${queryString}` : ''}`
     );
 
     console.log(queryString);
-    console.log('api response for depositWithdraw:', data);
+    console.log('api response for Withdraw:', data);
     return data;
   } catch (error) {
-    console.log(
-      'some thing went wrong with fetching the depositWithdraw',
-      error
-    );
+    console.log('some thing went wrong with fetching the Withdraw', error);
     throw error;
   }
+};
+
+export const createDepositWithdraw = async (paylaod) => {
+  const { data } = await axiosClient.post('/depositWithdraw', paylaod);
+  return data;
 };

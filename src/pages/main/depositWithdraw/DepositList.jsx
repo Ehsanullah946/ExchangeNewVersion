@@ -17,8 +17,9 @@ import { useDeposit } from '../../../hooks/useDeposit';
 const DepositList = () => {
   const { t } = useTranslation();
 
-  const { open, search, limit, page, debouncedPhone, debouncedSearch } =
-    useSelector((state) => state.filters);
+  const { open, search, limit, page, debouncedSearch } = useSelector(
+    (state) => state.filters
+  );
 
   const dispatch = useDispatch();
 
@@ -29,14 +30,12 @@ const DepositList = () => {
 
   useEffect(() => {
     dispatch(setPage(1));
-  }, [debouncedSearch, debouncedPhone, dispatch]);
+  }, [debouncedSearch, dispatch]);
 
   const { data, isLoading, error } = useDeposit(debouncedSearch, limit, page);
 
   const deposit = data?.data || [];
   const total = data?.total || 0;
-
-  console.log('deposit data', deposit);
 
   const totalPages = Math.max(1, Math.ceil(total / limit));
 
@@ -51,32 +50,23 @@ const DepositList = () => {
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
-      <div className="flex mt-1 mb-1">
+      <div className="flex mt-1 mb-2">
         <Link to="/main/deposit">
-          <Button type="primary">
-            <span className="flex gap-1">
-              {t('Deposit')} <FaRegArrowAltCircleDown className="mt-1" />
-            </span>
-          </Button>
+          <Button type="primary">{t('Deposit')}</Button>
         </Link>
-        <Link to="">
-          <Button type="primary">
-            <span className="flex gap-1">
-              {t('Limit Search')} <BsSearch className="mt-1" />
-            </span>
-          </Button>
-        </Link>
-        <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
+        <Button onClick={() => dispatch(toggleOpen(!open))} type="primary">
+          {t('Limit Search')}
+        </Button>
+        <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
           <input
             type="text"
-            name="text"
-            id="input"
-            placeholder={t('Search')}
-            class="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+            placeholder={t('Search By Name')}
+            value={search}
+            onChange={(e) => dispatch(setSearch(e.target.value))}
+            className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
           />
         </div>
       </div>
-
       {isLoading ? (
         <p className="p-4">
           {
@@ -170,7 +160,6 @@ const DepositList = () => {
               </span>
 
               <ul className="inline-flex -space-x-px mb-1 rtl:ml-2 rtl:space-x-reverse text-sm h-8">
-                {/* Previous */}
                 <li>
                   <button
                     onClick={() => dispatch(setPage(Math.max(page - 1, 1)))}
