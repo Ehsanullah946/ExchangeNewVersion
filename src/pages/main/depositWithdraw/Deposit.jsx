@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Select from 'react-select';
 import Button from '../../../components/layout/Button';
 import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
-
 import { useTranslation } from 'react-i18next';
 import { FaRegArrowAltCircleDown } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,7 +9,6 @@ import { useToast } from '../../../hooks/useToast';
 import { useCreateDeposit } from '../../../hooks/useDeposit';
 import { useAccount } from '../../../hooks/useAccount';
 const Deposit = () => {
-  const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
 
   const toast = useToast();
@@ -23,7 +21,7 @@ const Deposit = () => {
     description: '',
     accountNo: '',
     employeeId: '',
-    DWData: '',
+    DWData: new Date().toISOString().split('T')[0],
   });
 
   const { data: accountResponse } = useAccount();
@@ -149,7 +147,7 @@ const Deposit = () => {
                     name="deposit"
                     onChange={handleChange}
                     value={form.deposit}
-                    className=" w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    className=" w-full border border-gray-300 shadow-sm  font-semibold text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>

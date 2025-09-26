@@ -63,7 +63,7 @@ const DepositList = () => {
             placeholder={t('Search By Name')}
             value={search}
             onChange={(e) => dispatch(setSearch(e.target.value))}
-            className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+            className="h-6 border-none outline-none  bg-white rounded-[30px] px-3 tracking-[0.8px]  font-serif"
           />
         </div>
       </div>
