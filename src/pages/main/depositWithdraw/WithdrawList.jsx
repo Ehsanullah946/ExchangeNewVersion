@@ -35,8 +35,6 @@ const WithdrawList = () => {
   const withdraw = data?.data || [];
   const total = data?.total || 0;
 
-  console.log('withdraw data', withdraw);
-
   const totalPages = Math.max(1, Math.ceil(total / limit));
 
   useEffect(() => {
