@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
@@ -7,9 +7,55 @@ import { BsSearch } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 import { GiPayMoney } from 'react-icons/gi';
 
+import {
+  setSearch,
+  setDebouncedSearch,
+  setPage,
+  toggleOpen,
+} from '../../../features/ui/filterSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { useConsumption } from '../../../hooks/useConsumption';
+
 const ConsumptionList = () => {
   const { t } = useTranslation();
-  const [loading, setLoading] = useState(false);
+
+  const { search, debouncedSearch, page, limit, open } = useSelector(
+    (state) => state.filters
+  );
+
+  const { data, isLoading, error } = useConsumption(
+    debouncedSearch,
+    limit,
+    page
+  );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
+    return () => clearTimeout(handler);
+  }, [search, dispatch]);
+
+  useEffect(() => {
+    dispatch(setPage(1));
+  }, [debouncedSearch, dispatch]);
+
+  const consumption = data?.data || [];
+  const total = data?.total || 0;
+
+  console.log('consumption data:', consumption);
+
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+
+  useEffect(() => {
+    if (total > 0 && page > totalPages) {
+      dispatch(setPage(totalPages));
+    }
+    if (total === 0 && page !== 1) {
+      dispatch(setPage(1));
+    }
+  }, [total, totalPages, page, dispatch]);
+
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
       <div className="flex mt-1 mb-1">
@@ -38,7 +84,7 @@ const ConsumptionList = () => {
         </div>
       </div>
 
-      {loading ? (
+      {isLoading ? (
         <p className="p-4">
           {
             <PulseLoader
@@ -50,34 +96,135 @@ const ConsumptionList = () => {
           }
         </p>
       ) : (
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className=" text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 hidden md:table-header-group">
-            <tr>
-              <th className="px-3 py-2">{t('Number')}</th>
-              <th className="px-3 py-2">{t('Amount')}</th>
-              <th className="px-3 py-2">{t('Currency')}</th>
-              <th className="px-3 py-2">{t('Expence Type')}</th>
-              <th className="px-3 py-2">{t('Description')}</th>
-              <th className="px-3 py-2">{t('Date')}</th>
-              <th className="px-3 py-2">{t('Edit')}</th>
-              <th className="px-3 py-2">{t('Delete')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row">
-              <td className="px-3 py-2">1</td>
-              <td className="px-3 py-2">30000</td>
-              <td className="px-3 py-2">AFG</td>
-              <td className="px-3 py-2">دکان</td>
-              <td className="px-3 py-2">نقد برداشته</td>
-              <td className="px-3 py-2">{`${new Date().toLocaleDateString()}`}</td>
-              <td className="px-3 py-2">
-                <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
-              </td>
-              <td className="px-3 py-2">❌</td>
-            </tr>
-          </tbody>
-        </table>
+        <>
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className=" text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 hidden md:table-header-group">
+              <tr>
+                <th className="px-3 py-2">{t('Number')}</th>
+                <th className="px-3 py-2">{t('Amount')}</th>
+                <th className="px-3 py-2">{t('Currency')}</th>
+                <th className="px-3 py-2">{t('Expence Type')}</th>
+                <th className="px-3 py-2">{t('Description')}</th>
+                <th className="px-3 py-2">{t('Date')}</th>
+                <th className="px-3 py-2">{t('Edit')}</th>
+                <th className="px-3 py-2">{t('Delete')}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {consumption.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="8"
+                    className="px-4 py-4 font-bold text-xl text-center"
+                  >
+                    {t('No account found for your search')}
+                  </td>
+                </tr>
+              ) : (
+                consumption.map((c, index) => (
+                  <tr
+                    key={c.No}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
+                  >
+                    <td className="px-3 py-2">{c.No}</td>
+                    <td className="px-3 py-2">{c.amount}</td>
+                    <td className="px-3 py-2">{c.MoneyType.typeName}</td>
+                    <td className="px-3 py-2">{c.expenceType}</td>
+                    <td className="px-3 py-2">{c.description}</td>
+                    <td dir="ltr" className="px-3 py-2">
+                      {new Date(c.eDate)
+                        .toISOString()
+                        .slice(0, 16)
+                        .replace('T', ' ')}
+                    </td>
+                    <td className="px-3 py-2">
+                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                    </td>
+                    <td className="px-3 py-2">❌</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+          <div className="">
+            {/* Pagination */}
+            <nav
+              className="flex items-center flex-column flex-wrap md:flex-row justify-between pt-4"
+              aria-label="Table navigation"
+            >
+              <span className="text-sm font-normal rtl:mr-2  text-gray-500 dark:text-gray-400 mb-4 md:mb-0 block w-full md:inline md:w-auto">
+                {t('Showing')}{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {(page - 1) * limit + 1}
+                </span>{' '}
+                -{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {Math.min(page * limit, total)}
+                </span>{' '}
+                {t('of')}{' '}
+                <span className="font-semibold text-gray-900 dark:text-white">
+                  {total}
+                </span>
+              </span>
+
+              <ul className="inline-flex -space-x-px mb-1 rtl:ml-2 rtl:space-x-reverse text-sm h-8">
+                {/* Previous */}
+                <li>
+                  <button
+                    onClick={() => dispatch(setPage(Math.max(page - 1, 1)))}
+                    disabled={page === 1}
+                    className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-gray-300 rounded-s-lg 
+                                            ${
+                                              page === 1
+                                                ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
+                                                : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                                            }`}
+                  >
+                    {t('Prev')}
+                  </button>
+                </li>
+
+                {/* Page numbers */}
+                {Array.from(
+                  { length: Math.ceil(total / limit) },
+                  (_, i) => i + 1
+                ).map((pageNum) => (
+                  <li key={pageNum}>
+                    <button
+                      onClick={() => dispatch(setPage(pageNum))}
+                      className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 
+                                    ${
+                                      page === pageNum
+                                        ? 'text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white'
+                                        : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                                    }`}
+                    >
+                      {pageNum}
+                    </button>
+                  </li>
+                ))}
+                <li>
+                  <button
+                    onClick={() =>
+                      dispatch(
+                        setPage(Math.min(page + 1, Math.ceil(total / limit)))
+                      )
+                    }
+                    disabled={page === Math.ceil(total / limit)}
+                    className={`flex items-center justify-center px-3 h-8 leading-tight border border-gray-300 rounded-e-lg 
+                                             ${
+                                               page === Math.ceil(total / limit)
+                                                 ? 'text-gray-300 bg-gray-100 cursor-not-allowed'
+                                                 : 'text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
+                                             }`}
+                  >
+                    {t('Next')}
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </>
       )}
     </div>
   );
