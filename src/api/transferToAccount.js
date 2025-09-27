@@ -14,7 +14,7 @@ export const getTransferToAccount = async (filters = {}) => {
 
   try {
     const { data } = await axiosClient.get(
-      `/expence${queryString ? `?${queryString}` : ''}`
+      `/accountToAccount${queryString ? `?${queryString}` : ''}`
     );
 
     console.log('API response:', data);
@@ -23,4 +23,9 @@ export const getTransferToAccount = async (filters = {}) => {
     console.error('API error:', error);
     throw error;
   }
+};
+
+export const createTransferToAccount = async (payload) => {
+  const { data } = await axiosClient.post('/accountToAccount', payload);
+  return data;
 };

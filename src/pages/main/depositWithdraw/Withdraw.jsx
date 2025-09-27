@@ -52,7 +52,7 @@ const Withdraw = () => {
 
     const payload = {
       ...form,
-      deposit: parseFloat(form.deposit) || 0,
+      withdraw: parseFloat(form.withdraw) || 0,
     };
 
     const cleanData = Object.fromEntries(

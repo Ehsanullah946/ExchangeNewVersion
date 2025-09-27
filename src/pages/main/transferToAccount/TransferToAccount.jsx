@@ -4,10 +4,84 @@ import Button from '../../../components/layout/Button';
 import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
 import { MdCompareArrows } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useToast } from '../../../hooks/useToast';
+import { useCreateTransferToAccount } from '../../../hooks/useTransferToAccount';
+import { useAccount } from '../../../hooks/useAccount';
 const TransferToAccount = () => {
   const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
+
+  const toast = useToast();
+  const { mutate, isLoading } = useCreateTransferToAccount();
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    fromAccount: '',
+    toAccount: '',
+    amount: '',
+    description: '',
+    employeeId: '',
+    tData: new Date().toISOString().split('T')[0],
+  });
+
+  const { data: accountResponse } = useAccount();
+
+  const accountOptions = (accountResponse?.data || []).map((c) => ({
+    value: c.No,
+    label: `${c.Customer?.Stakeholder?.Person?.firstName} - ${c.MoneyType.typeName}`,
+  }));
+
+  const handleChange = (e) => {
+    const { value, name, checked, type } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!form.fromAccount || !form.toAccount || !form.amount) {
+      toast.error(t('Please Enter the base account  and  distanation account'));
+      return;
+    }
+
+    const payload = {
+      ...form,
+      amount: parseFloat(form.amount) || 0,
+    };
+
+    const cleanData = Object.fromEntries(
+      Object.entries(payload).filter(
+        ([_, v]) => v !== '' && v !== null && v !== undefined
+      )
+    );
+    mutate(cleanData, {
+      onSuccess: () => {
+        toast.success(t('transfer Created'));
+        navigate('/main/transferToAccountList');
+      },
+      onError: (error) => {
+        console.error('Backend error:', error);
+        let errorMessage = t('createTransferFailed');
+
+        if (error.response?.data?.message) {
+          errorMessage = error.response.data.message;
+
+          if (error.response.data.message.includes('Validation error')) {
+            errorMessage = t('TransferDuplicate');
+          } else if (error.response.data.message.includes('validation')) {
+            errorMessage = t('invalidInputData');
+          }
+        }
+
+        toast.error(errorMessage);
+      },
+    });
+  };
+
   return (
     <>
       <div className="grid justify-center">
@@ -62,35 +136,58 @@ const TransferToAccount = () => {
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('From Account')}:</label>
                   <Select
-                    className="w-full shadow-sm "
-                    name="branch"
+                    className="w-full shadow-sm"
+                    name="fromAccount"
                     isSearchable
-                    isDisabled={!isActive}
+                    options={accountOptions}
+                    value={accountOptions.find(
+                      (opt) => opt.value === form.fromAccount
+                    )}
+                    onChange={(selected) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        fromAccount: selected?.value || '',
+                      }))
+                    }
                   />
                 </div>
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('To Account')}:</label>
                   <Select
-                    className="w-full shadow-sm "
-                    name="branch"
+                    className="w-full shadow-sm"
+                    name="toAccount"
                     isSearchable
-                    isDisabled={!isActive}
+                    options={accountOptions}
+                    value={accountOptions.find(
+                      (opt) => opt.value === form.toAccount
+                    )}
+                    onChange={(selected) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        toAccount: selected?.value || '',
+                      }))
+                    }
                   />
                 </div>
-
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('Amount')}:</label>
                   <input
-                    type="text"
-                    className=" w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    type="number"
+                    name="amount"
+                    onChange={handleChange}
+                    value={form.amount}
+                    className=" w-full border border-gray-300 shadow-sm font-semibold  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('Date')}:</label>
+                <div className="flex gap-6 justify-between">
+                  <label className="sm:w-32 mt-2">{t('Date')}:</label>
                   <input
                     type="date"
-                    className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    name="tDate"
+                    value={form.tData}
+                    onChange={handleChange}
+                    className="border shadow-sm rounded-lg w-full p-1"
                     required
                   />
                 </div>
@@ -98,29 +195,31 @@ const TransferToAccount = () => {
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32 mt-1">{t('Description')}:</label>
                   <textarea
-                    rows="3"
+                    rows="4"
+                    name="description"
+                    onChange={handleChange}
+                    value={form.description}
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     placeholder="بشتر ..........."
                   />
                 </div>
-
-                <div className="flex flex-wrap gap-3 mt-3 justify-center sm:justify-start">
-                  {isActive ? (
-                    <>
-                      <Button type="primary" htmlType="submit">
-                        {t('Save')}
-                      </Button>
-                      <Button type="primary">{t('Cancel')}</Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button type="primary" onClick={() => setIsActive(true)}>
-                        {t('New')}
-                      </Button>
-                      <Button type="primary">{t('Edit')}</Button>
-                      <Button type="primary">{t('Delete')}</Button>
-                    </>
-                  )}
+                <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
+                  <button
+                    onClick={handleSubmit}
+                    disabled={isLoading}
+                    type="button"
+                    className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
+                  >
+                    {t('Save')}
+                  </button>
+                  <Link to="/management/employeeList">
+                    <button
+                      type="button"
+                      className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
+                    >
+                      {t('Cancel')}
+                    </button>
+                  </Link>
                 </div>
               </div>
               <div>
