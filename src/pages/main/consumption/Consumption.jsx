@@ -6,12 +6,93 @@ import Button from '../../../components/layout/Button';
 import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
 import { GiPayMoney } from 'react-icons/gi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useToast } from '../../../hooks/useToast';
+import { useCreateConsumption } from '../../../hooks/useConsumption';
+import { useEmployee } from '../../../hooks/useEmployee';
+import { useMoneyType } from '../../../hooks/useMoneyType';
 
 const Consumption = () => {
-  const { currentColor } = useStateContext();
   const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
+
+  const toast = useToast();
+  const { mutate, isLoading } = useCreateConsumption();
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    amount: '',
+    moneyTypeId: '',
+    description: '',
+    employeeId: '',
+    expenceType: '',
+    eDate: new Date().toISOString().split('T')[0],
+  });
+
+  const { data: employeeResponse } = useEmployee();
+
+  const employeeOptions = (employeeResponse?.data || []).map((c) => ({
+    value: c.No,
+    label: `${c.Stakeholder?.Person?.firstName}`,
+  }));
+
+  const handleChange = (e) => {
+    const { value, name, checked, type } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const { data: moneyTypeResponse } = useMoneyType();
+  const moneyTypeOptions = (moneyTypeResponse?.data || []).map((c) => ({
+    value: String(c.id),
+    label: c.typeName,
+  }));
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!form.amount || !form.moneyTypeId) {
+      toast.error(t('Please Enter amount and moneyType'));
+      return;
+    }
+
+    const payload = {
+      ...form,
+      amount: parseFloat(form.amount) || 0,
+    };
+
+    const cleanData = Object.fromEntries(
+      Object.entries(payload).filter(
+        ([_, v]) => v !== '' && v !== null && v !== undefined
+      )
+    );
+
+    mutate(cleanData, {
+      onSuccess: () => {
+        toast.success(t('consumption Created'));
+        navigate('/main/consumptionList');
+      },
+      onError: (error) => {
+        console.error('Backend error:', error);
+        let errorMessage = t('createConsumptionFailed');
+
+        if (error.response?.data?.message) {
+          errorMessage = error.response.data.message;
+
+          if (error.response.data.message.includes('Validation error')) {
+            errorMessage = t('consumptionDuplicate');
+          } else if (error.response.data.message.includes('validation')) {
+            errorMessage = t('invalidInputData');
+          }
+        }
+
+        toast.error(errorMessage);
+      },
+    });
+  };
+
   return (
     <>
       <div className="grid justify-center">
@@ -58,18 +139,21 @@ const Consumption = () => {
                   <label className="sm:w-32">{t('Date')}:</label>
                   <input
                     type="date"
+                    name="eDate"
+                    value={form.eDate}
+                    onChange={handleChange}
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
+                {/* <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
                   <label className="sm:w-32">{t('Number')}:</label>
                   <input
                     type="text"
                     className="border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
                     required
                   />
-                </div>
+                </div> */}
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
                   <label htmlFor="" className="sm:w-32">
                     {t('Amount')}:
@@ -80,7 +164,9 @@ const Consumption = () => {
                     </div>
                     <input
                       id="price"
-                      name="price"
+                      name="amount"
+                      value={form.amount}
+                      onChange={handleChange}
                       type="number"
                       step="0.01"
                       placeholder="0.00"
@@ -91,13 +177,23 @@ const Consumption = () => {
                     <div className="relative shrink-0">
                       <select
                         id="currency"
-                        name="currency"
+                        name="moneyTypeId"
+                        value={form.moneyTypeId}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            moneyTypeId: e.target.value,
+                          }))
+                        }
                         aria-label="Currency"
                         className="appearance-none rounded-md bg-transparent py-1.5 pr-6 pl-2 text-base text-gray-700 focus:outline-none sm:text-sm"
                       >
-                        <option>USD</option>
-                        <option>CAD</option>
-                        <option>EUR</option>
+                        <option value="">Cur</option>
+                        {moneyTypeOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
                       </select>
 
                       {/* Dropdown icon */}
@@ -109,13 +205,15 @@ const Consumption = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
                   <label className="sm:w-32">{t('Expence Type')}:</label>
-                  <Select
-                    className="w-full shadow-sm"
-                    name="branch"
-                    isSearchable
-                    isDisabled={!isActive}
+                  <input
+                    type="number"
+                    onChange={handleChange}
+                    value={form.expenceType}
+                    name="expenceType"
+                    className="border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
+                    required
                   />
                 </div>
 
@@ -123,28 +221,31 @@ const Consumption = () => {
                   <label className="sm:w-32 mt-1">{t('Description')}:</label>
                   <textarea
                     rows="3"
+                    name="description"
+                    onChange={handleChange}
+                    value={form.description}
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     placeholder="بشتر ..........."
                   />
                 </div>
 
-                <div className="flex flex-wrap gap-3 mt-3 justify-center sm:justify-start">
-                  {isActive ? (
-                    <>
-                      <Button type="primary" htmlType="submit">
-                        {t('Save')}
-                      </Button>
-                      <Button type="primary">{t('Cancel')}</Button>
-                    </>
-                  ) : (
-                    <>
-                      <Button type="primary" onClick={() => setIsActive(true)}>
-                        {t('New')}
-                      </Button>
-                      <Button type="primary">{t('Edit')}</Button>
-                      <Button type="primary">{t('Delete')}</Button>
-                    </>
-                  )}
+                <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
+                  <button
+                    onClick={handleSubmit}
+                    disabled={isLoading}
+                    type="button"
+                    className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
+                  >
+                    {t('Save')}
+                  </button>
+                  <Link to="/main/consumptionList">
+                    <button
+                      type="button"
+                      className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
+                    >
+                      {t('Cancel')}
+                    </button>
+                  </Link>
                 </div>
               </div>
 

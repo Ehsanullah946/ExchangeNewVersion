@@ -1,6 +1,6 @@
 import axiosClient from './axiosClient';
 
-export const getConsumption = async (filters = {}) => {
+export const getTransferToAccount = async (filters = {}) => {
   console.log('API call with filters:', filters);
   const params = new URLSearchParams();
   Object.entries(filters).forEach(([key, value]) => {
@@ -23,9 +23,4 @@ export const getConsumption = async (filters = {}) => {
     console.error('API error:', error);
     throw error;
   }
-};
-
-export const createConsumption = async (payload) => {
-  const { data } = await axiosClient.post('/expence', payload);
-  return data;
 };

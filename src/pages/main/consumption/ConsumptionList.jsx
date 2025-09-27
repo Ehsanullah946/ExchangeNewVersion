@@ -73,13 +73,13 @@ const ConsumptionList = () => {
             </span>
           </Button>
         </Link>
-        <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
+        <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
           <input
             type="text"
-            name="text"
-            id="input"
-            placeholder={t('Search')}
-            class="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+            placeholder={t('Search By Name')}
+            value={search}
+            onChange={(e) => dispatch(setSearch(e.target.value))}
+            className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
           />
         </div>
       </div>

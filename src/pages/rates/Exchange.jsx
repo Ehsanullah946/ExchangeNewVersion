@@ -17,7 +17,6 @@ import { useCustomers } from '../../hooks/useCustomers';
 import { useExchanger } from '../../hooks/useExchanger';
 import { useMoneyType } from '../../hooks/useMoneyType';
 const Exchange = () => {
-  const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
 
   const [form, setForm] = useState({
