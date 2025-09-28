@@ -13,7 +13,6 @@ import { useMoneyType } from '../../hooks/useMoneyType';
 
 const Accounts = () => {
   const { t } = useTranslation();
-  const { isActive } = useStateContext();
   const navigate = useNavigate();
   const toast = useToast();
   const { mutate, isLoading } = useCreateAccount();

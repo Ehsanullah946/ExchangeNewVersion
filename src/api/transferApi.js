@@ -25,3 +25,8 @@ export const getTransfer = async (filters = {}) => {
     throw error;
   }
 };
+
+export const createTransfer = async (payload) => {
+  const { data } = await axiosClient.post('/transfer', payload);
+  return data;
+};

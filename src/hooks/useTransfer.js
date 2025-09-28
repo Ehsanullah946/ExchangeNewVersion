@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { getTransfer } from '../api/transferApi';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createTransfer, getTransfer } from '../api/transferApi';
 
 export const useTransfer = (search = '', limit = 10, page = 1) => {
   return useQuery({
@@ -10,6 +10,16 @@ export const useTransfer = (search = '', limit = 10, page = 1) => {
     keepPreviousData: true,
     onError: (error) => {
       console.error('Error fetching transfer:', error);
+    },
+  });
+};
+
+export const useCreateTransfer = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createTransfer,
+    onSuccess: () => {
+      queryClient.invalidateQueries['transfer'];
     },
   });
 };
