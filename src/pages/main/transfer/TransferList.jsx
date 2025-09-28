@@ -77,7 +77,6 @@ const TransferList = () => {
           />
         </div>
       </div>
-
       {isLoading ? (
         <p className="p-4">
           {
@@ -120,7 +119,7 @@ const TransferList = () => {
               ) : (
                 transfer.map((c, index) => (
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row">
-                    <td className="px-3 py-2">{c.id}</td>
+                    <td className="px-3 py-2">{c.transferNo}</td>
                     <td className="px-3 py-2">{c.senderName}</td>
                     <td className="px-3 py-2">{c.receiverName}</td>
                     <td className="px-3 py-2">{c.transferAmount}</td>
