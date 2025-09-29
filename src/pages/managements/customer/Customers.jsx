@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PulseLoader } from 'react-spinners';
-import { useCustomers } from '../../../hooks/useCustomers';
+import { useCustomers, useDeleteCustomer } from '../../../hooks/useCustomers';
 import { BiSolidDetail, BiSolidEdit } from 'react-icons/bi';
 
 import {
@@ -23,6 +23,20 @@ const Customers = () => {
     useSelector((state) => state.filters);
 
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+  const deleteMutation = useDeleteCustomer();
+
+  const handleEdit = (id) => {
+    // Navigate to your edit page, e.g. /management/customerEdit/:id
+    navigate(`/management/customer/${id}/edit`);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this customer?')) {
+      deleteMutation.mutate(id);
+    }
+  };
 
   useEffect(() => {
     const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
@@ -145,7 +159,7 @@ const Customers = () => {
                       {c.Stakeholder?.Person?.lastName || c.lastName}
                     </td>
                     <td className="px-3 py-1">{c.orgCustomerId}</td>
-                    <td className="px-3 py-1">
+                    <td dir="ltr" className="px-3 py-1">
                       {c.Stakeholder?.Person?.phone || c.phone || '-'}
                     </td>
                     <td className="px-3 py-1">
@@ -157,9 +171,21 @@ const Customers = () => {
                       <BiSolidDetail className="text-lg text-blue-600 cursor-pointer" />
                     </td>
                     <td className="px-3 py-1">
-                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                      <BiSolidEdit
+                        onClick={() => handleEdit(c.id)}
+                        className="text-lg text-blue-600 cursor-pointer"
+                      />
                     </td>
-                    <td className="px-3 py-1">❌</td>
+                    <td className="px-3 py-1">
+                      {' '}
+                      <button
+                        onClick={() => handleDelete(c.id)}
+                        disabled={deleteMutation.isLoading}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        ❌
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}

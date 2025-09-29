@@ -25,17 +25,22 @@ export const getCustomer = async (filters = {}) => {
   }
 };
 
+export const getSingleCustomer = async (id) => {
+  const { data } = await axiosClient.get(`/customer/${id}`);
+  return data;
+};
+
 export const createCustomer = async (payload) => {
   const { data } = await axiosClient.post('/customer', payload);
   return data;
 };
 
 export const updateCustomer = async ({ id, payload }) => {
-  const { data } = await axiosClient.put(`/customer/:${id}`, payload);
+  const { data } = await axiosClient.patch(`/customer/${id}`, payload);
   return data;
 };
 
 export const deleteCustomer = async (id) => {
-  const { data } = await axiosClient.delete(`/customer/:${id}`);
+  const { data } = await axiosClient.delete(`/customer/${id}`);
   return data;
 };

@@ -3,6 +3,7 @@ import {
   createCustomer,
   deleteCustomer,
   getCustomer,
+  getSingleCustomer,
   updateCustomer,
 } from '../api/customerApi';
 export const useCustomers = (search = '', phone = '', limit = 10, page = 1) => {
@@ -14,6 +15,17 @@ export const useCustomers = (search = '', phone = '', limit = 10, page = 1) => {
     keepPreviousData: true,
     onError: (error) => {
       console.error('Error fetching customers:', error);
+    },
+  });
+};
+
+export const useSingleCustomer = (id) => {
+  return useQuery({
+    queryKey: ['customers', id],
+    queryFn: () => getSingleCustomer(id),
+    enabled: !!id,
+    onError: (error) => {
+      console.error('Error fetching customer by id:', error);
     },
   });
 };

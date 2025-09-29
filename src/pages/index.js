@@ -6,7 +6,7 @@ export { default as Settings } from './Settings';
 export { default as Main } from './Main';
 
 export { default as Customers } from './managements/customer/Customers';
-export { default as Customer } from './managements/customer/Customers';
+export { default as CustomerEdit } from './managements/customer/CustomerEdit';
 export { default as Branches } from './managements/branch/Branches';
 export { default as EmployeeAdd } from './managements/employee/EmployeeAdd';
 export { default as EmployeeList } from './managements/employee/EmployeeList';

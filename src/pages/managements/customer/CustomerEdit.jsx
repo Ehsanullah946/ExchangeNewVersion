@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useCustomer, useUpdateCustomer } from '../../../hooks/useCustomers';
+import {
+  useSingleCustomer,
+  useUpdateCustomer,
+} from '../../../hooks/useCustomers';
 import { useToast } from '../../../hooks/useToast';
 import Button from '../../../components/layout/Button';
-import { BsListCheck } from 'react-icons/bs';
+import { BsPhone, BsSearch, BsTelegram, BsWhatsapp } from 'react-icons/bs';
+import { RiMailFill, RiSendPlaneLine } from 'react-icons/ri';
+import { PulseLoader } from 'react-spinners';
 
 const CustomerEdit = () => {
   const { id } = useParams();
@@ -12,8 +17,10 @@ const CustomerEdit = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { data, isLoading: loadingCustomer } = useCustomer(id);
+  const { data, isLoading: loadingCustomer } = useSingleCustomer(id);
   const { mutate: updateCustomer, isLoading: updating } = useUpdateCustomer();
+
+  console.log(data);
 
   const [form, setForm] = useState({
     firstName: '',
@@ -38,8 +45,30 @@ const CustomerEdit = () => {
   });
 
   useEffect(() => {
-    if (data) {
-      setForm((prev) => ({ ...prev, ...data }));
+    if (data?.data) {
+      const customer = data.data;
+      const stakeholder = customer.Stakeholder || {};
+      const person = stakeholder.Person || {};
+      setForm((prev) => ({
+        ...prev,
+        ...customer,
+        firstName: person.firstName,
+        lastName: person.lastName,
+        fatherName: person.fatherName,
+        phone: person.phone,
+        email: person.email,
+        nationalCode: person.nationalCode,
+        currentAddress: person.currentAddress,
+
+        permanentAddress: stakeholder.permanentAddress,
+        job: stakeholder.job,
+        gender: stakeholder.gender,
+        maritalStatus: stakeholder.maritalStatus,
+        whatsAppEnabled: Boolean(customer.whatsAppEnabled),
+        telegramEnabled: Boolean(customer.telegramEnabled),
+        emailEnabled: Boolean(customer.emailEnabled),
+        phoneEnabled: Boolean(customer.phoneEnabled),
+      }));
     }
   }, [data]);
 
@@ -62,7 +91,7 @@ const CustomerEdit = () => {
       { id, payload: cleanData },
       {
         onSuccess: () => {
-          toast.success(t('Customer Updated'));
+          toast.success(t('Update Successful'));
           navigate('/management/customer');
         },
         onError: (err) => {
@@ -73,24 +102,17 @@ const CustomerEdit = () => {
     );
   };
 
-  if (loadingCustomer) return <p className="p-4">{t('Loading...')}</p>;
+  if (loadingCustomer)
+    return (
+      <p className="p-4 flex justify-center">
+        <PulseLoader color="green" size={15} />
+      </p>
+    );
   return (
     <>
       <div className="grid justify-center">
         <div className="flex mt-1 mb-1">
-          <Link to="/management/customer">
-            <Button type="primary">
-              <span className="flex justify-between">
-                <BsListCheck className="mt-1 ml-3" />
-                {t('List')}
-              </span>
-            </Button>
-          </Link>
-          <Button type="primary">
-            <span className="flex justify-between">
-              <BsPrinter className="mt-1 ml-3" /> {t('Print')}
-            </span>
-          </Button>
+          <Link to="/management/customer"></Link>
           <Button type="primary">
             <span className="flex justify-between">
               <BsSearch className="mt-1 ml-3" /> {t('Search')}
@@ -111,7 +133,7 @@ const CustomerEdit = () => {
           <form onSubmit={handleSubmit}>
             <div className="font-extrabold bg-gradient-to-b from-[#b34cfd] to-[#6048f9] p-3 ltr:mr-4 rtl:ml-4 rounded-t-2xl text-white text-center">
               <span className="flex justify-center gap-3">
-                {t('Add New Customer')} <RiSendPlaneLine className="mt-1" />
+                {t('Update Customer')} <RiSendPlaneLine className="mt-1" />
               </span>
             </div>
 

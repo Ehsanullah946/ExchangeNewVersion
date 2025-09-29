@@ -50,6 +50,7 @@ import {
   ExchangerList,
   ExchangerAdd,
   ExchangeList,
+  CustomerEdit,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -73,6 +74,7 @@ const App = () => {
             <Route path="/management" element={<Management />}>
               <Route index element={<Navigate replace to="customer" />} />
               <Route path="customer" element={<Customers />} />
+              <Route path="customer/:id/edit" element={<CustomerEdit />} />
               <Route path="customerAdd" element={<CustomerAdd />} />
               <Route
                 path="customer/:id/transactions"
