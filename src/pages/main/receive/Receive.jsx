@@ -7,10 +7,121 @@ import { BsListCheck } from 'react-icons/bs';
 import { BsPrinter } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
 import { RiDownload2Line } from 'react-icons/ri';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useToast } from '../../../hooks/useToast';
+import { useCreateReceive } from '../../../hooks/useReceive';
+import { useMoneyType } from '../../../hooks/useMoneyType';
+import { useCustomers } from '../../../hooks/useCustomers';
+import { useBranch } from '../../../hooks/useBranch';
 const Receive = () => {
   const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
+
+  const navigate = useNavigate();
+  const toast = useToast();
+  const { mutate, isLoading } = useCreateReceive();
+
+  const { data: moneyTypeResponse } = useMoneyType();
+
+  const moneyTypeOptions = (moneyTypeResponse?.data || []).map((c) => ({
+    value: c.id,
+    label: `${c.typeName}`,
+  }));
+
+  const { data: customerResponse } = useCustomers();
+
+  const customerOptions = (customerResponse?.data || []).map((c) => ({
+    value: c.id,
+    label: `${c.Stakeholder?.Person?.firstName} ${c.Stakeholder?.Person?.lastName}`,
+  }));
+
+  const { data: branchResponse } = useBranch();
+
+  const branchOptions = (branchResponse?.data || []).map((b) => ({
+    value: b.id,
+    label: `${b.Customer?.Stakeholder?.Person?.firstName} ${b.Customer?.Stakeholder?.Person?.lastName}`,
+  }));
+
+  const [form, setForm] = useState({
+    receiveNo: '',
+    receiveAmount: '',
+    chargesAmount: '',
+    chargesType: '',
+    branchCharges: '',
+    branchChargesType: '',
+    rDate: '',
+    description: '',
+    passTo: '',
+    fromWhere: '',
+    passNo: '',
+    customerId: '',
+    senderName: '',
+    receiverName: '',
+    moneyTypeId: '',
+    channels: '',
+    receiveStatus: false,
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // simple validation
+    if (
+      !form.fromWhere ||
+      !form.senderName ||
+      !form.receiverName ||
+      !form.moneyTypeId ||
+      !form.receiveNo
+    ) {
+      toast.error(t('Please select Receive field'));
+      return;
+    }
+
+    const payload = {
+      ...form,
+      transferAmount: parseFloat(form.transferAmount) || 0,
+      chargesAmount: parseFloat(form.chargesAmount) || 0,
+      branchCharges: parseFloat(form.branchCharges),
+    };
+
+    const cleanData = Object.fromEntries(
+      Object.entries(payload).filter(
+        ([_, v]) => v !== '' && v !== null && v !== undefined
+      )
+    );
+
+    mutate(cleanData, {
+      onSuccess: () => {
+        toast.success(t('Receive Created'));
+        navigate('/main/receiveList');
+      },
+      onError: (error) => {
+        console.error('Backend error:', error);
+        let errorMessage = t('createReceiveFailed');
+
+        if (error.response?.data?.message) {
+          errorMessage = error.response.data.message;
+
+          if (error.response.data.message.includes('Validation error')) {
+            errorMessage = t('ReceiveDuplicate');
+          } else if (error.response.data.message.includes('validation')) {
+            errorMessage = t('invalidInputData');
+          }
+        }
+
+        toast.error(errorMessage);
+      },
+    });
+  };
+
   return (
     <>
       <div className="grid justify-center">
@@ -57,9 +168,18 @@ const Receive = () => {
                   <label className="sm:w-32 mt-1">{t('Branch')}:</label>
                   <Select
                     className="w-full shadow-sm"
-                    name="branch"
+                    name="fromWhere"
                     isSearchable
-                    isDisabled={!isActive}
+                    options={branchOptions}
+                    value={branchOptions.find(
+                      (opt) => opt.value === form.fromWhere
+                    )}
+                    onChange={(selected) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        fromWhere: selected?.value || '',
+                      }))
+                    }
                   />
                 </div>
 
@@ -67,6 +187,9 @@ const Receive = () => {
                   <label className="sm:w-32">{t('Number')}:</label>
                   <input
                     type="text"
+                    name="receiveNo"
+                    onChange={handleChange}
+                    value={form.receiveNo}
                     className="border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
                     required
                   />
@@ -75,7 +198,10 @@ const Receive = () => {
                   <label className="sm:w-32">{t('Transfer')}:</label>
                   <input
                     type="text"
-                    className=" w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    name="senderName"
+                    onChange={handleChange}
+                    value={form.senderName}
+                    className=" w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
@@ -83,12 +209,15 @@ const Receive = () => {
                   <label className="sm:w-32">{t('Receiver')}:</label>
                   <input
                     type="text"
-                    className=" w-full border border-gray-300 shadow-sm text-red-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    name="receiverName"
+                    onChange={handleChange}
+                    value={form.receiverName}
+                    className=" w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
 
-                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between">
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
                   <label htmlFor="" className="sm:w-32">
                     {t('Amount')}:
                   </label>
@@ -98,27 +227,36 @@ const Receive = () => {
                     </div>
                     <input
                       id="price"
-                      name="price"
+                      name="receiveAmount"
+                      value={form.receiveAmount}
+                      onChange={handleChange}
                       type="number"
                       step="0.01"
                       placeholder="0.00"
                       className="block w-full grow border-0 bg-transparent text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm"
                     />
 
-                    {/* Currency dropdown */}
                     <div className="relative shrink-0">
                       <select
                         id="currency"
-                        name="currency"
+                        name="moneyTypeId"
+                        value={form.moneyTypeId}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            moneyTypeId: e.target.value,
+                          }))
+                        }
                         aria-label="Currency"
                         className="appearance-none rounded-md bg-transparent py-1.5 pr-6 pl-2 text-base text-gray-700 focus:outline-none sm:text-sm"
                       >
-                        <option>USD</option>
-                        <option>CAD</option>
-                        <option>EUR</option>
+                        <option value="">Cur</option>
+                        {moneyTypeOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
                       </select>
-
-                      {/* Dropdown icon */}
                       <BiChevronDown
                         aria-hidden="true"
                         className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 size-5 text-gray-500 sm:size-4"
@@ -127,7 +265,7 @@ const Receive = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between">
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
                   <label htmlFor="" className="sm:w-32">
                     {t('charges')}:
                   </label>
@@ -137,7 +275,9 @@ const Receive = () => {
                     </div>
                     <input
                       id="price"
-                      name="price"
+                      name="chargesAmount"
+                      value={form.chargesAmount}
+                      onChange={handleChange}
                       type="number"
                       step="0.01"
                       placeholder="0.00"
@@ -147,13 +287,23 @@ const Receive = () => {
                     <div className="relative shrink-0">
                       <select
                         id="currency"
-                        name="currency"
+                        name="chargesType"
+                        value={form.chargesType}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            chargesType: e.target.value,
+                          }))
+                        }
                         aria-label="Currency"
                         className="appearance-none rounded-md bg-transparent py-1.5 pr-6 pl-2 text-base text-gray-700 focus:outline-none sm:text-sm"
                       >
-                        <option>USD</option>
-                        <option>CAD</option>
-                        <option>EUR</option>
+                        <option value="">Cur</option>
+                        {moneyTypeOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
                       </select>
                       <BiChevronDown
                         aria-hidden="true"
@@ -163,7 +313,7 @@ const Receive = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between">
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
                   <label htmlFor="" className="sm:w-32">
                     {t('pass charges')}:
                   </label>
@@ -173,7 +323,9 @@ const Receive = () => {
                     </div>
                     <input
                       id="price"
-                      name="price"
+                      name="branchCharges"
+                      value={form.branchCharges}
+                      onChange={handleChange}
                       type="number"
                       step="0.01"
                       placeholder="0.00"
@@ -183,16 +335,24 @@ const Receive = () => {
                     <div className="relative shrink-0">
                       <select
                         id="currency"
-                        name="currency"
+                        name="branchChargesType"
+                        value={form.branchChargesType}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            branchChargesType: e.target.value,
+                          }))
+                        }
                         aria-label="Currency"
                         className="appearance-none rounded-md bg-transparent py-1.5 pr-6 pl-2 text-base text-gray-700 focus:outline-none sm:text-sm"
                       >
-                        <option>USD</option>
-                        <option>CAD</option>
-                        <option>EUR</option>
+                        <option value="">Cur</option>
+                        {moneyTypeOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
                       </select>
-
-                      {/* Dropdown icon */}
                       <BiChevronDown
                         aria-hidden="true"
                         className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 size-5 text-gray-500 sm:size-4"
@@ -206,33 +366,58 @@ const Receive = () => {
                   <label className="sm:w-32">{t('Date')}:</label>
                   <input
                     type="date"
+                    name="rDate"
+                    value={form.rDate}
+                    onChange={handleChange}
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
 
-                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between ">
+                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('Customer')}:</label>
                   <Select
                     className="w-full shadow-sm"
-                    name="branch"
+                    name="customerId"
                     isSearchable
-                    isDisabled={!isActive}
+                    options={customerOptions}
+                    value={customerOptions.find(
+                      (opt) => opt.value === form.customerId
+                    )}
+                    onChange={(selected) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        customerId: selected?.value || '',
+                      }))
+                    }
                   />
                 </div>
+
                 <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('pass to')}:</label>
                   <Select
                     className="w-full shadow-sm"
-                    name="branch"
+                    name="passTo"
                     isSearchable
-                    isDisabled={!isActive}
+                    options={branchOptions}
+                    value={branchOptions.find(
+                      (opt) => opt.value === form.passTo
+                    )}
+                    onChange={(selected) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        passTo: selected?.value || '',
+                      }))
+                    }
                   />
                 </div>
                 <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32 mt-1">{t('Description')}:</label>
                   <textarea
                     rows="4"
+                    value={form.description}
+                    onChange={handleChange}
+                    name="description"
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     placeholder="more...."
                   />
@@ -241,10 +426,10 @@ const Receive = () => {
                   <input
                     type="checkbox"
                     id="react-option"
-                    value=""
+                    name="receiveStatus"
+                    checked={form.receiveStatus}
+                    onChange={handleChange}
                     class="hidden peer"
-                    required=""
-                    name="daily"
                   />
                   <label
                     for="react-option"
@@ -259,23 +444,23 @@ const Receive = () => {
                   </label>
                 </div>
               </div>
-              <div className="flex flex-wrap  justify-center sm:justify-start">
-                {isActive ? (
-                  <>
-                    <Button type="primary" htmlType="submit">
-                      {t('Save')}
-                    </Button>
-                    <Button type="primary">{t('Cancel')}</Button>
-                  </>
-                ) : (
-                  <>
-                    <Button type="primary" onClick={() => setIsActive(true)}>
-                      {t('New')}
-                    </Button>
-                    <Button type="primary">{t('Edit')}</Button>
-                    <Button type="primary">{t('Delete')}</Button>
-                  </>
-                )}
+              <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
+                <button
+                  onClick={handleSubmit}
+                  disabled={isLoading}
+                  type="button"
+                  className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
+                >
+                  {t('Save')}
+                </button>
+                <Link to="/main/receiveList">
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
+                  >
+                    {t('Cancel')}
+                  </button>
+                </Link>
               </div>
             </div>
           </form>

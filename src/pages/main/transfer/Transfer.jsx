@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Select from 'react-select';
 import { BiChevronDown } from 'react-icons/bi';
 import Button from '../../../components/layout/Button';
@@ -159,7 +159,7 @@ const Transfer = () => {
             <div className="grid sm:grid-cols-2 gap-8 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl w-full max-w-7xl mx-auto">
               <div className=" space-y-1 w-full">
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('Account')}:</label>
+                  <label className="sm:w-32">{t('Branch')}:</label>
                   <Select
                     className="w-full shadow-sm"
                     name="toWhere"
@@ -399,6 +399,9 @@ const Transfer = () => {
                   <label className="sm:w-32 mt-1">{t('Description')}:</label>
                   <textarea
                     rows="4"
+                    value={form.description}
+                    onChange={handleChange}
+                    name="description"
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     placeholder="more...."
                   />
@@ -413,7 +416,7 @@ const Transfer = () => {
                 >
                   {t('Save')}
                 </button>
-                <Link to="/management/employeeList">
+                <Link to="/main/transferList">
                   <button
                     type="button"
                     className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"

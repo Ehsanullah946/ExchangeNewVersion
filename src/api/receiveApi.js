@@ -25,3 +25,9 @@ export const getReceive = async (filters = {}) => {
     throw error;
   }
 };
+
+
+export const createReceive =async (payload) => {
+  const { data } = await axiosClient.post("/receive", payload)
+  return data;
+}

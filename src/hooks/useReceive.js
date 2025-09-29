@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
-import { getReceive } from '../api/receiveApi';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createReceive, getReceive } from '../api/receiveApi';
 
 export const useReceive = (search = '', limit = 10, page = 1) => {
   return useQuery({
@@ -10,6 +10,16 @@ export const useReceive = (search = '', limit = 10, page = 1) => {
     keepPreviousData: true,
     onError: (error) => {
       console.error('Error fetching receive:', error);
+    },
+  });
+};
+
+export const useCreateReceive = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createReceive,
+    onSuccess: () => {
+      queryClient.invalidateQueries['receive'];
     },
   });
 };

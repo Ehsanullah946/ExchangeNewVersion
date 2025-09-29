@@ -29,3 +29,13 @@ export const createCustomer = async (payload) => {
   const { data } = await axiosClient.post('/customer', payload);
   return data;
 };
+
+export const updateCustomer = async ({ id, payload }) => {
+  const { data } = await axiosClient.put(`/customer/:${id}`, payload);
+  return data;
+};
+
+export const deleteCustomer = async (id) => {
+  const { data } = await axiosClient.delete(`/customer/:${id}`);
+  return data;
+};
