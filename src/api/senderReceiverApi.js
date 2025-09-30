@@ -32,3 +32,17 @@ export const createSenderReceiver = async (paylaod) => {
   const { data } = await axiosClient.post('/senderReceiver', paylaod);
   return data;
 };
+export const getSingleSenderReceiver = async (id) => {
+  const { data } = await axiosClient.get(`/senderReceiver/${id}`);
+  return data;
+};
+
+export const updateSenderReceiver = async ({ id, paylaod }) => {
+  const { data } = await axiosClient.patch(`/senderReceiver/${id}`, paylaod);
+  return data;
+};
+
+export const deleteSenderReceiver = async (id) => {
+  const { data } = await axiosClient.delete(`/senderReceiver/${id}`);
+  return data;
+};

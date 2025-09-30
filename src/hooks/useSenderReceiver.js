@@ -6,7 +6,10 @@ import {
 } from '@tanstack/react-query';
 import {
   createSenderReceiver,
+  deleteSenderReceiver,
   getSenderReceiver,
+  getSingleSenderReceiver,
+  updateSenderReceiver,
 } from '../api/senderReceiverApi';
 
 export const useSenderReceiver = (
@@ -26,11 +29,41 @@ export const useSenderReceiver = (
     },
   });
 };
+export const useSingleSenderReceiver = (id) => {
+  return useQuery({
+    queryKey: ['senderReceivers', id],
+    queryFn: () => getSingleSenderReceiver(id),
+    staleTime: 0,
+    refetchOnMount: 'always',
+    keepPreviousData: true,
+    onError: (error) => {
+      console.log('failed to fetch senderReceiver', error);
+    },
+  });
+};
 
 export const useCreateSenderReceiver = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createSenderReceiver,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['senderReceivers']);
+    },
+  });
+};
+export const useUpdateSenderReceiver = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateSenderReceiver,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['senderReceivers']);
+    },
+  });
+};
+export const useDeleteSenderReceiver = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteSenderReceiver,
     onSuccess: () => {
       queryClient.invalidateQueries(['senderReceivers']);
     },

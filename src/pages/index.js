@@ -16,6 +16,7 @@ export { default as ExchangerList } from './managements/exchanger/ExchangerList'
 export { default as ExchangerEdit } from './managements/exchanger/ExchangerEdit';
 export { default as ExchangerAdd } from './managements/exchanger/ExchangerAdd';
 export { default as SenderReceiverList } from './managements/senderReceiver/SenderReceiverList';
+export { default as SenderReceiverEdit } from './managements/senderReceiver/SenderReceiverEdit';
 export { default as SenderReceiverAdd } from './managements/senderReceiver/SenderReceiverAdd';
 export { default as CustomerAdd } from './managements/customer/CustomerAdd';
 export { default as CustomerTransactions } from './managements/customer/CustomerTransactions';

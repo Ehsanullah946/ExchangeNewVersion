@@ -54,6 +54,7 @@ import {
   BranchEdit,
   EmployeeEdit,
   ExchangerEdit,
+  SenderReceiverEdit,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -101,6 +102,10 @@ const App = () => {
                 element={<SenderReceiverList />}
               />
               <Route path="senderReceiverAdd" element={<SenderReceiverAdd />} />
+              <Route
+                path="senderReceiver/:id/edit"
+                element={<SenderReceiverEdit />}
+              />
             </Route>
             <Route path="/main" element={<Main />}>
               <Route path="receive" element={<Receive />} />

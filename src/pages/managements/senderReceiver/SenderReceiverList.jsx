@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BsPrinter, BsSearch, BsShare } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,7 +14,10 @@ import {
   toggleOpen,
   setPage,
 } from '../../../features/ui/filterSlice';
-import { useSenderReceiver } from '../../../hooks/useSenderReceiver';
+import {
+  useDeleteSenderReceiver,
+  useSenderReceiver,
+} from '../../../hooks/useSenderReceiver';
 const SenderReceiverList = () => {
   const { t } = useTranslation();
 
@@ -22,6 +25,22 @@ const SenderReceiverList = () => {
     useSelector((state) => state.filters);
 
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+  const deleteMutation = useDeleteSenderReceiver();
+
+  const handleEdit = (id) => {
+    navigate(`/management/senderReceiver/${id}/edit`);
+  };
+
+  const handleDelete = (id) => {
+    if (
+      window.confirm('Are you sure you want to delete this Sender Receiver?')
+    ) {
+      deleteMutation.mutate(id);
+    }
+  };
+
   useEffect(() => {
     const handler = setTimeout(() => dispatch(setDebouncedPhone(phone)), 500);
     return () => clearTimeout(handler);
@@ -157,10 +176,22 @@ const SenderReceiverList = () => {
                       {' '}
                       {e.Stakeholder?.Person?.phone || e.phone || '-'}
                     </td>
-                    <td className="px-3 py-2">
-                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                    <td className="px-3 py-1">
+                      <BiSolidEdit
+                        onClick={() => handleEdit(e.id)}
+                        className="text-lg text-blue-600 cursor-pointer"
+                      />
                     </td>
-                    <td className="px-3 py-2">❌</td>
+                    <td className="px-3 py-1">
+                      {' '}
+                      <button
+                        onClick={() => handleDelete(e.id)}
+                        disabled={deleteMutation.isLoading}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        ❌
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}
