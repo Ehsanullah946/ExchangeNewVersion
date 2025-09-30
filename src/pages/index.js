@@ -10,6 +10,7 @@ export { default as CustomerEdit } from './managements/customer/CustomerEdit';
 export { default as Branches } from './managements/branch/Branches';
 export { default as BranchEdit } from './managements/branch/BranchEdit';
 export { default as EmployeeAdd } from './managements/employee/EmployeeAdd';
+export { default as EmployeeEdit } from './managements/employee/EmployeeEdit';
 export { default as EmployeeList } from './managements/employee/EmployeeList';
 export { default as ExchangerList } from './managements/exchanger/ExchangerList';
 export { default as ExchangerAdd } from './managements/exchanger/ExchangerAdd';

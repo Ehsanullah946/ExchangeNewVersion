@@ -51,6 +51,7 @@ const BranchEdit = () => {
       const customer = branch.Customer || {};
       const stakeholder = customer.Stakeholder || {};
       const person = stakeholder.Person || {};
+
       setForm((prev) => ({
         ...prev,
         ...branch,

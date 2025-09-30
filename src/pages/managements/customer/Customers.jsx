@@ -28,7 +28,6 @@ const Customers = () => {
   const deleteMutation = useDeleteCustomer();
 
   const handleEdit = (id) => {
-    // Navigate to your edit page, e.g. /management/customerEdit/:id
     navigate(`/management/customer/${id}/edit`);
   };
 

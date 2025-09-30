@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BsSearch } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 
@@ -14,7 +14,7 @@ import {
   setSearch,
   toggleOpen,
 } from '../../../features/ui/filterSlice';
-import { useEmployee } from '../../../hooks/useEmployee';
+import { useDeleteEmployee, useEmployee } from '../../../hooks/useEmployee';
 import { useDispatch, useSelector } from 'react-redux';
 const EmployeeList = () => {
   const { t } = useTranslation();
@@ -40,6 +40,19 @@ const EmployeeList = () => {
     limit,
     page
   );
+
+  const navigate = useNavigate();
+  const deleteMutation = useDeleteEmployee();
+
+  const handleEdit = (id) => {
+    navigate(`/management/employee/${id}/edit`);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this employee?')) {
+      deleteMutation.mutate(id);
+    }
+  };
 
   useEffect(() => {
     dispatch(setPage(1));
@@ -167,10 +180,22 @@ const EmployeeList = () => {
                       {e.Stakeholder?.orgCustomerId || 'N/A'}
                     </td>
                     {/* <td className="px-3 py-2">{t('AFG')}</td> */}
-                    <td className="px-3 py-2">
-                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                    <td className="px-3 py-1">
+                      <BiSolidEdit
+                        onClick={() => handleEdit(e.id)}
+                        className="text-lg text-blue-600 cursor-pointer"
+                      />
                     </td>
-                    <td className="px-3 py-2">❌</td>
+                    <td className="px-3 py-1">
+                      {' '}
+                      <button
+                        onClick={() => handleDelete(e.id)}
+                        disabled={deleteMutation.isLoading}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        ❌
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}
