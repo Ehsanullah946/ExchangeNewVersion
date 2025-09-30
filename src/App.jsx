@@ -53,6 +53,7 @@ import {
   CustomerEdit,
   BranchEdit,
   EmployeeEdit,
+  ExchangerEdit,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -93,6 +94,7 @@ const App = () => {
               <Route path="employee/:id/edit" element={<EmployeeEdit />} />
               <Route path="employeeList" element={<EmployeeList />} />
               <Route path="exchangerList" element={<ExchangerList />} />
+              <Route path="exchanger/:id/edit" element={<ExchangerEdit />} />
               <Route path="exchangerAdd" element={<ExchangerAdd />} />
               <Route
                 path="senderReceiverList"

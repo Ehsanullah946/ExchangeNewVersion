@@ -91,7 +91,7 @@ const AccountList = () => {
 
       {/* Table */}
       {isLoading ? (
-        <p className="p-4">
+        <p className="p-4 flex justify-center-4">
           {
             <PulseLoader
               color="green"

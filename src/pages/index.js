@@ -13,6 +13,7 @@ export { default as EmployeeAdd } from './managements/employee/EmployeeAdd';
 export { default as EmployeeEdit } from './managements/employee/EmployeeEdit';
 export { default as EmployeeList } from './managements/employee/EmployeeList';
 export { default as ExchangerList } from './managements/exchanger/ExchangerList';
+export { default as ExchangerEdit } from './managements/exchanger/ExchangerEdit';
 export { default as ExchangerAdd } from './managements/exchanger/ExchangerAdd';
 export { default as SenderReceiverList } from './managements/senderReceiver/SenderReceiverList';
 export { default as SenderReceiverAdd } from './managements/senderReceiver/SenderReceiverAdd';

@@ -68,7 +68,7 @@ const DepositList = () => {
         </div>
       </div>
       {isLoading ? (
-        <p className="p-4">
+        <p className="p-p-4 flex justify-center">
           {
             <PulseLoader
               color="green"

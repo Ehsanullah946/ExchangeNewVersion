@@ -78,7 +78,7 @@ const EmployeeEdit = () => {
       {
         onSuccess: () => {
           toast.success(t('Update Successful'));
-          navigate('/management/employee');
+          navigate('/management/employeeList');
         },
         onError: (err) => {
           console.error(err);
@@ -122,7 +122,7 @@ const EmployeeEdit = () => {
           <form onSubmit={handleSubmit}>
             <div className="font-extrabold bg-gradient-to-b from-[#b34cfd] to-[#6048f9] p-3 ltr:mr-4 rtl:ml-4 rounded-t-2xl text-white text-center">
               <span className="flex justify-center gap-3">
-                {t('Add New Employee')} <RiSendPlaneLine className="mt-1" />
+                {t('Update Employee')} <RiSendPlaneLine className="mt-1" />
               </span>
             </div>
 

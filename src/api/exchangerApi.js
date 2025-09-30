@@ -27,7 +27,22 @@ export const getExchanger = async (filters = {}) => {
   }
 };
 
+export const getSingleExchanger = async (id) => {
+  const { data } = await axiosClient.get(`/exchanger/${id}`);
+  return data;
+};
+
 export const createExchanger = async (payload) => {
   const { data } = await axiosClient.post('/exchanger', payload);
+  return data;
+};
+
+export const updateExchanger = async ({ id, payload }) => {
+  const { data } = await axiosClient.patch(`/exchanger/${id}`, payload);
+  return data;
+};
+
+export const deleteExchanger = async (id) => {
+  const { data } = await axiosClient.delete(`/exchanger/${id}`);
   return data;
 };

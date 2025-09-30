@@ -80,7 +80,7 @@ const ReceiveList = () => {
       </div>
 
       {isLoading ? (
-        <p className="p-4">
+        <p className="p-4 flex justify-center">
           {
             <PulseLoader
               color="green"

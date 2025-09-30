@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BsSearch } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 import { RiExchangeCnyFill } from 'react-icons/ri';
@@ -15,7 +15,7 @@ import {
   setPhone,
   setSearch,
 } from '../../../features/ui/filterSlice';
-import { useExchanger } from '../../../hooks/useExchanger';
+import { useDeleteExchanger, useExchanger } from '../../../hooks/useExchanger';
 const ExchangerList = () => {
   const { t } = useTranslation();
 
@@ -59,6 +59,19 @@ const ExchangerList = () => {
     }
   }, [total, totalPages, page, dispatch]);
 
+  const navigate = useNavigate();
+  const deleteMutation = useDeleteExchanger();
+
+  const handleEdit = (id) => {
+    navigate(`/management/exchanger/${id}/edit`);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this exchanger?')) {
+      deleteMutation.mutate(id);
+    }
+  };
+
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
       {open && (
@@ -93,7 +106,7 @@ const ExchangerList = () => {
       </div>
 
       {isLoading ? (
-        <p className="p-4">
+        <p className="p-4 flex justify-center">
           {
             <PulseLoader
               color="green"
@@ -158,10 +171,22 @@ const ExchangerList = () => {
                       {' '}
                       {e.Person?.phone || e.phone || '-'}
                     </td>
-                    <td className="px-3 py-2">
-                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                    <td className="px-3 py-1">
+                      <BiSolidEdit
+                        onClick={() => handleEdit(e.id)}
+                        className="text-lg text-blue-600 cursor-pointer"
+                      />
                     </td>
-                    <td className="px-3 py-2">❌</td>
+                    <td className="px-3 py-1">
+                      {' '}
+                      <button
+                        onClick={() => handleDelete(e.id)}
+                        disabled={deleteMutation.isLoading}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        ❌
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}
