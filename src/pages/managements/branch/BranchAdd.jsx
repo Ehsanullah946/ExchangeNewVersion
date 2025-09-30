@@ -15,7 +15,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useCreateBranch } from '../../../hooks/useBranch';
 import { useToast } from '../../../hooks/useToast';
 const BranchAdd = () => {
-  const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
 
   const [form, setForm] = useState({
@@ -41,7 +40,7 @@ const BranchAdd = () => {
     direct: true,
   });
 
-  const { mutate, isLoading, error } = useCreateBranch();
+  const { mutate, isLoading } = useCreateBranch();
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -420,15 +419,21 @@ const BranchAdd = () => {
 
               {/* Buttons */}
               <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
-                <Button
-                  type="primary"
+                <button
                   onClick={handleSubmit}
                   disabled={isLoading}
+                  type="button"
+                  className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
                 >
-                  {isLoading ? 'Saving...' : t('Save')}
-                </Button>
-                <Link to="/management/branch">
-                  <Button type="primary">{t('Cancel')}</Button>
+                  {t('Save')}
+                </button>
+                <Link to="/management/employeeList">
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r from-red-500 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
+                  >
+                    {t('Cancel')}
+                  </button>
                 </Link>
               </div>
             </div>

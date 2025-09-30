@@ -51,6 +51,7 @@ import {
   ExchangerAdd,
   ExchangeList,
   CustomerEdit,
+  BranchEdit,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -82,6 +83,7 @@ const App = () => {
               />
               <Route path="branch" element={<Branches />} />
               <Route path="branchAdd" element={<BranchAdd />} />
+              <Route path="branch/:id/edit" element={<BranchEdit />} />
               <Route
                 path="branch/:id/transaction"
                 element={<BranchTransaction />}

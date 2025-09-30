@@ -24,7 +24,21 @@ export const getBranch = async (filters = {}) => {
   }
 };
 
+export const getSingleBranch = async (id) => {
+  const { data } = await axiosClient.get(`/branch/${id}`);
+  return data;
+};
 export const createBranch = async (payload) => {
   const { data } = await axiosClient.post('/branch', payload);
+  return data;
+};
+
+export const updateBranch = async ({ id, payload }) => {
+  const { data } = await axiosClient.patch(`/branch/${id}`, payload);
+  return data;
+};
+
+export const deleteBranch = async (id) => {
+  const { data } = await axiosClient.delete(`/branch/${id}`);
   return data;
 };

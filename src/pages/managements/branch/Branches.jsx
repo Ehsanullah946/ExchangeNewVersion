@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PulseLoader } from 'react-spinners';
-import { useBranch } from '../../../hooks/useBranch';
+import { useBranch, useDeleteBranch } from '../../../hooks/useBranch';
 import { BiSolidDetail, BiSolidEdit } from 'react-icons/bi';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -42,6 +42,20 @@ const Branches = () => {
     limit,
     page
   );
+
+  const navigate = useNavigate();
+  const deleteMutation = useDeleteBranch();
+
+  const handleEdit = (id) => {
+    // Navigate to your edit page, e.g. /management/customerEdit/:id
+    navigate(`/management/branch/${id}/edit`);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this customer?')) {
+      deleteMutation.mutate(id);
+    }
+  };
 
   const branches = data?.data || [];
   const total = data?.total || 0;
@@ -161,11 +175,23 @@ const Branches = () => {
                     <td className="px-4 py-2">
                       <BiSolidDetail className="text-lg text-blue-600 cursor-pointer" />
                     </td>
-                    <td className="px-4 py-2">
-                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                    <td className="px-3 py-1">
+                      <BiSolidEdit
+                        onClick={() => handleEdit(branch.id)}
+                        className="text-lg text-blue-600 cursor-pointer"
+                      />
                     </td>
                     <td className="px-4 py-2">
-                      <span className="text-red-600 cursor-pointer">❌</span>
+                      <span className="text-red-600 cursor-pointer">
+                        {' '}
+                        <button
+                          onClick={() => handleDelete(branch.id)}
+                          disabled={deleteMutation.isLoading}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          ❌
+                        </button>
+                      </span>
                     </td>
                   </tr>
                 ))

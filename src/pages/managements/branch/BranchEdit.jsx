@@ -1,62 +1,65 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import {
-  useSingleCustomer,
-  useUpdateCustomer,
-} from '../../../hooks/useCustomers';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../../hooks/useToast';
-import Button from '../../../components/layout/Button';
-import { BsPhone, BsSearch, BsTelegram, BsWhatsapp } from 'react-icons/bs';
-import { RiMailFill, RiSendPlaneLine } from 'react-icons/ri';
+import { useSingleBranch, useUpdateBranch } from '../../../hooks/useBranch';
+import { RiMailFill } from 'react-icons/ri';
+import {
+  BsWhatsapp,
+  BsTelegram,
+  BsPhone,
+  BsHouseAddFill,
+} from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
-
-const CustomerEdit = () => {
+const BranchEdit = () => {
   const { id } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { data, isLoading: loadingCustomer } = useSingleCustomer(id);
-  const { mutate: updateCustomer, isLoading: updating } = useUpdateCustomer();
+  const { data, isLoading: loadingBranch } = useSingleBranch(id);
+  const { mutate: updateBranch, isLoading: updating } = useUpdateBranch();
 
-  console.log(data);
+  console.log('this is branch', data);
 
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
     fatherName: '',
     nationalCode: '',
-    phone: '',
     currentAddress: '',
-    permanentAddress: '',
+    phone: '',
     maritalStatus: '',
+    gender: '',
     job: '',
     language: '',
     loanLimit: '',
-    gender: '',
+    whatsApp: '',
+    email: '',
+    telegram: '',
     whatsAppEnabled: false,
     telegramEnabled: false,
     emailEnabled: false,
     phoneEnabled: false,
-    whatsApp: '',
-    telegram: '',
-    email: '',
+    faxNo: '',
+    direct: true,
   });
 
   useEffect(() => {
     if (data?.data) {
-      const customer = data.data;
+      const branch = data.data;
+      const customer = branch.Customer || {};
       const stakeholder = customer.Stakeholder || {};
       const person = stakeholder.Person || {};
       setForm((prev) => ({
         ...prev,
-        ...customer,
+        ...branch,
         firstName: person.firstName,
         lastName: person.lastName,
         fatherName: person.fatherName,
         phone: person.phone,
         email: person.email,
+        language: customer.language,
         nationalCode: person.nationalCode,
         currentAddress: person.currentAddress,
         permanentAddress: stakeholder.permanentAddress,
@@ -86,12 +89,12 @@ const CustomerEdit = () => {
       Object.entries(form).filter(([_, v]) => v !== '' && v !== null)
     );
 
-    updateCustomer(
+    updateBranch(
       { id, payload: cleanData },
       {
         onSuccess: () => {
           toast.success(t('Update Successful'));
-          navigate('/management/customer');
+          navigate('/management/branch');
         },
         onError: (err) => {
           console.error(err);
@@ -101,38 +104,22 @@ const CustomerEdit = () => {
     );
   };
 
-  if (loadingCustomer)
+  if (loadingBranch)
     return (
       <p className="p-4 flex justify-center">
         <PulseLoader color="green" size={15} />
       </p>
     );
+
   return (
     <>
       <div className="grid justify-center">
-        <div className="flex mt-1 mb-1">
-          <Link to="/management/customer"></Link>
-          <Button type="primary">
-            <span className="flex justify-between">
-              <BsSearch className="mt-1 ml-3" /> {t('Search')}
-            </span>
-          </Button>
-          <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
-            <input
-              type="text"
-              name="text"
-              className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
-              placeholder={t('Search')}
-            />
-          </div>
-        </div>
-
+        <div className=" flex mt-1 mb-1"></div>
         <div>
-          {/* Add onSubmit to form element */}
           <form onSubmit={handleSubmit}>
-            <div className="font-extrabold bg-gradient-to-b from-[#b34cfd] to-[#6048f9] p-3 ltr:mr-4 rtl:ml-4 rounded-t-2xl text-white text-center">
-              <span className="flex justify-center gap-3">
-                {t('Update Customer')} <RiSendPlaneLine className="mt-1" />
+            <div className="font-extrabold  bg-gradient-to-b from-[#b34cfd] to-[#6048f9]   p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
+              <span className="flex justify-center gap-3 ">
+                {t('Add New Branch')} <BsHouseAddFill className="mt-1" />
               </span>
             </div>
 
@@ -182,7 +169,7 @@ const CustomerEdit = () => {
                     onChange={handleChange}
                     className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                   >
-                    <option value="">Select Status</option>
+                    <option value="">{t('Select Status')}</option>
                     <option value={t('single')}>{t('single')}</option>
                     <option value={t('married')}>{t('married')}</option>
                     <option value={t('divorced')}>{t('divorced')}</option>
@@ -191,17 +178,16 @@ const CustomerEdit = () => {
                 </div>
 
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
-                  <label className="sm:w-32">{t('Gender')}:</label>
+                  <label className="sm:w-32">{t('Direction')}:</label>
                   <select
-                    name="gender"
-                    value={form.gender}
+                    name="direct"
+                    value={form.direct}
                     onChange={handleChange}
                     className="w-full border border-gray-300 shadow-sm  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                   >
-                    <option value="">Gender</option>
-                    <option value={t('M')}>{t('male')}</option>
-                    <option value={t('F')}>{t('famale')}</option>
-                    <option value={t('O')}>{t('other')}</option>
+                    <option value="">{t('Select Direct')}</option>
+                    <option value={1}>{t('Direct')}</option>
+                    <option value={0}>{t('Undirect')}</option>
                   </select>
                 </div>
 
@@ -239,6 +225,16 @@ const CustomerEdit = () => {
                     onChange={handleChange}
                     className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
+                  />
+                </div>
+                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between">
+                  <label className="sm:w-32">{t('FaxNo')}:</label>
+                  <input
+                    type="text"
+                    name="faxNo"
+                    value={form.faxNo}
+                    onChange={handleChange}
+                    className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                   />
                 </div>
 
@@ -388,10 +384,10 @@ const CustomerEdit = () => {
                 >
                   {t('Save')}
                 </button>
-                <Link to="/management/customer">
+                <Link to="/management/branch">
                   <button
                     type="button"
-                    classname="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
+                    className="text-white bg-gradient-to-r from-red-500 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
                   >
                     {t('Cancel')}
                   </button>
@@ -405,4 +401,4 @@ const CustomerEdit = () => {
   );
 };
 
-export default CustomerEdit;
+export default BranchEdit;
