@@ -47,31 +47,42 @@ const BranchEdit = () => {
 
   useEffect(() => {
     if (data?.data) {
-      const branch = data.data;
+      const branch = data.data; // this is the object you showed me
       const customer = branch.Customer || {};
       const stakeholder = customer.Stakeholder || {};
       const person = stakeholder.Person || {};
 
-      setForm((prev) => ({
-        ...prev,
-        ...branch,
-        firstName: person.firstName,
-        lastName: person.lastName,
-        fatherName: person.fatherName,
-        phone: person.phone,
-        email: person.email,
-        language: customer.language,
-        nationalCode: person.nationalCode,
-        currentAddress: person.currentAddress,
-        permanentAddress: stakeholder.permanentAddress,
-        job: stakeholder.job,
-        gender: stakeholder.gender,
-        maritalStatus: stakeholder.maritalStatus,
-        whatsAppEnabled: Boolean(customer.whatsAppEnabled),
-        telegramEnabled: Boolean(customer.telegramEnabled),
-        emailEnabled: Boolean(customer.emailEnabled),
-        phoneEnabled: Boolean(customer.phoneEnabled),
-      }));
+      console.log('🔥 Flattened Branch:', branch);
+
+      setForm({
+        // Branch level
+        id: branch.id,
+        direct: branch.direct ? 1 : 0,
+        faxNo: branch.faxNo || '',
+
+        // Customer level
+        loanLimit: customer.loanLimit || '',
+        language: customer.language || '',
+        email: customer.email || '',
+        whatsApp: customer.whatsApp || '',
+        telegram: customer.telegram || '',
+        phoneEnabled: !!customer.phoneEnabled,
+        emailEnabled: !!customer.emailEnabled,
+        whatsAppEnabled: !!customer.whatsAppEnabled,
+        telegramEnabled: !!customer.telegramEnabled,
+
+        // Stakeholder level
+        job: stakeholder.job || '',
+        maritalStatus: stakeholder.maritalStatus || '',
+
+        // Person level
+        firstName: person.firstName || '',
+        lastName: person.lastName || '',
+        fatherName: person.fatherName || '',
+        gender: person.gender || '',
+        phone: person.phone || '',
+        permanentAddress: person.permanentAddress || '',
+      });
     }
   }, [data]);
 

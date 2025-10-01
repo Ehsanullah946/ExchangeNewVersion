@@ -61,3 +61,18 @@ export const createDepositWithdraw = async (paylaod) => {
   const { data } = await axiosClient.post('/depositWithdraw', paylaod);
   return data;
 };
+
+export const getSingleDepositWithdraw = async (No) => {
+  const { data } = await axiosClient.get(`/depositWithdraw/${No}`);
+  return data;
+};
+
+export const updateDepositWithdraw = async ({ No, paylaod }) => {
+  const { data } = await axiosClient.patch(`/depositWithdraw/${No}`, paylaod);
+  return data;
+};
+
+export const deleteDepositWithdraw = async (No) => {
+  const { data } = await axiosClient.delete(`/depositWithdraw/${No}`);
+  return data;
+};

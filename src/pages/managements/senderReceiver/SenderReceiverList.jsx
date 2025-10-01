@@ -29,18 +29,6 @@ const SenderReceiverList = () => {
   const navigate = useNavigate();
   const deleteMutation = useDeleteSenderReceiver();
 
-  const handleEdit = (id) => {
-    navigate(`/management/senderReceiver/${id}/edit`);
-  };
-
-  const handleDelete = (id) => {
-    if (
-      window.confirm('Are you sure you want to delete this Sender Receiver?')
-    ) {
-      deleteMutation.mutate(id);
-    }
-  };
-
   useEffect(() => {
     const handler = setTimeout(() => dispatch(setDebouncedPhone(phone)), 500);
     return () => clearTimeout(handler);
@@ -75,6 +63,18 @@ const SenderReceiverList = () => {
       dispatch(setPage(1));
     }
   }, [total, totalPages, page, dispatch]);
+
+  const handleEdit = (id) => {
+    navigate(`/management/senderReceiver/${id}/edit`);
+  };
+
+  const handleDelete = (id) => {
+    if (
+      window.confirm('Are you sure you want to delete this Sender Receiver?')
+    ) {
+      deleteMutation.mutate(id);
+    }
+  };
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
@@ -142,7 +142,7 @@ const SenderReceiverList = () => {
                     colSpan="10"
                     className="px-4 py-4 font-bold text-xl text-center"
                   >
-                    {t('No Exchanger found for your search')}
+                    {t('No SenderReceiver found for your search')}
                   </td>
                 </tr>
               ) : (

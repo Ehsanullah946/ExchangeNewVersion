@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
 import axiosClient from './axiosClient';
 
 export const getSenderReceiver = async (filters = {}) => {
@@ -32,6 +31,7 @@ export const createSenderReceiver = async (paylaod) => {
   const { data } = await axiosClient.post('/senderReceiver', paylaod);
   return data;
 };
+
 export const getSingleSenderReceiver = async (id) => {
   const { data } = await axiosClient.get(`/senderReceiver/${id}`);
   return data;

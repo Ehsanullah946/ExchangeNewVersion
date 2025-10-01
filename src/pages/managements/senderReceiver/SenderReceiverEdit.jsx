@@ -22,6 +22,8 @@ const SenderReceiverEdit = () => {
   const { mutate: updateSenderReceiver, isLoading: updating } =
     useUpdateSenderReceiver();
 
+  console.log('single data for senderReceiver', data);
+
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -97,7 +99,7 @@ const SenderReceiverEdit = () => {
     <>
       <div className="grid justify-center">
         <div className="flex mt-1 mb-1">
-          <Link to="/management/employeeList">
+          <Link to="/management/senderRecieverList">
             <Button type="primary">
               <span className="flex justify-between">
                 <BsListCheck className="mt-1 ml-3" />
@@ -120,7 +122,7 @@ const SenderReceiverEdit = () => {
           <form onSubmit={handleSubmit}>
             <div className="font-extrabold bg-gradient-to-b from-[#b34cfd] to-[#6048f9] p-3 ltr:mr-4 rtl:ml-4 rounded-t-2xl text-white text-center">
               <span className="flex justify-center gap-3">
-                {t('Add New Employee')} <RiSendPlaneLine className="mt-1" />
+                {t('Edit SenderReceiver')} <RiSendPlaneLine className="mt-1" />
               </span>
             </div>
 

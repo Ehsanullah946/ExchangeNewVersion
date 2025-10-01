@@ -33,9 +33,6 @@ export const useSingleSenderReceiver = (id) => {
   return useQuery({
     queryKey: ['senderReceivers', id],
     queryFn: () => getSingleSenderReceiver(id),
-    staleTime: 0,
-    refetchOnMount: 'always',
-    keepPreviousData: true,
     onError: (error) => {
       console.log('failed to fetch senderReceiver', error);
     },

@@ -20,6 +20,8 @@ const ExchangerEdit = () => {
   const { data, isLoading: loadingExchanger } = useSingleExchanger(id);
   const { mutate: updateExchanger, isLoading: updating } = useUpdateExchanger();
 
+  console.log('exchanger fill data', data);
+
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -47,7 +49,6 @@ const ExchangerEdit = () => {
         lastName: person.lastName,
         fatherName: person.fatherName,
         phone: person.phone,
-        email: person.email,
         nationalCode: person.nationalCode,
       }));
     }

@@ -3,6 +3,7 @@ import {
   createExchanger,
   deleteExchanger,
   getExchanger,
+  getSingleExchanger,
   updateExchanger,
 } from '../api/exchangerApi';
 
@@ -22,7 +23,8 @@ export const useExchanger = (search = '', phone = '', limit = 10, page = 1) => {
 export const useSingleExchanger = (id) => {
   return useQuery({
     queryKey: ['exchangers', id],
-    queryFn: () => getExchanger(id),
+    queryFn: () => getSingleExchanger(id),
+    enabled: !!id,
     onError: (error) => {
       console.log('failed to fetch exchanger', error);
     },

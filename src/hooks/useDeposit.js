@@ -1,5 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createDepositWithdraw, getDeposit } from '../api/DepositWithdrowApi';
+import {
+  createDepositWithdraw,
+  deleteDepositWithdraw,
+  getDeposit,
+  getSingleDepositWithdraw,
+  updateDepositWithdraw,
+} from '../api/DepositWithdrowApi';
 
 export const useDeposit = (search = '', limit = 10, page = 1) => {
   return useQuery({
@@ -14,10 +20,41 @@ export const useDeposit = (search = '', limit = 10, page = 1) => {
   });
 };
 
+export const useSingleDepositWithdraw = (No) => {
+  return useQuery({
+    queryKey: ['deposit', No],
+    queryFn: () => getSingleDepositWithdraw(No),
+    staleTime: 0,
+    refetchOnMount: 'always',
+    keepPreviousData: true,
+    onError: (error) => {
+      console.log('something went worng:', error);
+    },
+  });
+};
+
 export const useCreateDeposit = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createDepositWithdraw,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['deposit']);
+    },
+  });
+};
+export const useUpdateWithdrawDeposit = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateDepositWithdraw,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['deposit']);
+    },
+  });
+};
+export const useDeleteDepositWithdraw = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteDepositWithdraw,
     onSuccess: () => {
       queryClient.invalidateQueries(['deposit']);
     },
