@@ -57,6 +57,7 @@ import {
   SenderReceiverEdit,
   DepositEdit,
   WithdrawEdit,
+  ConsumptionEdit,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -121,6 +122,10 @@ const App = () => {
               <Route path="withdraw" element={<Withdraw />} />
               <Route path="withdrawList" element={<WithdrawList />} />
               <Route path="consumption" element={<Consumption />} />
+              <Route
+                path="consumption/:id/edit"
+                element={<ConsumptionEdit />}
+              />
               <Route path="consumptionList" element={<ConsumptionList />} />
               <Route path="transferToAccount" element={<TransferToAccount />} />
               <Route

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BsSearch } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 import { GiPayMoney } from 'react-icons/gi';
@@ -14,7 +14,10 @@ import {
   toggleOpen,
 } from '../../../features/ui/filterSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useConsumption } from '../../../hooks/useConsumption';
+import {
+  useConsumption,
+  useDeleteConsumption,
+} from '../../../hooks/useConsumption';
 
 const ConsumptionList = () => {
   const { t } = useTranslation();
@@ -55,6 +58,20 @@ const ConsumptionList = () => {
       dispatch(setPage(1));
     }
   }, [total, totalPages, page, dispatch]);
+
+  const navigate = useNavigate();
+
+  const deleteMutation = useDeleteConsumption();
+
+  const handleEdit = (id) => {
+    navigate(`/main/consumption/${id}/edit`);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this deposit?')) {
+      deleteMutation.mutate(id);
+    }
+  };
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
@@ -137,10 +154,22 @@ const ConsumptionList = () => {
                         .slice(0, 16)
                         .replace('T', ' ')}
                     </td>
-                    <td className="px-3 py-2">
-                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                    <td className="px-3 py-1">
+                      <BiSolidEdit
+                        onClick={() => handleEdit(c.No)}
+                        className="text-lg text-blue-600 cursor-pointer"
+                      />
                     </td>
-                    <td className="px-3 py-2">❌</td>
+                    <td className="px-3 py-1">
+                      {' '}
+                      <button
+                        onClick={() => handleDelete(c.No)}
+                        disabled={deleteMutation.isLoading}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        ❌
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}

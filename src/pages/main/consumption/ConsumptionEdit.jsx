@@ -1,23 +1,29 @@
-import React, { useState } from 'react';
-import { useStateContext } from '../../../context/contextProvider';
-import Select from 'react-select';
-import { BiChevronDown } from 'react-icons/bi';
-import Button from '../../../components/layout/Button';
-import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { GiPayMoney } from 'react-icons/gi';
-import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '../../../hooks/useToast';
-import { useCreateConsumption } from '../../../hooks/useConsumption';
-import { useEmployee } from '../../../hooks/useEmployee';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import {
+  useSingleConsumption,
+  useUpdateConsumption,
+} from '../../../hooks/useConsumption';
 import { useMoneyType } from '../../../hooks/useMoneyType';
+import { GiPayMoney } from 'react-icons/gi';
+import { BsListCheck } from 'react-icons/bs';
+import Button from '../../../components/layout/Button';
+import { PulseLoader } from 'react-spinners';
+import { BiChevronDown } from 'react-icons/bi';
 
-const Consumption = () => {
+const ConsumptionEdit = () => {
+  const { id } = useParams();
   const { t } = useTranslation();
-
-  const toast = useToast();
-  const { mutate, isLoading } = useCreateConsumption();
   const navigate = useNavigate();
+  const toast = useToast();
+
+  const { data, isLoading: loadingConsumption } = useSingleConsumption(id);
+  const { mutate: updateConsumption, isLoading: updating } =
+    useUpdateConsumption();
+
+  console.log('consupmtion:', data);
 
   const [form, setForm] = useState({
     amount: '',
@@ -28,69 +34,60 @@ const Consumption = () => {
     eDate: new Date().toISOString().split('T')[0],
   });
 
-  const { data: employeeResponse } = useEmployee();
-
-  const employeeOptions = (employeeResponse?.data || []).map((c) => ({
-    value: c.No,
-    label: `${c.Stakeholder?.Person?.firstName}`,
-  }));
-
-  const handleChange = (e) => {
-    const { value, name, checked, type } = e.target;
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
-
   const { data: moneyTypeResponse } = useMoneyType();
   const moneyTypeOptions = (moneyTypeResponse?.data || []).map((c) => ({
     value: String(c.id),
     label: c.typeName,
   }));
 
+  useEffect(() => {
+    if (data?.data) {
+      const consumption = data.data;
+      setForm((prev) => ({
+        ...prev,
+        ...consumption,
+      }));
+    }
+  }, [data]);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!form.amount || !form.moneyTypeId) {
-      toast.error(t('Please Enter amount and moneyType'));
-      return;
-    }
-
-    const payload = {
-      ...form,
-      amount: parseFloat(form.amount) || 0,
-    };
-
     const cleanData = Object.fromEntries(
-      Object.entries(payload).filter(
+      Object.entries(form).filter(
         ([_, v]) => v !== '' && v !== null && v !== undefined
       )
     );
 
-    mutate(cleanData, {
-      onSuccess: () => {
-        toast.success(t('consumption Created'));
-        navigate('/main/consumptionList');
-      },
-      onError: (error) => {
-        console.error('Backend error:', error);
-        let errorMessage = t('createConsumptionFailed');
-
-        if (error.response?.data?.message) {
-          errorMessage = error.response.data.message;
-
-          if (error.response.data.message.includes('Validation error')) {
-            errorMessage = t('consumptionDuplicate');
-          } else if (error.response.data.message.includes('validation')) {
-            errorMessage = t('invalidInputData');
-          }
-        }
-
-        toast.error(errorMessage);
-      },
-    });
+    updateConsumption(
+      { id, payload: cleanData },
+      {
+        onSuccess: () => {
+          toast.success(t('Update Successful'));
+          navigate('/main/consumptionList');
+        },
+        onError: (err) => {
+          console.error(err);
+          toast.error(t('Update failed'));
+        },
+      }
+    );
   };
+
+  if (loadingConsumption)
+    return (
+      <p className="p-4 flex justify-center">
+        <PulseLoader color="green" size={15} />
+      </p>
+    );
 
   return (
     <>
@@ -104,16 +101,6 @@ const Consumption = () => {
               </span>
             </Button>
           </Link>
-          <Button type="primary">
-            <span className="flex justify-between ">
-              <BsPrinter className="mt-1 ml-3" /> {t('Print')}
-            </span>
-          </Button>
-          <Button type="primary">
-            <span className="flex justify-between ">
-              <BsSearch className="mt-1 ml-3" /> {t('Limit Search')}
-            </span>
-          </Button>
           <div class="h-8 flex  items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-xl overflow-hidden cursor-pointer shadow-md">
             <input
               type="text"
@@ -157,7 +144,7 @@ const Consumption = () => {
                   <label htmlFor="" className="sm:w-32">
                     {t('Amount')}:
                   </label>
-                  <div className="flex items-center w-full rounded-md bg-white px-1 py-0.5 outline outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-indigo-600">
+                  <div className="flex items-center w-full rounded-md bg-white px-1 py-0.5  outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-indigo-600">
                     <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm rtl:ml-3 ltr:mr-3">
                       $
                     </div>
@@ -231,7 +218,7 @@ const Consumption = () => {
                 <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
                   <button
                     onClick={handleSubmit}
-                    disabled={isLoading}
+                    disabled={updating}
                     type="button"
                     className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
                   >
@@ -282,4 +269,4 @@ const Consumption = () => {
   );
 };
 
-export default Consumption;
+export default ConsumptionEdit;
