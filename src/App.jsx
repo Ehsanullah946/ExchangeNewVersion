@@ -58,6 +58,7 @@ import {
   DepositEdit,
   WithdrawEdit,
   ConsumptionEdit,
+  TransferToAccountEdit,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -129,12 +130,17 @@ const App = () => {
               <Route path="consumptionList" element={<ConsumptionList />} />
               <Route path="transferToAccount" element={<TransferToAccount />} />
               <Route
+                path="transferToAccount/:id/edit"
+                element={<TransferToAccountEdit />}
+              />
+              <Route
                 path="transferToAccountList"
                 element={<TransferToAccountList />}
               />
             </Route>
             <Route path="/accounts" element={<Accounts />}>
               <Route path="accountAdd" element={<Account />} />
+              <Route path="account/:id/edit" element={<Account />} />
               <Route path="accountList" element={<AccountList />} />
               <Route
                 path="account/:id/transactions"

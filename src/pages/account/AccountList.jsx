@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../components/layout/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BsPrinter, BsSearch, BsShare } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 import {
@@ -11,7 +11,7 @@ import {
   setSearch,
 } from '../../features/ui/filterSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAccount } from '../../hooks/useAccount';
+import { useAccount, useDeleteAccount } from '../../hooks/useAccount';
 const AccountList = () => {
   const { t } = useTranslation();
 
@@ -44,6 +44,20 @@ const AccountList = () => {
       dispatch(setPage(1));
     }
   }, [total, totalPages, page, dispatch]);
+
+  const navigate = useNavigate();
+
+  const deleteMutation = useDeleteAccount();
+
+  const handleEdit = (id) => {
+    navigate(`/accounts/account/${id}/edit`);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this deposit?')) {
+      deleteMutation.mutate(id);
+    }
+  };
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
@@ -162,10 +176,22 @@ const AccountList = () => {
                     <td className="px-3 py-2">
                       <BsPrinter color="green" />
                     </td>
-                    <td className="px-3 py-2">
-                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                    <td className="px-3 py-1">
+                      <BiSolidEdit
+                        onClick={() => handleEdit(c.No)}
+                        className="text-lg text-blue-600 cursor-pointer"
+                      />
                     </td>
-                    <td className="px-3 py-2">❌</td>
+                    <td className="px-3 py-1">
+                      {' '}
+                      <button
+                        onClick={() => handleDelete(c.No)}
+                        disabled={deleteMutation.isLoading}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        ❌
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}

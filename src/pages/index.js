@@ -39,6 +39,7 @@ export { default as Consumption } from './main/consumption/Consumption';
 export { default as ConsumptionEdit } from './main/consumption/ConsumptionEdit';
 export { default as ConsumptionList } from './main/consumption/ConsumptionList';
 export { default as TransferToAccount } from './main/transferToAccount/TransferToAccount';
+export { default as TransferToAccountEdit } from './main/transferToAccount/TransferToAccountEdit';
 export { default as TransferToAccountList } from './main/transferToAccount/TransferToAccountList';
 
 //setting
@@ -46,6 +47,7 @@ export { default as Languages } from './settings/Languages';
 
 export { default as Accounts } from './Accounts';
 export { default as Account } from './account/Account';
+export { default as AccountEdit } from './account/AccountEdit';
 export { default as AccountList } from './account/AccountList';
 
 //Daily

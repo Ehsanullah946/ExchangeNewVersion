@@ -1,20 +1,25 @@
-import React, { useState } from 'react';
-import Select from 'react-select';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useCreateAccount } from '../../hooks/useAccount';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../hooks/useToast';
+import { useSingleAccount, useUpdateAccount } from '../../hooks/useAccount';
+import { PulseLoader } from 'react-spinners';
+import { BsListCheck } from 'react-icons/bs';
 import Button from '../../components/layout/Button';
-import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
-import { RiAccountBox2Fill } from 'react-icons/ri';
 import { useCustomers } from '../../hooks/useCustomers';
 import { useMoneyType } from '../../hooks/useMoneyType';
+import Select from 'react-select';
 
-const Accounts = () => {
+const AccountEdit = () => {
+  const { id } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const toast = useToast();
-  const { mutate, isLoading } = useCreateAccount();
+
+  const { data, isLoading: loadingAcount } = useSingleAccount(id);
+  const { mutate: UpdateAccount, isLoading: updating } = useUpdateAccount();
+
+  console.log('account fill data:', data);
 
   const { data: moneyTypeResponse } = useMoneyType();
 
@@ -40,7 +45,7 @@ const Accounts = () => {
     deleted: false,
     moneyTypeId: '',
     customerId: '',
-    date: '', // <-- add date field
+    date: '',
   });
 
   const handleChange = (e) => {
@@ -51,44 +56,46 @@ const Accounts = () => {
     }));
   };
 
+  useEffect(() => {
+    if (data?.data) {
+      const account = data.data;
+      setForm((prev) => ({
+        ...prev,
+        ...account,
+      }));
+    }
+  }, [data]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // simple validation
-    if (!form.customerId || !form.moneyTypeId) {
-      toast.error(t('Please select customer and account type'));
-      return;
-    }
+    const cleanData = Object.fromEntries(
+      Object.entries(form).filter(
+        ([_, v]) => v !== '' && v !== null && v !== undefined
+      )
+    );
 
-    const payload = {
-      ...form,
-      credit: parseFloat(form.credit) || 0,
-    };
-
-    mutate(payload, {
-      onSuccess: () => {
-        toast.success(t('Account Created'));
-        navigate('/accounts/accountList');
-      },
-      onError: (error) => {
-        console.error('Backend error:', error);
-        let errorMessage = t('createAccountFailed');
-
-        if (error.response?.data?.message) {
-          errorMessage = error.response.data.message;
-
-          if (error.response.data.message.includes('Validation error')) {
-            errorMessage = t('AccountDuplicate');
-          } else if (error.response.data.message.includes('validation')) {
-            errorMessage = t('invalidInputData');
-          }
-        }
-
-        toast.error(errorMessage);
-      },
-    });
+    UpdateAccount(
+      { id, payload: cleanData },
+      {
+        onSuccess: () => {
+          toast.success(t('Update Successful'));
+          navigate('/accounts/accountList');
+        },
+        onError: (err) => {
+          console.error(err);
+          toast.error(t('Update failed'));
+        },
+      }
+    );
   };
 
+  if (loadingAcount)
+    return (
+      <p className="p-4 flex justify-center">
+        <PulseLoader color="green" size={15} />
+      </p>
+    );
   return (
     <div className="grid justify-center">
       {/* HEADER BUTTONS */}
@@ -101,16 +108,6 @@ const Accounts = () => {
             </span>
           </Button>
         </Link>
-        <Button type="primary">
-          <span className="flex justify-between">
-            <BsPrinter className="mt-1 ml-3" /> {t('Print')}
-          </span>
-        </Button>
-        <Button type="primary">
-          <span className="flex justify-between">
-            <BsSearch className="mt-1 ml-3" /> {t('Search')}
-          </span>
-        </Button>
         <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
           <input
             type="text"
@@ -198,18 +195,19 @@ const Accounts = () => {
           </div>
 
           {/* Submit */}
-          <div className="flex justify-center sm:justify-start gap-2 col-span-full">
+          <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
             <button
-              type="submit"
-              disabled={isLoading}
-              className="text-white bg-blue-600 hover:bg-blue-700 px-4 py-1 rounded-lg"
+              onClick={handleSubmit}
+              disabled={updating}
+              type="button"
+              className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
             >
               {t('Save')}
             </button>
-            <Link to="/accounts/accountList">
+            <Link to="/main/depositList">
               <button
                 type="button"
-                className="text-white bg-red-500 hover:bg-red-600 px-4 py-1 rounded-lg"
+                className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
               >
                 {t('Cancel')}
               </button>
@@ -221,4 +219,4 @@ const Accounts = () => {
   );
 };
 
-export default Accounts;
+export default AccountEdit;

@@ -1,5 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createAccount, getAccounts } from '../api/accountApi';
+import {
+  createAccount,
+  deleteAccount,
+  getAccounts,
+  getSingleAccount,
+  updateAccount,
+} from '../api/accountApi';
 
 export const useAccount = (search = '', limit = 10, page = 1) => {
   return useQuery({
@@ -13,11 +19,38 @@ export const useAccount = (search = '', limit = 10, page = 1) => {
     },
   });
 };
+export const useSingleAccount = (id) => {
+  return useQuery({
+    queryKey: ['accounts', id],
+    queryFn: () => getSingleAccount(id),
+    onError: (error) => {
+      console.log('something went single Account worng:', error);
+    },
+  });
+};
 
 export const useCreateAccount = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createAccount,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['accounts']);
+    },
+  });
+};
+export const useUpdateAccount = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateAccount,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['accounts']);
+    },
+  });
+};
+export const useDeleteAccount = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteAccount,
     onSuccess: () => {
       queryClient.invalidateQueries(['accounts']);
     },
