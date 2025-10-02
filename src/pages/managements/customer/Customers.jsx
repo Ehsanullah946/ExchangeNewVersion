@@ -125,7 +125,7 @@ const Customers = () => {
               <tr>
                 <th className="px-4 py-2">{t('ID')}</th>
                 <th className="px-4 py-2">{t('fullname')}</th>
-                <th className="px-4 py-2">{t('Account No')}</th>
+                <th className="px-4 py-2">{t('Father Name')}</th>
                 <th className="px-4 py-2">{t('Phone')}</th>
                 <th className="px-4 py-2">{t('Transactions')}</th>
                 <th className="px-4 py-2">{t('Details')}</th>
@@ -157,7 +157,9 @@ const Customers = () => {
                       {c.Stakeholder?.Person?.firstName || c.firstName}{' '}
                       {c.Stakeholder?.Person?.lastName || c.lastName}
                     </td>
-                    <td className="px-3 py-1">{c.orgCustomerId}</td>
+                    <td className="px-3 py-1">
+                      {c.Stakeholder?.Person?.fatherName || c.fatherName}
+                    </td>
                     <td dir="ltr" className="px-3 py-1">
                       {c.Stakeholder?.Person?.phone || c.phone || '-'}
                     </td>

@@ -6,6 +6,7 @@ import {
   getSingleDepositWithdraw,
   updateDepositWithdraw,
 } from '../api/DepositWithdrowApi';
+import { Navigate } from 'react-router-dom';
 
 export const useDeposit = (search = '', limit = 10, page = 1) => {
   return useQuery({
@@ -20,13 +21,11 @@ export const useDeposit = (search = '', limit = 10, page = 1) => {
   });
 };
 
-export const useSingleDepositWithdraw = (No) => {
+export const useSingleDepositWithdraw = (id) => {
   return useQuery({
-    queryKey: ['deposit', No],
-    queryFn: () => getSingleDepositWithdraw(No),
-    staleTime: 0,
-    refetchOnMount: 'always',
-    keepPreviousData: true,
+    queryKey: ['deposit', id],
+    queryFn: () => getSingleDepositWithdraw(id),
+    enabled: !!id,
     onError: (error) => {
       console.log('something went worng:', error);
     },

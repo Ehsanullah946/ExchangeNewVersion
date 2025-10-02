@@ -48,6 +48,7 @@ export const useCreateSenderReceiver = () => {
     },
   });
 };
+
 export const useUpdateSenderReceiver = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -57,6 +58,7 @@ export const useUpdateSenderReceiver = () => {
     },
   });
 };
+
 export const useDeleteSenderReceiver = () => {
   const queryClient = useQueryClient();
   return useMutation({

@@ -115,7 +115,7 @@ const App = () => {
               <Route path="transfer" element={<Transfer />} />
               <Route path="deposit" element={<Deposit />} />
               <Route path="depositList" element={<DepositList />} />
-              <Route path="deposit/:No/edit" element={<DepositEdit />} />
+              <Route path="deposit/:id/edit" element={<DepositEdit />} />
               <Route path="withdraw" element={<Withdraw />} />
               <Route path="withdrawList" element={<WithdrawList />} />
               <Route path="consumption" element={<Consumption />} />

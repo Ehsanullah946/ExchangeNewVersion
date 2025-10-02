@@ -2,23 +2,18 @@ import axiosClient from './axiosClient';
 
 export const getSenderReceiver = async (filters = {}) => {
   console.log('api filter:', filters);
-
   const params = new URLSearchParams();
-
   Object.entries(filters).forEach(([key, value]) => {
     if (value) {
       params.append(key, value);
     }
   });
-
   const queryString = params.toString();
   console.log('Query string:', queryString);
-
   try {
     const { data } = await axiosClient.get(
       `/senderReceiver${queryString ? `?${queryString}` : ''}`
     );
-
     console.log('API response for senderReceiver:', data);
     return data;
   } catch (error) {
@@ -27,8 +22,8 @@ export const getSenderReceiver = async (filters = {}) => {
   }
 };
 
-export const createSenderReceiver = async (paylaod) => {
-  const { data } = await axiosClient.post('/senderReceiver', paylaod);
+export const createSenderReceiver = async (payload) => {
+  const { data } = await axiosClient.post('/senderReceiver', payload);
   return data;
 };
 
@@ -37,8 +32,8 @@ export const getSingleSenderReceiver = async (id) => {
   return data;
 };
 
-export const updateSenderReceiver = async ({ id, paylaod }) => {
-  const { data } = await axiosClient.patch(`/senderReceiver/${id}`, paylaod);
+export const updateSenderReceiver = async ({ id, payload }) => {
+  const { data } = await axiosClient.patch(`/senderReceiver/${id}`, payload);
   return data;
 };
 

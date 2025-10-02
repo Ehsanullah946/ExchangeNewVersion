@@ -15,12 +15,12 @@ import { updateDepositWithdraw } from '../../../api/DepositWithdrowApi';
 import { useAccount } from '../../../hooks/useAccount';
 
 const DepositEdit = () => {
-  const { No } = useParams();
+  const { id } = useParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const toast = useToast();
 
-  const { data, isLoading: loadingDeposit } = useSingleDepositWithdraw(No);
+  const { data, isLoading: loadingDeposit } = useSingleDepositWithdraw(id);
   const { mutate: UpdateDeposit, isLoading: updating } =
     useUpdateWithdrawDeposit();
 
@@ -35,7 +35,6 @@ const DepositEdit = () => {
 
   const [form, setForm] = useState({
     deposit: '',
-    withdraw: '',
     description: '',
     accountNo: '',
     employeeId: '',
@@ -64,11 +63,13 @@ const DepositEdit = () => {
     e.preventDefault();
 
     const cleanData = Object.fromEntries(
-      Object.entries(form).filter(([_, v]) => v !== '' && v !== null)
+      Object.entries(form).filter(
+        ([k, v]) => v !== '' && v !== null && k !== 'withdraw'
+      )
     );
 
-    updateDepositWithdraw(
-      { No, payload: cleanData },
+    UpdateDeposit(
+      { id, payload: cleanData },
       {
         onSuccess: () => {
           toast.success(t('Update Successful'));

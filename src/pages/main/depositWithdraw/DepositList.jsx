@@ -55,13 +55,13 @@ const DepositList = () => {
 
   const deleteMutation = useDeleteDepositWithdraw();
 
-  const handleEdit = (No) => {
-    navigate(`/main/deposit/${No}/edit`);
+  const handleEdit = (id) => {
+    navigate(`/main/deposit/${id}/edit`);
   };
 
-  const handleDelete = (No) => {
+  const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this deposit?')) {
-      deleteMutation.mutate(No);
+      deleteMutation.mutate(id);
     }
   };
   return (
