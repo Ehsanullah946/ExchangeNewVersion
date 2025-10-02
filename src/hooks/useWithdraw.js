@@ -1,5 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createDepositWithdraw, getWithdraw } from '../api/DepositWithdrowApi';
+import {
+  createDepositWithdraw,
+  deleteDepositWithdraw,
+  getWithdraw,
+  updateDepositWithdraw,
+} from '../api/DepositWithdrowApi';
 
 export const useWithdraw = (search = '', limit = 10, page = 1) => {
   return useQuery({
@@ -20,6 +25,26 @@ export const useCreateWithdraw = () => {
     mutationFn: createDepositWithdraw,
     onSuccess: () => {
       queryClient.invalidateQueries['withdraw'];
+    },
+  });
+};
+
+export const useUpdateWithdrawDeposit = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateDepositWithdraw,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['withdraw']);
+    },
+  });
+};
+
+export const useDeleteDepositWithdraw = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteDepositWithdraw,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['withdraw']);
     },
   });
 };

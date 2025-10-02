@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BsPrinter } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 import { useWithdraw } from '../../../hooks/useWithdraw';
@@ -13,6 +13,7 @@ import {
   setPage,
   toggleOpen,
 } from '../../../features/ui/filterSlice';
+import { useDeleteDepositWithdraw } from '../../../hooks/useDeposit';
 const WithdrawList = () => {
   const { t } = useTranslation();
 
@@ -45,6 +46,21 @@ const WithdrawList = () => {
       dispatch(setPage(1));
     }
   }, [total, totalPages, page, dispatch]);
+
+  const navigate = useNavigate();
+
+  const deleteMutation = useDeleteDepositWithdraw();
+
+  const handleEdit = (id) => {
+    navigate(`/main/withdraw/${id}/edit`);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this deposit?')) {
+      deleteMutation.mutate(id);
+    }
+  };
+
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
       <div className="flex mt-1 mb-2">
@@ -127,10 +143,22 @@ const WithdrawList = () => {
                     <td className="px-3 py-2">
                       <BsPrinter className="text-lg text-blue-600 cursor-pointer" />
                     </td>
-                    <td className="px-3 py-2">
-                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                    <td className="px-3 py-1">
+                      <BiSolidEdit
+                        onClick={() => handleEdit(c.No)}
+                        className="text-lg text-blue-600 cursor-pointer"
+                      />
                     </td>
-                    <td className="px-3 py-2">❌</td>
+                    <td className="px-3 py-1">
+                      {' '}
+                      <button
+                        onClick={() => handleDelete(c.No)}
+                        disabled={deleteMutation.isLoading}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        ❌
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}

@@ -29,3 +29,18 @@ export const createConsumption = async (payload) => {
   const { data } = await axiosClient.post('/expence', payload);
   return data;
 };
+
+export const getSingleConsumption = async (id) => {
+  const { data } = await axiosClient.post(`/expence/${id}`);
+  return data;
+};
+
+export const updateConsumption = async ({ id, payload }) => {
+  const { data } = await axiosClient.post(`/expence/${id}`, payload);
+  return data;
+};
+
+export const deleteConsumption = async (payload) => {
+  const { data } = await axiosClient.post('/expence', payload);
+  return data;
+};

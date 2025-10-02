@@ -1,28 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
-import Button from '../../../components/layout/Button';
-import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
+import {
+  useSingleDepositWithdraw,
+  useUpdateWithdrawDeposit,
+} from '../../../hooks/useDeposit';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { FaRegArrowAltCircleDown } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '../../../hooks/useToast';
-import { useCreateDeposit } from '../../../hooks/useDeposit';
+import { PulseLoader } from 'react-spinners';
+import Button from '../../../components/layout/Button';
+import { BsListCheck } from 'react-icons/bs';
 import { useAccount } from '../../../hooks/useAccount';
-const Deposit = () => {
+import { FaRegArrowAltCircleUp } from 'react-icons/fa';
+
+const WithdrawEdit = () => {
+  const { id } = useParams();
   const { t } = useTranslation();
-
-  const toast = useToast();
-  const { mutate, isLoading } = useCreateDeposit();
   const navigate = useNavigate();
+  const toast = useToast();
 
-  const [form, setForm] = useState({
-    deposit: '',
-    withdraw: '',
-    description: '',
-    accountNo: '',
-    employeeId: '',
-    DWData: new Date().toISOString().split('T')[0],
-  });
+  const { data, isLoading: loadingDeposit } = useSingleDepositWithdraw(id);
+  const { mutate: updateWithdraw, isLoading: updating } =
+    useUpdateWithdrawDeposit();
+
+  console.log('withdraw:', data);
 
   const { data: accountResponse } = useAccount();
 
@@ -31,8 +32,26 @@ const Deposit = () => {
     label: `${c.Customer?.Stakeholder?.Person?.firstName} - ${c.MoneyType.typeName}`,
   }));
 
+  const [form, setForm] = useState({
+    withdraw: '',
+    description: '',
+    accountNo: '',
+    employeeId: '',
+    DWData: new Date().toISOString().split('T')[0],
+  });
+
+  useEffect(() => {
+    if (data?.data) {
+      const depositWithdraw = data.data;
+      setForm((prev) => ({
+        ...prev,
+        ...depositWithdraw,
+      }));
+    }
+  }, [data]);
+
   const handleChange = (e) => {
-    const { value, name, checked, type } = e.target;
+    const { name, value, type, checked } = e.target;
     setForm((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
@@ -42,50 +61,38 @@ const Deposit = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!form.deposit || !form.accountNo) {
-      toast.error(t('Please Enter deposit and account'));
-      return;
-    }
-
-    const payload = {
-      ...form,
-      deposit: parseFloat(form.deposit) || 0,
-    };
-
     const cleanData = Object.fromEntries(
-      Object.entries(payload).filter(
-        ([_, v]) => v !== '' && v !== null && v !== undefined
+      Object.entries(form).filter(
+        ([k, v]) => v !== '' && v !== null && k !== 'deposit'
       )
     );
-    mutate(cleanData, {
-      onSuccess: () => {
-        toast.success(t('Deposit Created'));
-        navigate('/main/depositList');
-      },
-      onError: (error) => {
-        console.error('Backend error:', error);
-        let errorMessage = t('createDepositFailed');
 
-        if (error.response?.data?.message) {
-          errorMessage = error.response.data.message;
-
-          if (error.response.data.message.includes('Validation error')) {
-            errorMessage = t('DepositDuplicate');
-          } else if (error.response.data.message.includes('validation')) {
-            errorMessage = t('invalidInputData');
-          }
-        }
-
-        toast.error(errorMessage);
-      },
-    });
+    updateWithdraw(
+      { id, payload: cleanData },
+      {
+        onSuccess: () => {
+          toast.success(t('Update Successful'));
+          navigate('/main/withdrawList');
+        },
+        onError: (err) => {
+          console.error(err);
+          toast.error(t('Update failed'));
+        },
+      }
+    );
   };
 
+  if (loadingDeposit)
+    return (
+      <p className="p-4 flex justify-center">
+        <PulseLoader color="green" size={15} />
+      </p>
+    );
   return (
     <>
       <div className="grid justify-center">
         <div className=" flex mt-1 mb-1">
-          <Link to="/main/depositList">
+          <Link to="/main/withdrawList">
             <Button type="primary">
               <span className="flex justify-between">
                 <BsListCheck className="mt-1 ml-3" />
@@ -93,16 +100,6 @@ const Deposit = () => {
               </span>
             </Button>
           </Link>
-          <Button type="primary">
-            <span className="flex justify-between ">
-              <BsPrinter className="mt-1 ml-3" /> {t('Print')}
-            </span>
-          </Button>
-          <Button type="primary">
-            <span className="flex justify-between ">
-              <BsSearch className="mt-1 ml-3" /> {t('Search')}
-            </span>
-          </Button>
           <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
             <input
               type="text"
@@ -117,9 +114,10 @@ const Deposit = () => {
           <form>
             <div className="font-extrabold bg-blue-400 w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
               <span className="flex justify-center gap-3 ">
-                {t('Deposit')} <FaRegArrowAltCircleDown className="mt-1" />
+                {t('Withdraw')} <FaRegArrowAltCircleUp className="mt-1" />
               </span>
             </div>
+
             <div className="grid sm:grid-cols-2 gap-6 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl w-full max-w-7xl mx-auto">
               <div className=" space-y-1 w-full">
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
@@ -144,10 +142,10 @@ const Deposit = () => {
                   <label className="sm:w-32">{t('Amount')}:</label>
                   <input
                     type="number"
-                    name="deposit"
+                    name="withdraw"
                     onChange={handleChange}
-                    value={form.deposit}
-                    className=" w-full border border-gray-300 shadow-sm  font-semibold text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    value={form.withdraw}
+                    className=" w-full border border-gray-300 shadow-sm text-red-600 font-semibold  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
                     required
                   />
                 </div>
@@ -178,13 +176,13 @@ const Deposit = () => {
                 <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
                   <button
                     onClick={handleSubmit}
-                    disabled={isLoading}
+                    disabled={updating}
                     type="button"
                     className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
                   >
                     {t('Save')}
                   </button>
-                  <Link to="/main/depositList">
+                  <Link to="/main/withdrawList">
                     <button
                       type="button"
                       className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
@@ -229,4 +227,4 @@ const Deposit = () => {
   );
 };
 
-export default Deposit;
+export default WithdrawEdit;
