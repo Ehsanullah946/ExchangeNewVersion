@@ -54,7 +54,7 @@ const AccountList = () => {
   };
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this deposit?')) {
+    if (window.confirm('Are you sure you want to delete this account?')) {
       deleteMutation.mutate(id);
     }
   };

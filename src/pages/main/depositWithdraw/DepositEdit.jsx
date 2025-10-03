@@ -11,7 +11,6 @@ import { PulseLoader } from 'react-spinners';
 import Button from '../../../components/layout/Button';
 import { BsListCheck } from 'react-icons/bs';
 import { FaRegArrowAltCircleDown } from 'react-icons/fa';
-import { updateDepositWithdraw } from '../../../api/DepositWithdrowApi';
 import { useAccount } from '../../../hooks/useAccount';
 
 const DepositEdit = () => {

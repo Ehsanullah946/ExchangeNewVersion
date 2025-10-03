@@ -1,0 +1,410 @@
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import Select from 'react-select';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useToast } from '../../hooks/useToast';
+import { useSingleExchange, useUpdateExchange } from '../../hooks/useExchange';
+import { useCustomers } from '../../hooks/useCustomers';
+import { useExchanger } from '../../hooks/useExchanger';
+import { useMoneyType } from '../../hooks/useMoneyType';
+import { BiChevronDown } from 'react-icons/bi';
+import { RiExchangeDollarFill } from 'react-icons/ri';
+import Button from '../../components/layout/Button';
+import { BsListCheck } from 'react-icons/bs';
+import { PulseLoader } from 'react-spinners';
+
+const ExchangeEdit = () => {
+  const { id } = useParams();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  const { data, isLoading: loadingExchange } = useSingleExchange(id);
+  const { mutate: updateExchange, isLoading: updating } = useUpdateExchange();
+
+  console.log('exchange:', data);
+
+  const [form, setForm] = useState({
+    rate: '',
+    saleAmount: '',
+    purchaseAmount: '',
+    description: '',
+    fingerprint: '',
+    photo: '',
+    swap: false,
+    calculate: true,
+    saleMoneyType: '',
+    purchaseMoneyType: '',
+    exchangerId: '',
+    employeeId: '',
+    eDate: new Date().toISOString().split('T')[0],
+    customerId: '',
+    transferId: null,
+    receiveId: null,
+  });
+
+  const handleChange = (e) => {
+    const { name, value, checked, type } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleSwapCurrencies = () => {
+    setForm((prev) => ({
+      ...prev,
+      swap: !prev.swap,
+      saleMoneyType: prev.purchaseMoneyType,
+      purchaseMoneyType: prev.saleMoneyType,
+      saleAmount: prev.purchaseAmount,
+      purchaseAmount: prev.saleAmount,
+    }));
+  };
+
+  const { data: customerResponse } = useCustomers();
+
+  const customerOptions = (customerResponse?.data || []).map((c) => ({
+    value: c.id,
+    label: `${c.Stakeholder?.Person?.firstName} ${c.Stakeholder?.Person?.lastName}`,
+  }));
+
+  const { data: exchangerResponse } = useExchanger();
+  const exchangerOptions = (exchangerResponse?.data || []).map((c) => ({
+    value: c.id,
+    label: `${c.Person?.firstName || c.firstName} ${
+      c.Person?.lastName || c.lastName
+    }`,
+  }));
+
+  const { data: moneyTypeResponse } = useMoneyType();
+  const moneyTypeOptions = (moneyTypeResponse?.data || []).map((c) => ({
+    value: String(c.id), // ✅ must be string
+    label: c.typeName,
+  }));
+
+  const isUSD = (typeId) => {
+    const type = moneyTypeOptions.find((opt) => opt.value === typeId);
+    return (
+      type?.label?.toLowerCase().includes('usd') ||
+      type?.label?.toLowerCase().includes('usa')
+    );
+  };
+
+  useEffect(() => {
+    const { rate, saleAmount, purchaseAmount } = form;
+    if (!rate) return;
+
+    const saleIsUSD = isUSD(form.saleMoneyType);
+    const purchaseIsUSD = isUSD(form.purchaseMoneyType);
+
+    // 🟢 Case 1: User typed SALE amount
+    if (saleAmount && !purchaseAmount) {
+      setForm((prev) => ({
+        ...prev,
+        purchaseAmount: saleIsUSD
+          ? (parseFloat(saleAmount) * parseFloat(rate)).toFixed(2) // USD → AFN
+          : (parseFloat(saleAmount) / parseFloat(rate)).toFixed(2), // AFN → USD
+      }));
+    }
+
+    // 🟢 Case 2: User typed PURCHASE amount
+    else if (!saleAmount && purchaseAmount) {
+      setForm((prev) => ({
+        ...prev,
+        saleAmount: purchaseIsUSD
+          ? (parseFloat(purchaseAmount) * parseFloat(rate)).toFixed(2) // USD → AFN
+          : (parseFloat(purchaseAmount) / parseFloat(rate)).toFixed(2), // AFN → USD
+      }));
+    }
+  }, [
+    form.rate,
+    form.saleAmount,
+    form.purchaseAmount,
+    form.saleMoneyType,
+    form.purchaseMoneyType,
+    moneyTypeOptions,
+  ]);
+
+  useEffect(() => {
+    if (data?.data) {
+      const exchange = data.data;
+      setForm((prev) => ({
+        ...prev,
+        ...exchange,
+      }));
+    }
+  }, [data]);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const cleanData = Object.fromEntries(
+      Object.entries(form).filter(
+        ([_, v]) => v !== '' && v !== null && v !== undefined
+      )
+    );
+
+    updateExchange(
+      { id, payload: cleanData },
+      {
+        onSuccess: () => {
+          toast.success(t('Update Successful'));
+          navigate('/rates/exchangeList');
+        },
+        onError: (err) => {
+          console.error(err);
+          toast.error(t('Update failed'));
+        },
+      }
+    );
+  };
+
+  if (loadingExchange)
+    return (
+      <p className="p-4 flex justify-center">
+        <PulseLoader color="green" size={15} />
+      </p>
+    );
+
+  return (
+    <>
+      <div className="grid justify-center">
+        <div className=" flex mt-1 mb-1">
+          <Link to="/rates/exchangeList">
+            <Button type="primary">
+              <span className="flex justify-between">
+                <BsListCheck className="mt-1 ml-3" />
+                {t('List')}
+              </span>
+            </Button>
+          </Link>
+          <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
+            <input
+              type="text"
+              name="text"
+              id="input"
+              placeholder={t('Search by number')}
+              class="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+            />
+          </div>
+        </div>
+        <div>
+          <form>
+            <div className="font-extrabold bg-blue-400 w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
+              <span className="flex justify-center gap-2 ">
+                {t('Exchange')}{' '}
+                <RiExchangeDollarFill className="mt-0.5 text-xl" />
+              </span>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-8 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl w-full max-w-7xl mx-auto">
+              <div className=" space-y-1.5 w-full">
+                {/* <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Number')}:</label>
+                  <input
+                    type="text"
+                    className="border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
+                    required
+                  />
+                </div> */}
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
+                  <label htmlFor="" className="sm:w-32">
+                    {t('Sel Amount')}:
+                  </label>
+                  <div className="flex items-center w-full rounded-md bg-white px-1 py-0.5 outline outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-indigo-600">
+                    <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm rtl:ml-3 ltr:mr-3">
+                      $
+                    </div>
+                    <input
+                      id="price"
+                      name="saleAmount"
+                      value={form.saleAmount}
+                      onChange={handleChange}
+                      type="number"
+                      step="0.01"
+                      placeholder="0.00"
+                      className="block w-full grow border-0 bg-transparent text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm"
+                    />
+
+                    {/* Currency dropdown */}
+                    <div className="relative shrink-0">
+                      <select
+                        id="currency"
+                        name="saleMoneyType"
+                        value={form.saleMoneyType}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            saleMoneyType: e.target.value,
+                          }))
+                        }
+                        aria-label="Currency"
+                        className="appearance-none rounded-md bg-transparent py-1.5 pr-6 pl-2 text-base text-gray-700 focus:outline-none sm:text-sm"
+                      >
+                        <option value="">Cur</option>
+                        {moneyTypeOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+
+                      {/* Dropdown icon */}
+                      <BiChevronDown
+                        aria-hidden="true"
+                        className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 size-5 text-gray-500 sm:size-4"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Rates')}:</label>
+                  <input
+                    name="rate"
+                    value={form.rate}
+                    onChange={handleChange}
+                    type="number"
+                    className="border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
+                  />
+                </div>
+
+                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
+                  <label htmlFor="" className="sm:w-32">
+                    {t('Purchase Amount')}:
+                  </label>
+                  <div className="flex items-center w-full rounded-md bg-white px-1 py-0.5 outline outline-1 outline-gray-300 focus-within:outline-2 focus-within:outline-indigo-600">
+                    <div className="shrink-0 text-base text-gray-500 select-none sm:text-sm rtl:ml-3 ltr:mr-3">
+                      $
+                    </div>
+                    <input
+                      id="price"
+                      name="purchaseAmount"
+                      value={form.purchaseAmount}
+                      onChange={handleChange}
+                      type="number"
+                      step="0.01"
+                      placeholder="0.00"
+                      className="block w-full grow border-0 bg-transparent text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm"
+                    />
+
+                    <div className="relative shrink-0">
+                      <select
+                        id="currency"
+                        name="purchaseMoneyType"
+                        value={form.purchaseMoneyType}
+                        onChange={(e) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            purchaseMoneyType: e.target.value,
+                          }))
+                        }
+                        aria-label="Currency"
+                        className="appearance-none rounded-md bg-transparent py-1.5 pr-6 pl-2 text-base text-gray-700 focus:outline-none sm:text-sm"
+                      >
+                        <option value="">Cur</option>
+                        {moneyTypeOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                      <BiChevronDown
+                        aria-hidden="true"
+                        className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 size-5 text-gray-500 sm:size-4"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Date')}:</label>
+                  <input
+                    name="eDate"
+                    value={form.eDate}
+                    onChange={handleChange}
+                    type="date"
+                    className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="w-full space-y-1.5">
+                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Customer')}:</label>
+                  <Select
+                    className="w-full shadow-sm"
+                    name="customerId"
+                    isSearchable
+                    options={customerOptions}
+                    value={customerOptions.find(
+                      (opt) => opt.value === form.customerId
+                    )}
+                    onChange={(selected) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        customerId: selected?.value || '',
+                      }))
+                    }
+                  />
+                </div>
+                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32">{t('Exchanger')}:</label>
+                  <Select
+                    className="w-full shadow-sm"
+                    name="exchangerId"
+                    isSearchable
+                    options={exchangerOptions}
+                    value={exchangerOptions.find(
+                      (opt) => opt.value === form.exchangerId
+                    )}
+                    onChange={(selected) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        exchangerId: selected?.value || '',
+                      }))
+                    }
+                  />
+                </div>
+                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
+                  <label className="sm:w-32 mt-1">{t('Description')}:</label>
+                  <textarea
+                    rows="4"
+                    className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                    placeholder="more...."
+                  />
+                </div>
+              </div>
+              <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
+                <button
+                  onClick={handleSubmit}
+                  disabled={updating}
+                  type="button"
+                  className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
+                >
+                  {t('Save')}
+                </button>
+                <Link to="/main/depositList">
+                  <button
+                    type="button"
+                    className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
+                  >
+                    {t('Cancel')}
+                  </button>
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleSwapCurrencies}
+                  className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
+                >
+                  Swap ↔
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default ExchangeEdit;

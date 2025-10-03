@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../components/layout/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BsPrinter, BsSearch } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 import { RiExchange2Fill } from 'react-icons/ri';
@@ -12,12 +12,10 @@ import {
   setSearch,
   toggleOpen,
 } from '../../features/ui/filterSlice';
-import { useExchange } from '../../hooks/useExchange';
+import { useDeleteExchange, useExchange } from '../../hooks/useExchange';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCustomers } from '../../hooks/useCustomers';
 const ExchangeList = () => {
   const { t } = useTranslation();
-  const [loading, setLoading] = useState(false);
 
   const { search, page, limit, open, debouncedSearch } = useSelector(
     (state) => state.filters
@@ -36,10 +34,6 @@ const ExchangeList = () => {
 
   const { data, isLoading, error } = useExchange(debouncedSearch, limit, page);
 
-  // const { data: customerRespons } = useCustomers();
-
-  // const customers = customerRespons?.data || [];
-
   const exchanges = data || [];
   const total = data?.total || 0;
 
@@ -56,23 +50,24 @@ const ExchangeList = () => {
     }
   }, [total, totalPages, page, dispatch]);
 
+  const navigate = useNavigate();
+
+  const deleteMutation = useDeleteExchange();
+
+  const handleEdit = (id) => {
+    navigate(`/rates/exchange/${id}/edit`);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this exchange?')) {
+      deleteMutation.mutate(id);
+    }
+  };
+
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
-      {open && (
-        <div className="flex gap-2">
-          <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
-            <input
-              type="text"
-              placeholder="Phone"
-              value={phone}
-              onChange={(e) => dispatch(setPhone(e.target.value))}
-              className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
-            />
-          </div>
-        </div>
-      )}
       <div className="flex mt-1 mb-2">
-        <Link to="/management/exchangerAdd">
+        <Link to="/rates/exchange">
           <Button type="primary">{t('Add New Exchanger')}</Button>
         </Link>
         <Button onClick={() => dispatch(toggleOpen(!open))} type="primary">
@@ -158,10 +153,22 @@ const ExchangeList = () => {
                     <td className="px-3 py-2">
                       <BsPrinter className="text-lg text-blue-600 cursor-pointer" />
                     </td>
-                    <td className="px-3 py-2">
-                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                    <td className="px-3 py-1">
+                      <BiSolidEdit
+                        onClick={() => handleEdit(c.id)}
+                        className="text-lg text-blue-600 cursor-pointer"
+                      />
                     </td>
-                    <td className="px-3 py-2">❌</td>
+                    <td className="px-3 py-1">
+                      {' '}
+                      <button
+                        onClick={() => handleDelete(c.id)}
+                        disabled={deleteMutation.isLoading}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        ❌
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}

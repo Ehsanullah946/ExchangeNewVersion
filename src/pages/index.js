@@ -60,4 +60,5 @@ export { default as Login } from './Login';
 // Rate
 export { default as Exchange } from './rates/Exchange';
 export { default as ExchangeList } from './rates/ExchangeList';
+export { default as ExchangeEdit } from './rates/ExchangeEdit';
 export { default as Rate } from './rates/Rate';

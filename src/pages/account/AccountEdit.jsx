@@ -7,6 +7,7 @@ import { PulseLoader } from 'react-spinners';
 import { BsListCheck } from 'react-icons/bs';
 import Button from '../../components/layout/Button';
 import { useCustomers } from '../../hooks/useCustomers';
+import { RiAccountBox2Fill } from 'react-icons/ri';
 import { useMoneyType } from '../../hooks/useMoneyType';
 import Select from 'react-select';
 
@@ -98,7 +99,6 @@ const AccountEdit = () => {
     );
   return (
     <div className="grid justify-center">
-      {/* HEADER BUTTONS */}
       <div className="flex mt-1 mb-1">
         <Link to="/accounts/accountList">
           <Button type="primary">
@@ -174,9 +174,10 @@ const AccountEdit = () => {
             <input
               type="number"
               name="credit"
+              dir="ltr"
               value={form.credit}
-              onChange={handleChange}
               className="border shadow-sm rounded-lg w-full p-1"
+              onChange={handleChange}
               required
             />
           </div>
