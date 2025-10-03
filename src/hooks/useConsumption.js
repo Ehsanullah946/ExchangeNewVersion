@@ -36,7 +36,7 @@ export const useCreateConsumption = () => {
   return useMutation({
     mutationFn: createConsumption,
     onSuccess: () => {
-      queryClient.invalidateQueries['consumption'];
+      queryClient.invalidateQueries(['consumption']);
     },
   });
 };
@@ -46,7 +46,7 @@ export const useUpdateConsumption = () => {
   return useMutation({
     mutationFn: updateConsumption,
     onSuccess: () => {
-      queryClient.invalidateQueries['consumption'];
+      queryClient.invalidateQueries(['consumption']);
     },
   });
 };
@@ -56,7 +56,7 @@ export const useDeleteConsumption = () => {
   return useMutation({
     mutationFn: deleteConsumption,
     onSuccess: () => {
-      queryClient.invalidateQueries['consumption'];
+      queryClient.invalidateQueries(['consumption']);
     },
   });
 };

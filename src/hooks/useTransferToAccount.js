@@ -34,7 +34,7 @@ export const useCreateTransferToAccount = () => {
   return useMutation({
     mutationFn: createTransferToAccount,
     onSuccess: () => {
-      queryClient.invalidateQueries['transferToAccount'];
+      queryClient.invalidateQueries(['transferToAccount']);
     },
   });
 };
@@ -43,7 +43,7 @@ export const useUpdateTransferToAccount = () => {
   return useMutation({
     mutationFn: updateTransferToAccount,
     onSuccess: () => {
-      queryClient.invalidateQueries['transferToAccount'];
+      queryClient.invalidateQueries(['transferToAccount']);
     },
   });
 };
@@ -52,7 +52,7 @@ export const useDeleteTransferToAccount = () => {
   return useMutation({
     mutationFn: deleteTransferToAccount,
     onSuccess: () => {
-      queryClient.invalidateQueries['transferToAccount'];
+      queryClient.invalidateQueries(['transferToAccount']);
     },
   });
 };

@@ -32,6 +32,11 @@ export const createExchange = async (payload) => {
   return data;
 };
 
+export const getSingleExchange = async (id) => {
+  const { data } = await axiosClient.get(`/exchange/${id}`);
+  return data;
+};
+
 export const updateExchange = async ({ id, payload }) => {
   const { data } = await axiosClient.patch(`/exchange/${id}`, payload);
   return data;
@@ -39,10 +44,5 @@ export const updateExchange = async ({ id, payload }) => {
 
 export const deleteExchange = async (id) => {
   const { data } = await axiosClient.delete(`/exchange/${id}`);
-  return data;
-};
-
-export const getSingleExchange = async (id) => {
-  const { data } = await axiosClient.get(`/exchange/${id}`);
   return data;
 };

@@ -24,7 +24,7 @@ export const useCreateWithdraw = () => {
   return useMutation({
     mutationFn: createDepositWithdraw,
     onSuccess: () => {
-      queryClient.invalidateQueries['withdraw'];
+      queryClient.invalidateQueries(['withdraw']);
     },
   });
 };

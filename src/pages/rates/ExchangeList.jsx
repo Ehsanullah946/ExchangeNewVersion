@@ -37,6 +37,19 @@ const ExchangeList = () => {
   const exchanges = data || [];
   const total = data?.total || 0;
 
+  const navigate = useNavigate();
+  const deleteMutation = useDeleteExchange();
+
+  const handleEdit = (id) => {
+    navigate(`/rates/exchange/${id}/edit`);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this exchange?')) {
+      deleteMutation.mutate(id);
+    }
+  };
+
   console.log('exchange data:', exchanges);
 
   const totalPages = Math.max(1, Math.ceil(total / limit));
@@ -49,20 +62,6 @@ const ExchangeList = () => {
       dispatch(setPage(1));
     }
   }, [total, totalPages, page, dispatch]);
-
-  const navigate = useNavigate();
-
-  const deleteMutation = useDeleteExchange();
-
-  const handleEdit = (id) => {
-    navigate(`/rates/exchange/${id}/edit`);
-  };
-
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this exchange?')) {
-      deleteMutation.mutate(id);
-    }
-  };
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">

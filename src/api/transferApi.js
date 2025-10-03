@@ -30,3 +30,15 @@ export const createTransfer = async (payload) => {
   const { data } = await axiosClient.post('/transfer', payload);
   return data;
 };
+export const getSingleTransfer = async (id) => {
+  const { data } = await axiosClient.get(`/transfer/${id}`);
+  return data;
+};
+export const updateTransfer = async ({ id, payload }) => {
+  const { data } = await axiosClient.patch(`/transfer/${id}`, payload);
+  return data;
+};
+export const deleteTransfer = async (id) => {
+  const { data } = await axiosClient.delete(`/transfer/${id}`);
+  return data;
+};

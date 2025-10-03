@@ -19,7 +19,7 @@ export const useCreateReceive = () => {
   return useMutation({
     mutationFn: createReceive,
     onSuccess: () => {
-      queryClient.invalidateQueries['receive'];
+      queryClient.invalidateQueries(['receive']);
     },
   });
 };

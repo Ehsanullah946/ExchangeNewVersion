@@ -19,7 +19,7 @@ export const useCreateTransfer = () => {
   return useMutation({
     mutationFn: createTransfer,
     onSuccess: () => {
-      queryClient.invalidateQueries['transfer'];
+      queryClient.invalidateQueries(['transfer']);
     },
   });
 };

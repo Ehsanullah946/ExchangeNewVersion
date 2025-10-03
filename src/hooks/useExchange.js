@@ -34,7 +34,7 @@ export const useCreateExchange = () => {
   return useMutation({
     mutationFn: createExchange,
     onSuccess: () => {
-      queryClient.invalidateQueries['exchange'];
+      queryClient.invalidateQueries(['exchange']);
     },
   });
 };
@@ -43,16 +43,17 @@ export const useUpdateExchange = () => {
   return useMutation({
     mutationFn: updateExchange,
     onSuccess: () => {
-      queryClient.invalidateQueries['exchange'];
+      queryClient.invalidateQueries(['exchange']);
     },
   });
 };
+
 export const useDeleteExchange = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteExchange,
     onSuccess: () => {
-      queryClient.invalidateQueries['exchange'];
+      queryClient.invalidateQueries(['exchange']);
     },
   });
 };
