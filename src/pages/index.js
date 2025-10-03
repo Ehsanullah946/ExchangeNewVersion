@@ -28,6 +28,7 @@ export { default as BranchAdd } from './managements/branch/BranchAdd';
 export { default as Receive } from './main/receive/Receive';
 export { default as ReceiveList } from './main/receive/ReceiveList';
 export { default as Transfer } from './main/transfer/Transfer';
+export { default as TransferEdit } from './main/transfer/TransferEdit';
 export { default as TransferList } from './main/transfer/TransferList';
 export { default as Deposit } from './main/depositWithdraw/Deposit';
 export { default as DepositList } from './main/depositWithdraw/DepositList';

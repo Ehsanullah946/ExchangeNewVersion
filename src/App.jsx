@@ -61,6 +61,7 @@ import {
   TransferToAccountEdit,
   AccountEdit,
   ExchangeEdit,
+  TransferEdit,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -118,6 +119,7 @@ const App = () => {
               <Route path="receiveList" element={<ReceiveList />} />
               <Route path="transferList" element={<TransferList />} />
               <Route path="transfer" element={<Transfer />} />
+              <Route path="transfer/:id/edit" element={<TransferEdit />} />
               <Route path="deposit" element={<Deposit />} />
               <Route path="depositList" element={<DepositList />} />
               <Route path="deposit/:id/edit" element={<DepositEdit />} />

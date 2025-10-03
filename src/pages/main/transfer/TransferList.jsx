@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import Button from '../../../components/layout/Button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BsPrinter, BsSearch } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 import { BsSend } from 'react-icons/bs';
@@ -13,7 +13,7 @@ import {
   setPage,
   toggleOpen,
 } from '../../../features/ui/filterSlice';
-import { useTransfer } from '../../../hooks/useTransfer';
+import { useDeleteTransfer, useTransfer } from '../../../hooks/useTransfer';
 const TransferList = () => {
   const { t } = useTranslation();
 
@@ -49,6 +49,20 @@ const TransferList = () => {
       dispatch(setPage(1));
     }
   }, [total, totalPages, page, dispatch]);
+
+  const navigate = useNavigate();
+
+  const deleteMutation = useDeleteTransfer();
+
+  const handleEdit = (id) => {
+    navigate(`/main/transfer/${id}/edit`);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this transfer?')) {
+      deleteMutation.mutate(id);
+    }
+  };
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
@@ -118,7 +132,10 @@ const TransferList = () => {
                 </tr>
               ) : (
                 transfer.map((c, index) => (
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row">
+                  <tr
+                    key={c.id}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row"
+                  >
                     <td className="px-3 py-2">{c.transferNo}</td>
                     <td className="px-3 py-2">{c.senderName}</td>
                     <td className="px-3 py-2">{c.receiverName}</td>
@@ -130,10 +147,22 @@ const TransferList = () => {
                     <td className="px-3 py-2">
                       <BsPrinter className="text-lg text-blue-600 cursor-pointer" />
                     </td>
-                    <td className="px-3 py-2">
-                      <BiSolidEdit className="text-lg text-blue-600 cursor-pointer" />
+                    <td className="px-3 py-1">
+                      <BiSolidEdit
+                        onClick={() => handleEdit(c.id)}
+                        className="text-lg text-blue-600 cursor-pointer"
+                      />
                     </td>
-                    <td className="px-3 py-2">❌</td>
+                    <td className="px-3 py-1">
+                      {' '}
+                      <button
+                        onClick={() => handleDelete(c.id)}
+                        disabled={deleteMutation.isLoading}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        ❌
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}

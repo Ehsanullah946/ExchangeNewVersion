@@ -26,8 +26,22 @@ export const getReceive = async (filters = {}) => {
   }
 };
 
-
-export const createReceive =async (payload) => {
-  const { data } = await axiosClient.post("/receive", payload)
+export const createReceive = async (payload) => {
+  const { data } = await axiosClient.post('/receive', payload);
   return data;
-}
+};
+
+export const updateReceive = async ({ id, payload }) => {
+  const { data } = await axiosClient.patch(`/receive/${id}`, payload);
+  return data;
+};
+
+export const deleteReceive = async (id) => {
+  const { data } = await axiosClient.delete(`/receive/${id}`);
+  return data;
+};
+
+export const getSingleReceive = async (id) => {
+  const { data } = await axiosClient.get(`/receive/${id}`);
+  return data;
+};
