@@ -62,6 +62,7 @@ import {
   AccountEdit,
   ExchangeEdit,
   TransferEdit,
+  ReceiveEdit,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -88,7 +89,7 @@ const App = () => {
               <Route path="customer/:id/edit" element={<CustomerEdit />} />
               <Route path="customerAdd" element={<CustomerAdd />} />
               <Route
-                path="customer/:id/transactions"
+                path="customer/:customerId/transactions"
                 element={<CustomerTransactions />}
               />
               <Route path="branch" element={<Branches />} />
@@ -116,6 +117,7 @@ const App = () => {
             </Route>
             <Route path="/main" element={<Main />}>
               <Route path="receive" element={<Receive />} />
+              <Route path="receive/:id/edit" element={<ReceiveEdit />} />
               <Route path="receiveList" element={<ReceiveList />} />
               <Route path="transferList" element={<TransferList />} />
               <Route path="transfer" element={<Transfer />} />

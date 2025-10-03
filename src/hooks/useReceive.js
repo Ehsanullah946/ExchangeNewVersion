@@ -22,7 +22,7 @@ export const useReceive = (search = '', limit = 10, page = 1) => {
 export const useSingleReceive = (id) => {
   return useQuery({
     queryKey: ['receive', id],
-    queryFn: () => getSingleReceive({ id }),
+    queryFn: () => getSingleReceive(id),
     staleTime: 0,
     refetchOnMount: 'always',
     keepPreviousData: true,

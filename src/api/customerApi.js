@@ -30,6 +30,21 @@ export const getSingleCustomer = async (id) => {
   return data;
 };
 
+export const getAllTransaction = async (
+  customerId,
+  { limit = 10, page = 1 }
+) => {
+  const { data } = await axiosClient.get(
+    `/customer/${customerId}/transactions`,
+    {
+      params: { limit, page },
+    }
+  );
+
+  console.log('all transaction data:', data);
+  return data;
+};
+
 export const createCustomer = async (payload) => {
   const { data } = await axiosClient.post('/customer', payload);
   return data;

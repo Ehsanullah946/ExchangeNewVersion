@@ -1,6 +1,119 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSingleReceive, useUpdateReceive } from '../../../hooks/useReceive';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import Select from 'react-select';
+import { useToast } from '../../../hooks/useToast';
+import { useMoneyType } from '../../../hooks/useMoneyType';
+import { useCustomers } from '../../../hooks/useCustomers';
+import { useBranch } from '../../../hooks/useBranch';
+import Button from '../../../components/layout/Button';
+import { BsListCheck } from 'react-icons/bs';
+import { RiDownload2Line } from 'react-icons/ri';
+import { PulseLoader } from 'react-spinners';
+import { BiChevronDown } from 'react-icons/bi';
 
 const ReceiveEdit = () => {
+  const { id } = useParams();
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const toast = useToast();
+
+  const { data, isLoading: loadingReceive } = useSingleReceive(id);
+  const { mutate: updateReceive, isLoading: updating } = useUpdateReceive();
+
+  console.log('Receive:', data);
+
+  const { data: moneyTypeResponse } = useMoneyType();
+
+  const moneyTypeOptions = (moneyTypeResponse?.data || []).map((c) => ({
+    value: c.id,
+    label: `${c.typeName}`,
+  }));
+
+  const { data: customerResponse } = useCustomers();
+
+  const customerOptions = (customerResponse?.data || []).map((c) => ({
+    value: c.id,
+    label: `${c.Stakeholder?.Person?.firstName} ${c.Stakeholder?.Person?.lastName}`,
+  }));
+
+  const { data: branchResponse } = useBranch();
+
+  const branchOptions = (branchResponse?.data || []).map((b) => ({
+    value: b.id,
+    label: `${b.Customer?.Stakeholder?.Person?.firstName} ${b.Customer?.Stakeholder?.Person?.lastName}`,
+  }));
+
+  const [form, setForm] = useState({
+    receiveNo: '',
+    receiveAmount: '',
+    chargesAmount: '',
+    chargesType: '',
+    branchCharges: '',
+    branchChargesType: '',
+    rDate: '',
+    description: '',
+    passTo: '',
+    fromWhere: '',
+    passNo: '',
+    customerId: '',
+    senderName: '',
+    receiverName: '',
+    moneyTypeId: '',
+    channels: '',
+    receiveStatus: false,
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  useEffect(() => {
+    if (data?.data) {
+      const receive = data.data;
+      setForm((prev) => ({
+        ...prev,
+        ...receive,
+      }));
+    }
+  }, [data]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const cleanData = Object.fromEntries(
+      Object.entries(form).filter(
+        ([_, v]) => v !== '' && v !== null && v !== undefined
+      )
+    );
+
+    updateReceive(
+      { id, payload: cleanData },
+      {
+        onSuccess: () => {
+          toast.success(t('Update Successful'));
+          navigate('/main/receiveList');
+        },
+        onError: (err) => {
+          console.error(err);
+          toast.error(t('Update failed'));
+        },
+      }
+    );
+  };
+
+  if (loadingReceive)
+    return (
+      <p className="p-4 flex justify-center">
+        <PulseLoader color="green" size={15} />
+      </p>
+    );
+
   return (
     <>
       <div className="grid justify-center">
@@ -13,16 +126,6 @@ const ReceiveEdit = () => {
               </span>
             </Button>
           </Link>
-          <Button type="primary">
-            <span className="flex justify-between ">
-              <BsPrinter className="mt-1 ml-3" /> {t('Print')}
-            </span>
-          </Button>
-          <Button type="primary">
-            <span className="flex justify-between ">
-              <BsSearch className="mt-1 ml-3" /> {t('Limit Search')}
-            </span>
-          </Button>
           <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
             <input
               type="text"
@@ -326,13 +429,13 @@ const ReceiveEdit = () => {
               <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
                 <button
                   onClick={handleSubmit}
-                  disabled={isLoading}
+                  disabled={updating}
                   type="button"
                   className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
                 >
                   {t('Save')}
                 </button>
-                <Link to="/main/receiveList">
+                <Link to="/main/transferList">
                   <button
                     type="button"
                     className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"

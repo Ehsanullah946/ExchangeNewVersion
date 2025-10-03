@@ -26,6 +26,7 @@ export { default as BranchAdd } from './managements/branch/BranchAdd';
 
 /// main route
 export { default as Receive } from './main/receive/Receive';
+export { default as ReceiveEdit } from './main/receive/ReceiveEdit';
 export { default as ReceiveList } from './main/receive/ReceiveList';
 export { default as Transfer } from './main/transfer/Transfer';
 export { default as TransferEdit } from './main/transfer/TransferEdit';

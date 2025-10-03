@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createCustomer,
   deleteCustomer,
+  getAllTransaction,
   getCustomer,
   getSingleCustomer,
   updateCustomer,
@@ -26,6 +27,20 @@ export const useSingleCustomer = (id) => {
     enabled: !!id,
     onError: (error) => {
       console.error('Error fetching customer by id:', error);
+    },
+  });
+};
+
+export const useAllTransaction = (customerId, limit = 10, page = 1) => {
+  return useQuery({
+    queryKey: ['customers', customerId, limit, page],
+    queryFn: () => getAllTransaction(customerId, { limit, page }),
+    enabled: !!customerId,
+    staleTime: 0,
+    refetchOnMount: 'always',
+    keepPreviousData: true,
+    onError: (error) => {
+      console.error('Error fetching all transaction customer:', error);
     },
   });
 };
