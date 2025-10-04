@@ -32,6 +32,16 @@ const CustomerTransactions = () => {
   console.log('useParams:', useParams());
   console.log('Final URL:', `/customer/${customerId}/transactions`);
 
+  console.log('customerId from useParams:', customerId);
+  console.log('customerId type:', typeof customerId);
+
+  // Add validation
+  useEffect(() => {
+    if (!customerId) {
+      console.error('No customerId found in URL parameters');
+    }
+  }, [customerId]);
+
   console.log(customerTransaction);
 
   const totalPages = Math.max(1, Math.ceil(total / limit));

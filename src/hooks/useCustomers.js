@@ -33,18 +33,26 @@ export const useSingleCustomer = (id) => {
 
 export const useAllTransaction = (customerId, limit = 10, page = 1) => {
   return useQuery({
-    queryKey: ['customers', customerId, limit, page],
-    queryFn: () => getAllTransaction(customerId, { limit, page }),
-    enabled: !!customerId,
+    queryKey: ['customers', customerId, 'transactions', limit, page],
+    queryFn: () => {
+      if (!customerId) {
+        console.error('No customerId provided to useAllTransaction');
+        return Promise.resolve({ data: [], total: 0 });
+      }
+      return getAllTransaction(customerId, { limit, page });
+    },
+    enabled: !!customerId && !isNaN(customerId),
     staleTime: 0,
     refetchOnMount: 'always',
     keepPreviousData: true,
     onError: (error) => {
       console.error('Error fetching all transaction customer:', error);
     },
+    onSuccess: (data) => {
+      console.log('Query successful - data received:', data);
+    },
   });
 };
-
 export const useCreateCustomer = () => {
   const queryClient = useQueryClient();
   return useMutation({

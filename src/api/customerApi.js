@@ -2,6 +2,7 @@ import axiosClient from './axiosClient';
 
 export const getCustomer = async (filters = {}) => {
   console.log('API call with filters:', filters);
+
   const params = new URLSearchParams();
   Object.entries(filters).forEach(([key, value]) => {
     if (value) {
@@ -32,17 +33,29 @@ export const getSingleCustomer = async (id) => {
 
 export const getAllTransaction = async (
   customerId,
-  { limit = 10, page = 1 }
+  { limit = 10, page = 1 } = {}
 ) => {
-  const { data } = await axiosClient.get(
-    `/customer/${customerId}/transactions`,
-    {
-      params: { limit, page },
-    }
-  );
+  try {
+    console.log('API Call - customerId:', customerId);
+    console.log('API Call - params:', { limit, page });
 
-  console.log('all transaction data:', data);
-  return data;
+    const response = await axiosClient.get(
+      `/customer/${customerId}/transactions`,
+      {
+        params: { limit, page },
+      }
+    );
+
+    console.log('API Response status:', response.status);
+    console.log('API Response data:', response.data);
+    console.log('API Response data.data:', response.data.data);
+
+    return response.data;
+  } catch (error) {
+    console.error('API Error:', error);
+    console.error('API Error response:', error.response?.data);
+    throw error;
+  }
 };
 
 export const createCustomer = async (payload) => {
