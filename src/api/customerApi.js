@@ -31,13 +31,15 @@ export const getSingleCustomer = async (id) => {
   return data;
 };
 
+// Update your getAllTransaction function
 export const getAllTransaction = async (
   customerId,
   { limit = 10, page = 1 } = {}
 ) => {
   try {
-    console.log('API Call - customerId:', customerId);
-    console.log('API Call - params:', { limit, page });
+    console.log('🔍 API Call Debug:');
+    console.log('customerId:', customerId, 'type:', typeof customerId);
+    console.log('params:', { limit, page });
 
     const response = await axiosClient.get(
       `/customer/${customerId}/transactions`,
@@ -46,14 +48,22 @@ export const getAllTransaction = async (
       }
     );
 
-    console.log('API Response status:', response.status);
-    console.log('API Response data:', response.data);
-    console.log('API Response data.data:', response.data.data);
+    console.log('✅ API Response:', response);
+    console.log('📊 Response data structure:', {
+      status: response.data?.status,
+      total: response.data?.total,
+      dataLength: response.data?.data?.length,
+      fullData: response.data,
+    });
 
     return response.data;
   } catch (error) {
-    console.error('API Error:', error);
-    console.error('API Error response:', error.response?.data);
+    console.error('❌ API Error:', error);
+    console.error('Error details:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    });
     throw error;
   }
 };

@@ -160,14 +160,61 @@ const CustomerTransactions = () => {
               ) : (
                 customerTransaction.map((c, index) => (
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 flex flex-col md:table-row">
-                    <td className="px-3 py-2">{c.No}</td>
-                    <td className="px-3 py-2">{`${new Date().toLocaleDateString()}`}</td>
-                    <td className="px-3 py-2">{c.description} </td>
-                    <td className="px-3 py-2">40000</td>
-                    <td className="px-3 py-2">10000</td>
-                    <td className="px-3 py-2">AFG</td>
-                    <td className="px-3 py-2">20000</td>
-                    <td className="px-3 py-2">{t('Owe')}</td>
+                    <td className="px-3 py-2">
+                      {c.No || c.transferNo || c.receiveNo || '-'}
+                    </td>
+
+                    <td dir="ltr" className="px-3 py-2">
+                      {new Date(c.date).toLocaleDateString('en-GB')}
+                    </td>
+
+                    <td className="px-3 py-2">
+                      {c.description ||
+                        (c.type === 'transfer'
+                          ? `${c.senderName || ''} ➜ ${c.receiverName || ''}`
+                          : c.type === 'receive'
+                          ? `${c.senderName || ''} ➜ ${c.receiverName || ''}`
+                          : '-')}
+                    </td>
+
+                    <td className="px-3 py-2 text-red-600">
+                      {c.withdraw ||
+                        (c.type === 'transfer' ? c.transferAmount : '')}
+                    </td>
+
+                    <td className="px-3 py-2 text-green-600">
+                      {c.deposit ||
+                        (c.type === 'receive' ? c.receiveAmount : '')}
+                    </td>
+
+                    <td className="px-3 py-2">
+                      {c.Account?.MoneyType?.typeName ||
+                        c.MainMoneyType?.typeName ||
+                        '-'}
+                    </td>
+
+                    <td>
+                      {['deposit', 'withdraw'].includes(c.type)
+                        ? c.Account?.credit ?? '-'
+                        : '-'}
+                    </td>
+                    <td className="px-3 py-2">
+                      <span
+                        className={`px-2 py-1 rounded-full text-white text-xs ${
+                          c.type === 'deposit'
+                            ? 'bg-green-500'
+                            : c.type === 'withdraw'
+                            ? 'bg-red-500'
+                            : c.type === 'transfer'
+                            ? 'bg-blue-500'
+                            : c.type === 'receive'
+                            ? 'bg-yellow-500'
+                            : 'bg-gray-400'
+                        }`}
+                      >
+                        {t(c.type)}
+                      </span>
+                    </td>
                     <td className="px-3 py-2">
                       <BsPrinter color="green" />
                     </td>
