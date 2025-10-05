@@ -16,6 +16,7 @@ import { PulseLoader } from 'react-spinners';
 import { setPage, toggleOpen } from '../../../features/ui/filterSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAllTransaction } from '../../../hooks/useCustomers';
+import { space } from 'postcss/lib/list';
 
 const CustomerTransactions = () => {
   const { customerId } = useParams();
@@ -29,20 +30,12 @@ const CustomerTransactions = () => {
   const customerTransaction = data?.data || [];
   const total = data?.total || 0;
 
-  console.log('useParams:', useParams());
-  console.log('Final URL:', `/customer/${customerId}/transactions`);
-
-  console.log('customerId from useParams:', customerId);
-  console.log('customerId type:', typeof customerId);
-
   // Add validation
   useEffect(() => {
     if (!customerId) {
       console.error('No customerId found in URL parameters');
     }
   }, [customerId]);
-
-  console.log(customerTransaction);
 
   const totalPages = Math.max(1, Math.ceil(total / limit));
 
@@ -57,7 +50,6 @@ const CustomerTransactions = () => {
 
   return (
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
-      {/* Search + Add button */}
       <div className="flex mt-1 mb-2 gap-0.2">
         <Link to="/accounts/accountAdd">
           <Button type="primary">
@@ -108,14 +100,12 @@ const CustomerTransactions = () => {
             </span>
           </Button>
         </Link>
-
         <input
           type="text"
           placeholder={t('Search')}
           className="border rounded px-1 flex-1"
         />
       </div>
-
       {/* Table */}
       {isLoading ? (
         <p className="p-4">
@@ -140,7 +130,7 @@ const CustomerTransactions = () => {
                 <th className="px-3 py-2">{t('Deposit')}</th>
                 <th className="px-3 py-2">{t('Currency')}</th>
                 <th className="px-3 py-2">{t('Remain')}</th>
-                <th className="px-3 py-2">{t('Status')}</th>
+                <th className="px-3 py-2">{t('Type')}</th>
                 <th className="px-3 py-2">{t('Print')}</th>
                 <th className="px-3 py-2">{t('User')}</th>
                 <th className="px-3 py-2">{t('Edit')}</th>
@@ -171,20 +161,20 @@ const CustomerTransactions = () => {
                     <td className="px-3 py-2">
                       {c.description ||
                         (c.type === 'transfer'
-                          ? `${c.senderName || ''} ➜ ${c.receiverName || ''}`
+                          ? `${c.senderName || ''} ⬅️ ${c.receiverName || '-'}`
                           : c.type === 'receive'
-                          ? `${c.senderName || ''} ➜ ${c.receiverName || ''}`
+                          ? `${c.senderName || ''} ⬅️ ${c.receiverName || '-'}`
                           : '-')}
                     </td>
 
                     <td className="px-3 py-2 text-red-600">
                       {c.withdraw ||
-                        (c.type === 'transfer' ? c.transferAmount : '')}
+                        (c.type === 'transfer' ? c.transferAmount : '-')}
                     </td>
 
                     <td className="px-3 py-2 text-green-600">
                       {c.deposit ||
-                        (c.type === 'receive' ? c.receiveAmount : '')}
+                        (c.type === 'receive' ? c.receiveAmount : '-')}
                     </td>
 
                     <td className="px-3 py-2">
