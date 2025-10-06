@@ -5,14 +5,13 @@ import { useParams } from 'react-router-dom';
 import { useAllAccountTransaction } from '../../hooks/useAccount';
 
 import { BiSolidDetail, BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
-import Button from '../../../components/layout/Button';
 import { Link } from 'react-router-dom';
 import { ImMinus } from 'react-icons/im';
 import { RiAddBoxFill } from 'react-icons/ri';
 import { BsPrinter, BsSearch, BsShare } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
-import { setPage } from '../../../features/ui/filterSlice';
-
+import { setPage } from '../../features/ui/filterSlice';
+import Button from '../../components/layout/Button';
 const AccountTransaction = () => {
   const { accountId } = useParams();
   const { t } = useTranslation();
@@ -29,10 +28,9 @@ const AccountTransaction = () => {
   const accountTransaction = data?.data || [];
   const total = data?.total || 0;
 
-  // Add validation
   useEffect(() => {
     if (!accountId) {
-      console.error('No customerId found in URL parameters');
+      console.error('No account found in URL parameters');
     }
   }, [accountId]);
 
@@ -139,10 +137,10 @@ const AccountTransaction = () => {
               {accountTransaction.length === 0 ? (
                 <tr>
                   <td
-                    colSpan="8"
+                    colSpan="12"
                     className="px-4 py-4 font-bold text-xl text-center"
                   >
-                    {t('No customer found for your search')}
+                    {t('No Transaction found for your search')}
                   </td>
                 </tr>
               ) : (
@@ -181,10 +179,13 @@ const AccountTransaction = () => {
                         '-'}
                     </td>
 
-                    <td dir="ltr">
-                      {['deposit', 'withdraw'].includes(c.type)
-                        ? c.Account?.credit ?? '-'
-                        : '-'}
+                    <td
+                      dir="ltr"
+                      className={`px-3 py-2 ${
+                        c.runningBalance < 0 ? 'text-red-600' : ''
+                      }`}
+                    >
+                      {c.runningBalance}
                     </td>
                     <td className="px-3 py-2">
                       <span

@@ -140,10 +140,10 @@ const CustomerTransactions = () => {
               {customerTransaction.length === 0 ? (
                 <tr>
                   <td
-                    colSpan="8"
+                    colSpan="12"
                     className="px-4 py-4 font-bold text-xl text-center"
                   >
-                    {t('No customer found for your search')}
+                    {t('No Transaction found for your search')}
                   </td>
                 </tr>
               ) : (
@@ -182,10 +182,13 @@ const CustomerTransactions = () => {
                         '-'}
                     </td>
 
-                    <td dir="ltr">
-                      {['deposit', 'withdraw'].includes(c.type)
-                        ? c.Account?.credit ?? '-'
-                        : '-'}
+                    <td
+                      dir="ltr"
+                      className={`px-3 py-2 ${
+                        c.runningBalance < 0 ? 'text-red-600' : ''
+                      }`}
+                    >
+                      {c.runningBalance}
                     </td>
                     <td className="px-3 py-2">
                       <span

@@ -169,7 +169,7 @@ const AccountList = () => {
                     </td>
 
                     <td className="px-3 py-2">
-                      <Link to={`/accounts/account/1/transactions`}>
+                      <Link to={`/accounts/account/${c.No}/transactions`}>
                         <Button type="primary">{t('Transactions')}</Button>
                       </Link>
                     </td>

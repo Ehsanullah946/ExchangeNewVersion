@@ -149,7 +149,7 @@ const App = () => {
               <Route path="account/:id/edit" element={<AccountEdit />} />
               <Route path="accountList" element={<AccountList />} />
               <Route
-                path="account/:id/transactions"
+                path="account/:accountId/transactions"
                 element={<AccountTransaction />}
               />
             </Route>

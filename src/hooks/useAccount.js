@@ -42,7 +42,7 @@ export const useCreateAccount = () => {
 
 export const useAllAccountTransaction = (accountId, limit = 10, page = 1) => {
   return useQuery({
-    queryKey: ['accounts', accountId, 'transactions', limit, page],
+    queryKey: ['account', accountId, 'transactions', limit, page],
     queryFn: () => {
       if (!accountId) {
         console.error('No customerId provided to useAllTransaction');

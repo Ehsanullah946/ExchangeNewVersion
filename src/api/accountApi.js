@@ -30,25 +30,12 @@ export const getAllAccountTransaction = async (
   { limit = 10, page = 1 } = {}
 ) => {
   try {
-    console.log('🔍 API Call Debug:');
-    console.log('customerId:', accountId, 'type:', typeof accountId);
-    console.log('params:', { limit, page });
-
     const response = await axiosClient.get(
       `/account/${accountId}/transactions`,
       {
         params: { limit, page },
       }
     );
-
-    console.log('✅ API Response:', response);
-    console.log('📊 Response data structure:', {
-      status: response.data?.status,
-      total: response.data?.total,
-      dataLength: response.data?.data?.length,
-      fullData: response.data,
-    });
-
     return response.data;
   } catch (error) {
     console.error('❌ API Error:', error);
