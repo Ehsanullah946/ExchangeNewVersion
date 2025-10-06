@@ -25,6 +25,42 @@ export const getAccounts = async (filters = {}) => {
   }
 };
 
+export const getAllAccountTransaction = async (
+  accountId,
+  { limit = 10, page = 1 } = {}
+) => {
+  try {
+    console.log('🔍 API Call Debug:');
+    console.log('customerId:', accountId, 'type:', typeof accountId);
+    console.log('params:', { limit, page });
+
+    const response = await axiosClient.get(
+      `/account/${accountId}/transactions`,
+      {
+        params: { limit, page },
+      }
+    );
+
+    console.log('✅ API Response:', response);
+    console.log('📊 Response data structure:', {
+      status: response.data?.status,
+      total: response.data?.total,
+      dataLength: response.data?.data?.length,
+      fullData: response.data,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error('❌ API Error:', error);
+    console.error('Error details:', {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+    });
+    throw error;
+  }
+};
+
 export const createAccount = async (payload) => {
   const { data } = await axiosClient.post('/account', payload);
   return data;

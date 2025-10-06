@@ -16,7 +16,6 @@ import { PulseLoader } from 'react-spinners';
 import { setPage, toggleOpen } from '../../../features/ui/filterSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAllTransaction } from '../../../hooks/useCustomers';
-import { space } from 'postcss/lib/list';
 
 const CustomerTransactions = () => {
   const { customerId } = useParams();
@@ -183,7 +182,7 @@ const CustomerTransactions = () => {
                         '-'}
                     </td>
 
-                    <td>
+                    <td dir="ltr">
                       {['deposit', 'withdraw'].includes(c.type)
                         ? c.Account?.credit ?? '-'
                         : '-'}

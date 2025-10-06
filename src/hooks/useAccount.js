@@ -3,6 +3,7 @@ import {
   createAccount,
   deleteAccount,
   getAccounts,
+  getAllAccountTransaction,
   getSingleAccount,
   updateAccount,
 } from '../api/accountApi';
@@ -38,6 +39,30 @@ export const useCreateAccount = () => {
     },
   });
 };
+
+export const useAllAccountTransaction = (accountId, limit = 10, page = 1) => {
+  return useQuery({
+    queryKey: ['accounts', accountId, 'transactions', limit, page],
+    queryFn: () => {
+      if (!accountId) {
+        console.error('No customerId provided to useAllTransaction');
+        return Promise.resolve({ data: [], total: 0 });
+      }
+      return getAllAccountTransaction(accountId, { limit, page });
+    },
+    enabled: !!accountId && !isNaN(accountId),
+    staleTime: 0,
+    refetchOnMount: 'always',
+    keepPreviousData: true,
+    onError: (error) => {
+      console.error('Error fetching all transaction account:', error);
+    },
+    onSuccess: (data) => {
+      console.log('Query successful - data received:', data);
+    },
+  });
+};
+
 export const useUpdateAccount = () => {
   const queryClient = useQueryClient();
   return useMutation({
