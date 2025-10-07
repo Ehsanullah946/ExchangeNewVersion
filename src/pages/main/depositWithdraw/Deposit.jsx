@@ -83,146 +83,252 @@ const Deposit = () => {
 
   return (
     <>
-      <div className="grid justify-center">
-        <div className=" flex mt-1 mb-1">
-          <Link to="/main/depositList">
-            <Button type="primary">
-              <span className="flex justify-between">
-                <BsListCheck className="mt-1 ml-3" />
-                {t('List')}
-              </span>
-            </Button>
-          </Link>
-          <Button type="primary">
-            <span className="flex justify-between ">
-              <BsPrinter className="mt-1 ml-3" /> {t('Print')}
-            </span>
-          </Button>
-          <Button type="primary">
-            <span className="flex justify-between ">
-              <BsSearch className="mt-1 ml-3" /> {t('Search')}
-            </span>
-          </Button>
-          <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
-            <input
-              type="text"
-              name="text"
-              id="input"
-              placeholder={t('Search')}
-              class="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
-            />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-6 px-4">
+        <div className="max-w-7xl mx-auto">
+          {/* Header Actions */}
+          <div className="flex flex-wrap items-center justify-between gap-4 mb-8 p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20">
+            <div className="flex flex-wrap items-center gap-3">
+              <Link to="/main/depositList">
+                <button className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
+                  <BsListCheck className="text-lg" />
+                  <span className="font-semibold">{t('List')}</span>
+                </button>
+              </Link>
+
+              <button className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
+                <BsPrinter className="text-lg" />
+                <span className="font-semibold">{t('Print')}</span>
+              </button>
+
+              <button className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
+                <BsSearch className="text-lg" />
+                <span className="font-semibold">{t('Search')}</span>
+              </button>
+            </div>
+
+            {/* Search Bar */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
+              <div className="relative flex items-center bg-white rounded-xl shadow-lg border border-gray-100 pl-4 pr-2 py-2 min-w-64">
+                <BsSearch className="text-gray-400 mr-2 flex-shrink-0" />
+                <input
+                  type="text"
+                  placeholder={t('Search')}
+                  className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-400 font-medium tracking-wide"
+                />
+              </div>
+            </div>
           </div>
-        </div>
-        <div>
-          <form>
-            <div className="font-extrabold bg-blue-400 w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
-              <span className="flex justify-center gap-3 ">
-                {t('Deposit')} <FaRegArrowAltCircleDown className="mt-1" />
-              </span>
-            </div>
-            <div className="grid sm:grid-cols-2 gap-6 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl w-full max-w-7xl mx-auto">
-              <div className=" space-y-1 w-full">
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('Account')}:</label>
-                  <Select
-                    className="w-full shadow-sm"
-                    name="accountNo"
-                    isSearchable
-                    options={accountOptions}
-                    value={accountOptions.find(
-                      (opt) => opt.value === form.accountNo
-                    )}
-                    onChange={(selected) =>
-                      setForm((prev) => ({
-                        ...prev,
-                        accountNo: selected?.value || '',
-                      }))
-                    }
-                  />
-                </div>
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('Amount')}:</label>
-                  <input
-                    type="number"
-                    name="deposit"
-                    onChange={handleChange}
-                    value={form.deposit}
-                    className=" w-full border border-gray-300 shadow-sm  font-semibold text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
-                    required
-                  />
-                </div>
-                <div className="flex gap-6 justify-between">
-                  <label className="sm:w-32 mt-2">{t('Date')}:</label>
-                  <input
-                    type="date"
-                    name="DWData"
-                    value={form.DWData}
-                    onChange={handleChange}
-                    className="border shadow-sm rounded-lg w-full p-1"
-                    required
-                  />
-                </div>
 
-                <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32 mt-1">{t('Description')}:</label>
-                  <textarea
-                    rows="4"
-                    name="description"
-                    onChange={handleChange}
-                    value={form.description}
-                    className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
-                    placeholder="بشتر ..........."
-                  />
+          {/* Main Form Section */}
+          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
+            {/* Form Header */}
+            <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 p-6">
+              <div className="flex items-center justify-center gap-3 text-white">
+                <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                  <FaRegArrowAltCircleDown className="text-xl" />
                 </div>
-
-                <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
-                  <button
-                    onClick={handleSubmit}
-                    disabled={isLoading}
-                    type="button"
-                    className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
-                  >
-                    {t('Save')}
-                  </button>
-                  <Link to="/main/depositList">
-                    <button
-                      type="button"
-                      className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
-                    >
-                      {t('Cancel')}
-                    </button>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="w-full p-3">
-                <p className="text-md mb-1 font-semibold">{t('Account')}</p>
-                <hr className="mb-3" />
-                <div className="relative overflow-x-auto shadow-2xl sm:rounded-lg">
-                  <table className="w-full text-sm text-left rtl:text-right text-blue-100">
-                    <thead className="text-xs text-center text-white uppercase bg-blue-600">
-                      <tr>
-                        <th className="px-3 py-1">{t('Credit')}</th>
-                        <th className="px-3 py-1">{t('Owe')}</th>
-                        <th className="px-3 py-1">{t('Currency')}</th>
-                        <th className="px-3 py-1">{t('Total')}</th>
-                        <th className="px-3 py-1">{t('Status')}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr className="bg-blue-500 text-center border-b border-blue-400">
-                        <td className="px-3 py-2">50000</td>
-                        <td>30000</td>
-                        <td>AFG</td>
-                        <td>4300</td>
-                        <td>بدهکار</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <h1 className="text-2xl font-bold tracking-tight">
+                  {t('Deposit')}
+                </h1>
               </div>
             </div>
-          </form>
+
+            {/* Form Content */}
+            <div className="p-6 md:p-8">
+              <form>
+                <div className="grid lg:grid-cols-2 gap-8">
+                  {/* Left Column - Input Fields */}
+                  <div className="space-y-6">
+                    {/* Account Selection */}
+                    <div className="group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">
+                        {t('Account')}
+                      </label>
+                      <Select
+                        className="w-full"
+                        name="accountNo"
+                        isSearchable
+                        options={accountOptions}
+                        value={accountOptions.find(
+                          (opt) => opt.value === form.accountNo
+                        )}
+                        onChange={(selected) =>
+                          setForm((prev) => ({
+                            ...prev,
+                            accountNo: selected?.value || '',
+                          }))
+                        }
+                        styles={{
+                          control: (base) => ({
+                            ...base,
+                            border: '1px solid #e2e8f0',
+                            borderRadius: '12px',
+                            padding: '4px 8px',
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                            transition: 'all 0.2s',
+                            '&:hover': {
+                              borderColor: '#6366f1',
+                              boxShadow: '0 4px 12px rgba(99, 102, 241, 0.1)',
+                            },
+                          }),
+                        }}
+                      />
+                    </div>
+
+                    {/* Amount Input */}
+                    <div className="group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">
+                        {t('Amount')}
+                      </label>
+                      <div className="relative">
+                        <input
+                          type="number"
+                          name="deposit"
+                          onChange={handleChange}
+                          value={form.deposit}
+                          className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-3 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+                          required
+                        />
+                        <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 font-medium">
+                          AFG
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Date Input */}
+                    <div className="group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">
+                        {t('Date')}
+                      </label>
+                      <input
+                        type="date"
+                        name="DWData"
+                        value={form.DWData}
+                        onChange={handleChange}
+                        className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-3 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+                        required
+                      />
+                    </div>
+
+                    {/* Description Textarea */}
+                    <div className="group">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2 ml-1">
+                        {t('Description')}
+                      </label>
+                      <textarea
+                        rows="4"
+                        name="description"
+                        onChange={handleChange}
+                        value={form.description}
+                        className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-3 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm resize-none"
+                        placeholder={t('Enter description here...')}
+                      />
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="flex flex-wrap gap-4 pt-4">
+                      <button
+                        onClick={handleSubmit}
+                        disabled={isLoading}
+                        type="button"
+                        className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                      >
+                        {isLoading ? (
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        ) : null}
+                        {t('Save')}
+                      </button>
+
+                      <Link to="/main/depositList">
+                        <button
+                          type="button"
+                          className="flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-gray-500 to-slate-600 hover:from-gray-600 hover:to-slate-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+                        >
+                          {t('Cancel')}
+                        </button>
+                      </Link>
+                    </div>
+                  </div>
+
+                  {/* Right Column - Account Summary */}
+                  <div className="bg-gradient-to-br from-slate-50 to-blue-50/50 rounded-2xl p-6 border border-gray-200">
+                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      {t('Account Summary')}
+                    </h3>
+
+                    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="bg-gradient-to-r from-gray-800 to-slate-900">
+                            <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                              {t('Credit')}
+                            </th>
+                            <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                              {t('Owe')}
+                            </th>
+                            <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                              {t('Currency')}
+                            </th>
+                            <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                              {t('Total')}
+                            </th>
+                            <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                              {t('Status')}
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-gray-100 hover:bg-gray-50/80 transition-colors">
+                            <td className="px-4 py-3 font-medium text-gray-700">
+                              50,000
+                            </td>
+                            <td className="px-4 py-3 font-medium text-gray-700">
+                              30,000
+                            </td>
+                            <td className="px-4 py-3">
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                AFG
+                              </span>
+                            </td>
+                            <td className="px-4 py-3 font-bold text-green-600">
+                              4,300
+                            </td>
+                            <td className="px-4 py-3">
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                {t('Debtor')}
+                              </span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Additional Summary Cards */}
+                    <div className="grid grid-cols-2 gap-4 mt-6">
+                      <div className="bg-white rounded-xl p-4 shadow-lg border border-green-100">
+                        <div className="text-sm text-gray-500 font-medium">
+                          {t('Available Balance')}
+                        </div>
+                        <div className="text-xl font-bold text-green-600 mt-1">
+                          20,000 AFG
+                        </div>
+                      </div>
+                      <div className="bg-white rounded-xl p-4 shadow-lg border border-blue-100">
+                        <div className="text-sm text-gray-500 font-medium">
+                          {t('Total Deposits')}
+                        </div>
+                        <div className="text-xl font-bold text-blue-600 mt-1">
+                          15,300 AFG
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </>
