@@ -147,37 +147,37 @@ const DepositList = () => {
                     {/* Table Header */}
                     <thead className="bg-gradient-to-r from-gray-800 to-slate-900">
                       <tr>
-                        <th className="px-6 py-4 text-left text-white font-semibold text-sm uppercase tracking-wider">
+                        <th className="px-4 py-4 text-center text-white font-semibold text-sm uppercase tracking-wider">
                           <div className="flex items-center gap-2">
                             <BsHash className="text-gray-400" />
                             {t('Number')}
                           </div>
                         </th>
-                        <th className="px-6 py-4 text-left text-white font-semibold text-sm uppercase tracking-wider">
+                        <th className="px-2 py-4 text-center text-white font-semibold text-sm uppercase tracking-wider">
                           <div className="flex items-center gap-2">
                             <BsPerson className="text-gray-400" />
                             {t('Customer')}
                           </div>
                         </th>
-                        <th className="px-6 py-4 text-left text-white font-semibold text-sm uppercase tracking-wider">
+                        <th className="px-2 py-4 text-center text-white font-semibold text-sm uppercase tracking-wider">
                           <div className="flex items-center gap-2">
                             <BsCurrencyDollar className="text-gray-400" />
                             {t('Amount')}
                           </div>
                         </th>
-                        <th className="px-6 py-4 text-left text-white font-semibold text-sm uppercase tracking-wider">
+                        <th className="px-2 py-4 text-center text-white font-semibold text-sm uppercase tracking-wider">
                           {t('Currency')}
                         </th>
-                        <th className="px-6 py-4 text-left text-white font-semibold text-sm uppercase tracking-wider">
+                        <th className="px-2 py-4 text-center text-white font-semibold text-sm uppercase tracking-wider">
                           {t('Description')}
                         </th>
-                        <th className="px-6 py-4 text-left text-white font-semibold text-sm uppercase tracking-wider">
+                        <th className="px-2 py-4 text-center text-white font-semibold text-sm uppercase tracking-wider">
                           <div className="flex items-center gap-2">
                             <BsCalendar className="text-gray-400" />
                             {t('Date')}
                           </div>
                         </th>
-                        <th className="px-6 py-4 text-center text-white font-semibold text-sm uppercase tracking-wider">
+                        <th className="px-2 py-4 text-center text-white font-semibold text-sm uppercase tracking-wider">
                           {t('Actions')}
                         </th>
                       </tr>
@@ -192,7 +192,7 @@ const DepositList = () => {
                                 <BsInbox className="text-4xl text-gray-400" />
                               </div>
                               <h3 className="text-xl font-bold text-gray-600 mb-2">
-                                {t('No deposits found')}
+                                {t('No Transaction found for your search')}
                               </h3>
                               <p className="text-gray-500 max-w-md">
                                 {t(
@@ -219,8 +219,8 @@ const DepositList = () => {
                               </div>
                             </td>
 
-                            <td className="px-6 py-2">
-                              <div className="flex items-center gap-3">
+                            <td className="px-1 py-1">
+                              <div className="flex items-center gap-2">
                                 <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
                                   {c.Account?.Customer?.Stakeholder?.Person?.firstName?.charAt(
                                     0
@@ -232,33 +232,31 @@ const DepositList = () => {
                                       ?.firstName || 'Unknown'}
                                   </p>
                                   <p className="text-sm text-gray-500">
-                                    Customer
+                                    {t('Customer')}
                                   </p>
                                 </div>
                               </div>
                             </td>
 
-                            <td className="px-6 py-4">
+                            <td className="px-2 py-2">
                               <div className="flex items-center gap-2">
-                                <span className="font-bold text-lg text-green-600">
+                                <span className="font-bold text-md text-green-600">
                                   {c.deposit?.toLocaleString()}
                                 </span>
                               </div>
                             </td>
 
-                            <td className="px-6 py-2">
+                            <td className="px-2 py-1">
                               <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200">
                                 {c.Account?.MoneyType?.typeName || 'N/A'}
                               </span>
                             </td>
 
-                            <td className="px-6 py-2 max-w-xs">
-                              <p className="text-gray-600 line-clamp-2">
-                                {c.description}
-                              </p>
+                            <td className="px-2 py-1 max-w-xs">
+                              <p className="text-gray-600 ">{c.description}</p>
                             </td>
 
-                            <td className="px-6 py-2">
+                            <td className="px-2 py-1">
                               <div className="flex flex-col">
                                 <span className="font-semibold text-gray-800">
                                   {new Date(c.DWDate).toLocaleDateString()}
@@ -270,7 +268,7 @@ const DepositList = () => {
                             </td>
 
                             {/* Action Buttons */}
-                            <td className="px-4 py-2">
+                            <td className="px-2 py-1">
                               <div className="flex items-center justify-center gap-3">
                                 {/* Print Button */}
                                 <button className="p-2 bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 group">

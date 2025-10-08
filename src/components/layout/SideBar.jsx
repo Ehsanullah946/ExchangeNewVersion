@@ -73,31 +73,31 @@ const SideBar = ({ children }) => {
   };
 
   return (
-    <>
-      <div className="main-container">
-        {/* Mobile overlay */}
-        {isMobile && isOpen && (
-          <div className="sidebar-overlay" onClick={() => setIsOpen(false)} />
-        )}
+    <div className="main-container">
+      {/* Mobile overlay */}
+      {isMobile && isOpen && (
+        <div className="sidebar-overlay" onClick={() => setIsOpen(false)} />
+      )}
 
-        <motion.div
-          animate={{
-            width: isOpen
-              ? isMobile
-                ? '80%'
-                : '200px'
-              : isMobile
-              ? '0'
-              : '45px',
-            transition: {
-              duration: 0.3,
-              type: 'spring',
-              damping: 15,
-            },
-          }}
-          className={`sidebar ${isMobile ? 'mobile-sidebar' : ''}`}
-        >
-          <div className="top_section rtl:mr-1 ltr:mr-1">
+      <motion.div
+        animate={{
+          width: isOpen
+            ? isMobile
+              ? '80%'
+              : '250px'
+            : isMobile
+            ? '0'
+            : '60px',
+          transition: {
+            duration: 0.3,
+            type: 'spring',
+            damping: 15,
+          },
+        }}
+        className={`sidebar ${isMobile ? 'mobile-sidebar' : ''}`}
+      >
+        <div className="sidebar-content">
+          <div className="top_section">
             <AnimatePresence>
               {isOpen && (
                 <motion.h1
@@ -123,7 +123,7 @@ const SideBar = ({ children }) => {
 
           {isOpen && (
             <>
-              <div className="search flex gap-2">
+              <div className="search">
                 <div className="search_icon">
                   <BiSearch />
                 </div>
@@ -136,6 +136,7 @@ const SideBar = ({ children }) => {
                       variants={inputAnimation}
                       type="text"
                       placeholder="Search"
+                      className="search-input"
                     />
                   )}
                 </AnimatePresence>
@@ -181,18 +182,22 @@ const SideBar = ({ children }) => {
               </section>
             </>
           )}
-        </motion.div>
-        <main className={isOpen && !isMobile ? 'sidebar-open' : ''}>
-          {/* Mobile menu button */}
-          {isMobile && !isOpen && (
-            <button className="mobile-menu-btn" onClick={toggle}>
-              <FaBars />
-            </button>
-          )}
-          {children}
-        </main>
-      </div>
-    </>
+        </div>
+      </motion.div>
+
+      <main
+        className={`main-content ${isOpen && !isMobile ? 'sidebar-open' : ''}`}
+      >
+        {/* Mobile menu button */}
+        {isMobile && !isOpen && (
+          <button className="mobile-menu-btn" onClick={toggle}>
+            <FaBars />
+          </button>
+        )}
+        {children}
+      </main>
+    </div>
   );
 };
+
 export default SideBar;
