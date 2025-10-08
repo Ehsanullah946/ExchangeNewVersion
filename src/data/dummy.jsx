@@ -56,6 +56,62 @@ export const gridOrderStatus = (props) => (
   </button>
 );
 
+// Sample notification data
+export const notificationData = [
+  {
+    message: 'New Deposit Received',
+    desc: 'Ahmad Khan deposited $5,000.00 USD',
+    time: '2 min ago',
+    type: 'success',
+    status: 'completed'
+  },
+  {
+    message: 'Exchange Rate Updated',
+    desc: 'USD to EUR rate changed to 0.92',
+    time: '15 min ago',
+    type: 'info'
+  },
+  {
+    message: 'Withdrawal Request',
+    desc: 'Pending withdrawal of $3,000.00 needs approval',
+    time: '1 hour ago',
+    type: 'warning',
+    status: 'pending'
+  },
+  {
+    message: 'System Maintenance',
+    desc: 'Scheduled maintenance tonight at 2:00 AM',
+    time: '3 hours ago',
+    type: 'info'
+  }
+];
+
+// Sample chat data
+export const chatData = [
+  {
+    message: 'Ahmad Khan',
+    desc: 'Hello, I want to exchange USD to EUR. What are your current rates?',
+    time: '2 min ago',
+    image: 'https://example.com/avatar1.jpg',
+    online: true,
+    unread: 2,
+    status: 'delivered',
+    typing: false,
+    attachment: false
+  },
+  {
+    message: 'John Smith',
+    desc: 'Thank you for the quick transfer! The money arrived safely.',
+    time: '15 min ago',
+    image: 'https://example.com/avatar2.jpg',
+    online: false,
+    unread: 0,
+    status: 'read',
+    typing: false,
+    attachment: true
+  }
+];
+
 export const kanbanGrid = [
   { headerText: 'To Do', keyField: 'Open', allowToggle: true },
 
@@ -334,33 +390,6 @@ export const colorMappingData = [
   ['#FFFF99'],
   ['#FFA500'],
   ['#FF4040'],
-];
-
-export const chatData = [
-  {
-    image: avatar2,
-    message: 'Roman Joined the Team!',
-    desc: 'Congratulate him',
-    time: '9:08 AM',
-  },
-  {
-    image: avatar3,
-    message: 'New message received',
-    desc: 'Salma sent you new message',
-    time: '11:56 AM',
-  },
-  {
-    image: avatar4,
-    message: 'New Payment received',
-    desc: 'Check your earnings',
-    time: '4:39 AM',
-  },
-  {
-    image: avatar,
-    message: 'Jolly completed tasks',
-    desc: 'Assign her new tasks',
-    time: '1:12 AM',
-  },
 ];
 
 export const themeColors = [

@@ -10,6 +10,8 @@ import {
 } from 'react-icons/bs';
 import { FiDollarSign, FiTrendingUp, FiActivity } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
+import MChart from '../components/charts/MChart';
+import RevenueChart from '../components/charts/RevenueChart';
 
 const Dashboard = () => {
   const { t } = useTranslation();
@@ -161,11 +163,11 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8 text-center p-3 rounded-2xl shadow-lg bg-white">
+        <div className="mb-8 text-center p-3 rounded-2xl shadow-lg  bg-gradient-to-r from-green-600 to-emerald-400">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             {t('Dashboard')}
           </h1>
-          <p className="text-green-400 font-bold">
+          <p className="text-white font-bold">
             {t('به صرافی و خدمات پولی اکبریان خوش آمدید')}
           </p>
         </div>
@@ -203,7 +205,7 @@ const Dashboard = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* Revenue Chart */}
+          {/* Enhanced Revenue Chart */}
           <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-gray-900">
@@ -214,27 +216,7 @@ const Dashboard = () => {
                 {t('Monthly Revenue')}
               </div>
             </div>
-            <div className="h-64">
-              <div className="flex items-end justify-between h-48 gap-2">
-                {revenueData.datasets[0].data.map((value, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col items-center flex-1"
-                  >
-                    <div className="text-xs text-gray-500 mb-2">
-                      {revenueData.labels[index]}
-                    </div>
-                    <div
-                      className="w-full bg-gradient-to-t from-blue-500 to-blue-600 rounded-t-lg transition-all duration-300 hover:from-blue-600 hover:to-blue-700 cursor-pointer"
-                      style={{ height: `${(value / 100000) * 100}%` }}
-                    />
-                    <div className="text-xs text-gray-600 mt-2">
-                      ${(value / 1000).toFixed(0)}K
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <RevenueChart data={revenueData} />
           </div>
 
           {/* Currency Distribution */}

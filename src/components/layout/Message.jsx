@@ -26,7 +26,7 @@ const Message = () => {
   };
 
   return (
-    <div className="absolute top-16 right-4 md:right-6 w-80 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/60 z-50 animate-in slide-in-from-right-8 duration-300">
+    <div className="absolute w-80 bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-200/60 z-50 animate-in slide-in-from-right-8 duration-300">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200/60">
         <div className="flex items-center gap-3">
@@ -133,16 +133,16 @@ const Message = () => {
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t border-gray-200/60 bg-gray-50/50 rounded-b-2xl">
+      <div className="p-2 border-t border-gray-200/60 bg-gray-50/50 rounded-b-2xl">
         <div className="flex gap-2">
           <button
-            className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+            className="flex-1 flex items-center justify-center gap-1 py-2 px-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
             style={{ background: currentColor }}
           >
             <MdOutlineMarkEmailRead className="text-lg" />
-            {t('Mark all as read')}
+            {t('Mark as read')}
           </button>
-          <button className="flex-1 py-2.5 px-4 border border-gray-300 hover:border-gray-400 text-gray-700 font-medium rounded-xl transition-all duration-200 hover:bg-white">
+          <button className="flex-1 py-2 px-2 border border-gray-300 hover:border-gray-400 text-gray-700 font-medium rounded-xl transition-all duration-200 hover:bg-white">
             {t('See all')}
           </button>
         </div>

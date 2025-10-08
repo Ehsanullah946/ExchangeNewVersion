@@ -99,14 +99,14 @@ const Navbar = () => {
   const messageCount = 7;
 
   return (
-    <div className="flex items-center justify-between p-4 md:px-6 bg-gradient-to-r from-white to-gray-50/80 backdrop-blur-lg border-b border-gray-200/60 shadow-sm relative z-50">
+    <div className="flex items-center justify-between p-2 md:px-6 bg-gradient-to-r from-white to-gray-50/80 backdrop-blur-lg border-b border-gray-200/60 shadow-sm relative z-50">
       {/* Search Bar - Optional */}
       <div className="hidden md:flex items-center flex-1 max-w-md">
         <div className="relative w-full">
           <input
             type="text"
             placeholder="Search..."
-            className="w-full pl-10 pr-4 py-2.5 bg-white/80 border border-gray-300/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 shadow-sm"
+            className="w-full pl-8 pr-3 py-2 bg-white/80 border border-gray-300/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 shadow-sm"
           />
           <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
             <svg
@@ -169,7 +169,7 @@ const Navbar = () => {
               <img
                 src={avatar}
                 alt="Profile"
-                className="rounded-xl h-10 w-10 border-2 border-white shadow-md transition-transform duration-300 group-hover:scale-105"
+                className="rounded-2xl h-10 w-10 border-1 border-white shadow-md transition-transform duration-300 group-hover:scale-105"
               />
               <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
             </div>
@@ -190,7 +190,7 @@ const Navbar = () => {
 
           {/* Quick User Menu */}
           {showQuickMenu && (
-            <div className="absolute top-full right-0 mt-2 w-64 bg-white/95 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-200/60 py-2 z-50 animate-in fade-in-0 zoom-in-95">
+            <div className="absolute top-full rtl:left-4  ltr:right-4 mt-2 w-64 bg-white/95 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-200/60 py-2 z-50 animate-in fade-in-0 zoom-in-95">
               {/* User Info */}
               <div className="px-4 py-3 border-b border-gray-200/60">
                 <div className="flex items-center gap-3">
@@ -238,13 +238,13 @@ const Navbar = () => {
 
       {/* Floating Panels */}
       {isClicked.chat && (
-        <div className="absolute top-full right-20 mt-2 z-40">
+        <div className="absolute top-full rtl:right-4 mt-1 z-40">
           <Message />
         </div>
       )}
 
       {isClicked.notification && (
-        <div className="absolute top-full right-32 mt-2 z-40">
+        <div className="absolute top-full  mt-1 z-40">
           <NotificationPanel />
         </div>
       )}

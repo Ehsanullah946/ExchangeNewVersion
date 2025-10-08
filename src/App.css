@@ -97,8 +97,8 @@ main {
 .search {
   display: flex;
   align-items: center;
-  margin: 15px;
-  padding: 8px 12px;
+  margin: 10px;
+  padding: 5px 9px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -384,7 +384,11 @@ main {
 /* @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(10px);
+    -webkit-transform: translateY(10px);
+    -moz-transform: translateY(10px);
+    -ms-transform: translateY(10px);
+    -o-transform: translateY(10px);
   }
   to {
     opacity: 1;
@@ -395,7 +399,11 @@ main {
 /* @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateX(10px);
+    transform: translateX(-10px);
+    -webkit-transform: translateX(-10px);
+    -moz-transform: translateX(-10px);
+    -ms-transform: translateX(-10px);
+    -o-transform: translateX(-10px);
   }
   to {
     opacity: 1;
@@ -417,11 +425,15 @@ main {
 
 .zoom-in-95 {
   transform: scale(0.95);
-}
+  -webkit-transform: scale(0.95);
+  -moz-transform: scale(0.95);
+  -ms-transform: scale(0.95);
+  -o-transform: scale(0.95);
+} */
 
 .zoom-in-100 {
   transform: scale(1);
-} */
+}
 
 /* Backdrop blur support */
 @supports (backdrop-filter: blur(10px)) {

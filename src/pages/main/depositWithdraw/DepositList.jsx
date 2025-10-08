@@ -208,9 +208,9 @@ const DepositList = () => {
                             key={c.No}
                             className="group hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/30 transition-all duration-200 border-b border-gray-100 last:border-b-0"
                           >
-                            <td className="px-6 py-2">
+                            <td className="px-2 py-2">
                               <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                                <div className="w-6 h-7 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
                                   {index + 1}
                                 </div>
                                 <span className="font-semibold text-gray-700">
@@ -221,7 +221,7 @@ const DepositList = () => {
 
                             <td className="px-1 py-1">
                               <div className="flex items-center gap-2">
-                                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
                                   {c.Account?.Customer?.Stakeholder?.Person?.firstName?.charAt(
                                     0
                                   ) || 'U'}
@@ -272,7 +272,7 @@ const DepositList = () => {
                               <div className="flex items-center justify-center gap-3">
                                 {/* Print Button */}
                                 <button className="p-2 bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 group">
-                                  <BsPrinter className="text-lg" />
+                                  <BsPrinter className="text-md" />
                                   <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
                                     {t('Print')}
                                   </div>
@@ -283,7 +283,7 @@ const DepositList = () => {
                                   onClick={() => handleEdit(c.No)}
                                   className="p-2 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 group"
                                 >
-                                  <BiSolidEdit className="text-lg" />
+                                  <BiSolidEdit className="text-md" />
                                   <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
                                     {t('Edit')}
                                   </div>
@@ -298,7 +298,7 @@ const DepositList = () => {
                                   {deleteMutation.isLoading ? (
                                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                   ) : (
-                                    <BsTrash className="text-lg" />
+                                    <BsTrash className="text-md" />
                                   )}
                                   <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
                                     {t('Delete')}
