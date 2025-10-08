@@ -194,11 +194,11 @@ const CustomerTransactions = () => {
                       <span
                         className={`px-2 py-1 rounded-full text-white text-xs ${
                           c.type === 'deposit'
-                            ? 'bg-green-500'
+                            ? 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-500 text-white-800'
                             : c.type === 'withdraw'
-                            ? 'bg-red-500'
+                            ? 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500 text-white-800'
                             : c.type === 'transfer'
-                            ? 'bg-blue-500'
+                            ? 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-500 text-white-800'
                             : c.type === 'receive'
                             ? 'bg-yellow-500'
                             : 'bg-gray-400'

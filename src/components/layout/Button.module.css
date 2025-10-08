@@ -20,6 +20,10 @@
 .formBtn:hover {
   transform: scale(0.9);
   box-shadow: rgba(133, 189, 215, 0.8784313725) 0px 23px 10px -20px;
+  -webkit-transform: scale(0.9);
+  -moz-transform: scale(0.9);
+  -ms-transform: scale(0.9);
+  -o-transform: scale(0.9);
 }
 
 .secondry {

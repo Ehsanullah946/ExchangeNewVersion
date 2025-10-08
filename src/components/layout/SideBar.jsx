@@ -1,28 +1,8 @@
 import { useEffect } from 'react';
 import SidebarMenu from './SidebarMenu';
 import { useState } from 'react';
-import {
-  FaBars,
-  FaHome,
-  FaLock,
-  FaMoneyBill,
-  FaRegArrowAltCircleUp,
-  FaUser,
-  FaUserTie,
-  FaTimes,
-} from 'react-icons/fa';
-import {
-  MdAccountTree,
-  MdCompareArrows,
-  MdManageAccounts,
-  MdToday,
-} from 'react-icons/md';
-import { BiAnalyse, BiSearch, BiTransferAlt } from 'react-icons/bi';
-import { BiCog } from 'react-icons/bi';
-import { AiFillHome, AiOutlineDashboard, AiOutlineRise } from 'react-icons/ai';
-import { RiDownloadLine, RiSendPlaneLine } from 'react-icons/ri';
-import { FiUser, FiUsers } from 'react-icons/fi';
-import { GiPayMoney } from 'react-icons/gi';
+import { FaBars, FaTimes } from 'react-icons/fa';
+import { BiSearch } from 'react-icons/bi';
 import { NavLink } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
@@ -38,7 +18,6 @@ const SideBar = ({ children }) => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
 
-      // Auto-close sidebar on mobile when switching to desktop
       if (!mobile && isOpen) {
         setIsOpen(false);
       }
