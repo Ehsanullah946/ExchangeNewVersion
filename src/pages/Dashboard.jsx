@@ -20,7 +20,6 @@ const Dashboard = () => {
     monthlyRevenue: 0,
   });
 
-  // Sample data - replace with actual API calls
   useEffect(() => {
     // Simulate API loading
     setTimeout(() => {
@@ -162,12 +161,12 @@ const Dashboard = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 text-center p-3 rounded-2xl shadow-lg bg-white">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             {t('Dashboard')}
           </h1>
-          <p className="text-gray-600">
-            {t('Welcome to your exchange management system')}
+          <p className="text-green-400 font-bold">
+            {t('به صرافی و خدمات پولی اکبریان خوش آمدید')}
           </p>
         </div>
 
@@ -216,7 +215,6 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="h-64">
-              {/* Simple bar chart implementation */}
               <div className="flex items-end justify-between h-48 gap-2">
                 {revenueData.datasets[0].data.map((value, index) => (
                   <div
