@@ -268,7 +268,7 @@ const Dashboard = () => {
                 {t('View All')}
               </button>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-1">
               {recentTransactions.map((transaction) => (
                 <div
                   key={transaction.id}
