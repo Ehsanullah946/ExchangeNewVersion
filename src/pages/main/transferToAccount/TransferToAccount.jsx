@@ -85,41 +85,56 @@ const TransferToAccount = () => {
   return (
     <>
       <div className="grid justify-center">
-        <div className="flex mt-1 mb-1">
-          <Link to="/main/transferToAccountList">
-            <Button type="primary">
-              <span className="flex justify-between gap-2">
-                <BsListCheck className="mt-1" />
-                {t('List')}
+        <div className=" flex mt-1 justify-between  gap-1 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 mb-1">
+          <div className="flex flex-wrap justify-center items-center p-2 gap-3">
+            <Link to="/main/transferToAccountList">
+              <button className="flex  items-center gap-2 px-2 py-1 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-z-150 active:scale-110">
+                <span className="flex justify-between">
+                  <BsListCheck className="mt-1 ml-3" />
+                  {t('List')}
+                </span>
+              </button>
+            </Link>
+            <button
+              className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-110"
+              type="primary"
+            >
+              <span className="flex justify-between ">
+                <BsPrinter className="mt-1 ml-3" /> {t('Print')}
               </span>
-            </Button>
-          </Link>
-          <Button type="primary">
-            <span className="flex justify-between gap-2 ">
-              <BsPrinter className="mt-1 bg-transparent" /> {t('Print')}
-            </span>
-          </Button>
-          <Button type="primary">
-            <span className="flex justify-between gap-2 ">
-              <BsSearch className="mt-1 " /> {t('Limit Search')}
-            </span>
-          </Button>
-          <div class="h-8 flex items-center justify-center bg-gradient-to-b from-[#b34cfd] to-[#6048f9] rounded-2xl overflow-hidden cursor-pointer shadow-md">
-            <input
-              type="text"
-              name="text"
-              id="input"
-              placeholder={t('Search')}
-              class="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
-            />
+            </button>
+            <button
+              className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-110"
+              type="primary"
+            >
+              <span className="flex justify-between ">
+                <BsSearch className="mt-1 ml-3" /> {t('Search')}
+              </span>
+            </button>
+          </div>
+          <div className="relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
+            <div className="relative flex items-center bg-white rounded-xl shadow-lg border border-gray-100 pl-4 pr-2 py-2 min-w-64">
+              <BsSearch className="text-gray-400 mr-2 flex-shrink-0" />
+              <input
+                type="text"
+                placeholder={t('Search')}
+                className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-400 font-medium tracking-wide"
+              />
+            </div>
           </div>
         </div>
         <div>
           <form>
-            <div className="font-extrabold  bg-gradient-to-b from-[#ba61fa] to-[#6d57fa]  w-full  p-3 ltr:mr-4 rtl:ml-4  rounded-t-2xl text-white  text-center">
-              <span className="flex justify-center gap-3 ">
-                {t('Transfer To Account')} <MdCompareArrows className="mt-1" />
-              </span>
+            <div className="bg-gradient-to-r from-blue-600 rounded-t-2xl via-purple-600 to-indigo-700 p-3">
+              <div className="flex items-center justify-center gap-3 text-white">
+                <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                  <MdCompareArrows className="text-xl" />
+                </div>
+                <h1 className="text-2xl font-bold tracking-tight">
+                  {t('Transfer To Account')}
+                </h1>
+              </div>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-6 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl w-full max-w-7xl mx-auto">
@@ -208,14 +223,14 @@ const TransferToAccount = () => {
                     onClick={handleSubmit}
                     disabled={isLoading}
                     type="button"
-                    className="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2 "
+                    className="flex items-center gap-2 px-4  bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     {t('Save')}
                   </button>
-                  <Link to="/main/transferToAccountList">
+                  <Link to="/main/transferToAccount">
                     <button
                       type="button"
-                      className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"
+                      className="flex items-center gap-2 px-4 py-1  bg-gradient-to-r from-gray-500 to-slate-600 hover:from-gray-600 hover:to-slate-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-110"
                     >
                       {t('Cancel')}
                     </button>
@@ -223,53 +238,102 @@ const TransferToAccount = () => {
                 </div>
               </div>
               <div>
-                <div className="w-full p-1">
-                  <p className="text-md mb-1 font-semibold">{t('Account')}</p>
-                  <hr className="mb-2" />
-                  <div className="relative overflow-x-auto shadow-2xl sm:rounded-lg">
-                    <table className="w-full text-sm text-left bg-gradient-to-b  from-[#b55df5] to-[#725ef4]  rtl:text-right text-blue-100">
-                      <thead className="text-xs text-center text-white uppercase  bg-gradient-to-b  ">
-                        <tr>
-                          <th className="px-3 py-1">{t('Credit')}</th>
-                          <th className="px-3 py-1">{t('Owe')}</th>
-                          <th className="px-3 py-1">{t('Currency')}</th>
-                          <th className="px-3 py-1">{t('Total')}</th>
-                          <th className="px-3 py-1">{t('Status')}</th>
+                <div className="bg-gradient-to-br from-slate-50 to-blue-50/50 rounded-2xl p-3 border border-gray-200">
+                  <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    {t('Account Summary')}
+                  </h3>
+
+                  <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="bg-gradient-to-r from-gray-800 to-slate-900">
+                          <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                            {t('Credit')}
+                          </th>
+                          <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                            {t('Owe')}
+                          </th>
+                          <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                            {t('Currency')}
+                          </th>
+                          <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                            {t('Total')}
+                          </th>
+                          <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                            {t('Status')}
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className=" text-sm text-center border-b  ">
-                          <td className="px-3 py-2">50000</td>
-                          <td>30000</td>
-                          <td>AFG</td>
-                          <td>4300</td>
-                          <td>بدهکار</td>
+                        <tr className="border-b border-gray-100 hover:bg-gray-50/80 transition-colors">
+                          <td className="px-4 py-3 font-medium text-gray-700">
+                            50,000
+                          </td>
+                          <td className="px-4 py-3 font-medium text-gray-700">
+                            30,000
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                              AFG
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 font-bold text-green-600">
+                            4,300
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                              {t('Debtor')}
+                            </span>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
                   </div>
-                </div>
-                <div className="w-full p-1">
-                  <p className="text-md mb-1 font-semibold">{t('Account')}</p>
-                  <hr className="mb-2" />
-                  <div className="relative overflow-x-auto shadow-2xl sm:rounded-lg">
-                    <table className="w-full text-sm text-left rtl:text-right bg-gradient-to-b from-[#ba61fa] to-[#6d57fa] text-blue-100">
-                      <thead className="text-xs text-center text-white uppercase ">
-                        <tr>
-                          <th className="px-3 py-1">{t('Credit')}</th>
-                          <th className="px-3 py-1">{t('Owe')}</th>
-                          <th className="px-3 py-1">{t('Currency')}</th>
-                          <th className="px-3 py-1">{t('Total')}</th>
-                          <th className="px-3 py-1">{t('Status')}</th>
+
+                  {/* Additional Summary Cards */}
+                  <div className="bg-white mt-3 rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="bg-gradient-to-r from-gray-800 to-slate-900">
+                          <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                            {t('Credit')}
+                          </th>
+                          <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                            {t('Owe')}
+                          </th>
+                          <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                            {t('Currency')}
+                          </th>
+                          <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                            {t('Total')}
+                          </th>
+                          <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                            {t('Status')}
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr className="  text-sm text-center border-b border-blue-400">
-                          <td className="px-3 py-2">50000</td>
-                          <td>30000</td>
-                          <td>AFG</td>
-                          <td>4300</td>
-                          <td>بدهکار</td>
+                        <tr className="border-b border-gray-100 hover:bg-gray-50/80 transition-colors">
+                          <td className="px-4 py-3 font-medium text-gray-700">
+                            50,000
+                          </td>
+                          <td className="px-4 py-3 font-medium text-gray-700">
+                            30,000
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                              AFG
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 font-bold text-green-600">
+                            4,300
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                              {t('Debtor')}
+                            </span>
+                          </td>
                         </tr>
                       </tbody>
                     </table>
