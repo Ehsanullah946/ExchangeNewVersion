@@ -161,7 +161,7 @@ const Deposit = () => {
                   <label className="sm:w-32">{t('Amount')}:</label>
                   <input
                     type="number"
-                    name="withdraw"
+                    name="deposit"
                     onChange={handleChange}
                     value={form.deposit}
                     className=" w-full border border-gray-300 shadow-sm font-semibold  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"

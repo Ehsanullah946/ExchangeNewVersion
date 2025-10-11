@@ -267,30 +267,77 @@ const Consumption = () => {
                 </div>
               </div>
 
-              <div className="w-full p-3">
-                <p className="text-md mb-1 font-semibold">{t('Account')}</p>
-                <hr className="mb-3" />
-                <div className="relative overflow-x-auto shadow-2xl sm:rounded-lg">
-                  <table className="w-full text-sm text-left rtl:text-right text-blue-100">
-                    <thead className="text-xs text-center text-white uppercase bg-blue-600">
-                      <tr>
-                        <th className="px-3 py-1">{t('Credit')}</th>
-                        <th className="px-3 py-1">{t('Owe')}</th>
-                        <th className="px-3 py-1">{t('Currency')}</th>
-                        <th className="px-3 py-1">{t('Total')}</th>
-                        <th className="px-3 py-1">{t('Status')}</th>
+              <div className="bg-gradient-to-br from-slate-50 to-blue-50/50 rounded-2xl p-3 border border-gray-200">
+                <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  {t('Account Summary')}
+                </h3>
+
+                <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="bg-gradient-to-r from-gray-800 to-slate-900">
+                        <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                          {t('Credit')}
+                        </th>
+                        <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                          {t('Owe')}
+                        </th>
+                        <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                          {t('Currency')}
+                        </th>
+                        <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                          {t('Total')}
+                        </th>
+                        <th className="px-4 py-3 text-left text-white font-semibold text-sm">
+                          {t('Status')}
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="bg-blue-500 text-center border-b border-blue-400">
-                        <td className="px-3 py-2">50000</td>
-                        <td>30000</td>
-                        <td>AFG</td>
-                        <td>4300</td>
-                        <td>بدهکار</td>
+                      <tr className="border-b border-gray-100 hover:bg-gray-50/80 transition-colors">
+                        <td className="px-4 py-3 font-medium text-gray-700">
+                          50,000
+                        </td>
+                        <td className="px-4 py-3 font-medium text-gray-700">
+                          30,000
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            AFG
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 font-bold text-green-600">
+                          4,300
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            {t('Debtor')}
+                          </span>
+                        </td>
                       </tr>
                     </tbody>
                   </table>
+                </div>
+
+                {/* Additional Summary Cards */}
+                <div className="grid grid-cols-2 gap-4 mt-6">
+                  <div className="bg-white rounded-xl p-4 shadow-lg border border-green-100">
+                    <div className="text-sm text-gray-500 font-medium">
+                      {t('Available Balance')}
+                    </div>
+                    <div className="text-xl font-bold text-green-600 mt-1">
+                      20,000 AFG
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-xl p-4 shadow-lg border border-blue-100">
+                    <div className="text-sm text-gray-500 font-medium">
+                      {t('Total Deposits')}
+                    </div>
+                    <div className="text-xl font-bold text-blue-600 mt-1">
+                      15,300 AFG
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
