@@ -22,8 +22,6 @@ const ReceiveEdit = () => {
   const { data, isLoading: loadingReceive } = useSingleReceive(id);
   const { mutate: updateReceive, isLoading: updating } = useUpdateReceive();
 
-  console.log('Receive:', data);
-
   const { data: moneyTypeResponse } = useMoneyType();
 
   const moneyTypeOptions = (moneyTypeResponse?.data || []).map((c) => ({
@@ -435,7 +433,7 @@ const ReceiveEdit = () => {
                 >
                   {t('Save')}
                 </button>
-                <Link to="/main/transferList">
+                <Link to="/main/receiveList">
                   <button
                     type="button"
                     className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-4 py-1 text-center me-2 mb-2"

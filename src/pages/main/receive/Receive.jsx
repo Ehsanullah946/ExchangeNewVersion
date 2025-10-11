@@ -167,6 +167,7 @@ const Receive = () => {
             </div>
           </div>
         </div>
+
         <div>
           <form>
             <div className="bg-gradient-to-r from-blue-600 rounded-t-2xl via-purple-600 to-indigo-700 p-3">

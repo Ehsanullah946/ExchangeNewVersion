@@ -238,7 +238,7 @@ const WithdrawList = () => {
 
                             <td className="px-2 py-2">
                               <div className="flex items-center gap-2">
-                                <span className="font-bold text-md text-green-600">
+                                <span className="font-bold text-md text-red-600">
                                   {c.withdraw?.toLocaleString()}
                                 </span>
                               </div>
