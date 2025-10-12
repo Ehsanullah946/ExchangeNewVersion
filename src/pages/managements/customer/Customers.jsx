@@ -25,6 +25,7 @@ import {
   BsPrinter,
   BsSearch,
   BsTrash,
+  BsX,
 } from 'react-icons/bs';
 
 const Customers = () => {
@@ -85,6 +86,19 @@ const Customers = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 py-3 px-2">
+      {open && (
+        <div className="flex gap-2">
+          <div className="h-8 flex items-center justify-center bg-gradient-to-b from-[#e3d5ff] to-[#ffe7e7] rounded-2xl overflow-hidden cursor-pointer shadow-md">
+            <input
+              type="text"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => dispatch(setPhone(e.target.value))}
+              className="h-6 border-none outline-none caret-orange-600 bg-white rounded-[30px] px-3 tracking-[0.8px] text-[#131313] font-serif"
+            />
+          </div>
+        </div>
+      )}
       <div className="max-w-7xl mx-auto">
         {/* Header Actions */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-2 p-1 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20">
@@ -138,10 +152,16 @@ const Customers = () => {
                 <div className="text-center">
                   <div className="relative">
                     <div className="w-16 h-16 border-4 border-blue-200 rounded-full animate-spin"></div>
-                    <div className="w-16 h-16 border-4 border-transparent border-t-blue-500 rounded-full animate-spin absolute top-0 left-0"></div>
+                    <div className="w-16 h-16 border-4 ml-2 border-transparent border-t-blue-500 rounded-full animate-spin absolute top-0 left-0"></div>
                   </div>
-                  <p className="mt-4 text-gray-600 font-medium">
-                    {t('Loading deposits...')}
+                  <p className="mt-4  text-gray-600 font-medium">
+                    <PulseLoader
+                      color="green"
+                      size={15}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                    {t('Loading...')}
                   </p>
                 </div>
               </div>

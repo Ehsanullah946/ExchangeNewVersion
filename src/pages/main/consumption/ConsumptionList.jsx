@@ -27,6 +27,7 @@ import {
   useConsumption,
   useDeleteConsumption,
 } from '../../../hooks/useConsumption';
+import { PulseLoader } from 'react-spinners';
 
 const ConsumptionList = () => {
   const { t } = useTranslation();
@@ -137,10 +138,16 @@ const ConsumptionList = () => {
                 <div className="text-center">
                   <div className="relative">
                     <div className="w-16 h-16 border-4 border-blue-200 rounded-full animate-spin"></div>
-                    <div className="w-16 h-16 border-4 border-transparent border-t-blue-500 rounded-full animate-spin absolute top-0 left-0"></div>
+                    <div className="w-16 h-16 border-4 ml-2 border-transparent border-t-blue-500 rounded-full animate-spin absolute top-0 left-0"></div>
                   </div>
-                  <p className="mt-4 text-gray-600 font-medium">
-                    {t('Loading consumption...')}
+                  <p className="mt-4  text-gray-600 font-medium">
+                    <PulseLoader
+                      color="green"
+                      size={15}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                    {t('Loading...')}
                   </p>
                 </div>
               </div>

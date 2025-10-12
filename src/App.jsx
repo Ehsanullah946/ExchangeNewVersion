@@ -96,7 +96,7 @@ const App = () => {
               <Route path="branchAdd" element={<BranchAdd />} />
               <Route path="branch/:id/edit" element={<BranchEdit />} />
               <Route
-                path="branch/:id/transaction"
+                path="branch/:id/transactions"
                 element={<BranchTransaction />}
               />
               <Route path="employeeAdd" element={<EmployeeAdd />} />
