@@ -114,8 +114,15 @@
   "Add New SenderReceiver": "افزودن گیرنده/فرستنده جدید",
   "Add New Employee": "افزودن کارمند جدید",
   "Add New Exchanger": "افزودن تبادله کننده جدید",
+  "Add New Exchange": "افزودن تبادله جدید",
   "Share": "اشتراک گزاری",
   "Balance": "بلانس",
+  "male": "مرد",
+  "famale": "خانم",
+  "Date & Time": "تاریخ",
+  "Transaction": "تراکنش",
+  "Transaction History": "تراکنش ها",
+
   "Taxt": "مالیه",
   "Net Salary": "معاش خالص",
   "FaxNo": "نمبر فکس",
@@ -156,6 +163,10 @@
   "Select Status": "انتخاب حالت",
   "Uncomplete": "اجرا نشده",
   "Account Summary": "مجموعه حساب",
+  "Accounts Management": "مدیریت حساب",
+  "Manage and monitor all customer accounts": "مدیریت و نمایش تمام حساب های مشتریان ",
+  "View and manage all financial transactions": "مدیریت و نمایش تمام تراکنش های مشتری ",
+  "View and manage all financial transactions of account": "مدیریت و نمایش تمام تراکنش های حساب ",
   "Search By Name": "جستجو به اساس نام",
   "No branches found for your search": "نمایندگی یافت نشد🙃",
   "No customer found for your search": "مشتری یافت نشد🙃",

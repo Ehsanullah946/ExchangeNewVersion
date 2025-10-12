@@ -16,6 +16,7 @@ import {
 } from '../../../features/ui/filterSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  BsArrowLeftRight,
   BsChevronLeft,
   BsChevronRight,
   BsFilter,
@@ -280,7 +281,8 @@ const Customers = () => {
                               <Link
                                 to={`/management/customer/${c.id}/transactions`}
                               >
-                                <button className="flex items-center gap-2  px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
+                                <button className="flex items-center gap-1 px-2 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow hover:shadow-lg hover:scale-105">
+                                  <BsArrowLeftRight className="text-xs" />
                                   {t('Transactions')}
                                 </button>
                               </Link>

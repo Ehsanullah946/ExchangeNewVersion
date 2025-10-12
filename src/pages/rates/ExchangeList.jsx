@@ -67,7 +67,7 @@ const ExchangeList = () => {
     <div className="relative overflow-x-auto rtl:ml-4 ltr:mr-4 shadow-xl sm:rounded-lg">
       <div className="flex mt-1 mb-2">
         <Link to="/rates/exchange">
-          <Button type="primary">{t('Add New Exchanger')}</Button>
+          <Button type="primary">{t('Add New Exchange')}</Button>
         </Link>
         <Button onClick={() => dispatch(toggleOpen(!open))} type="primary">
           {t('Limit Search')}
