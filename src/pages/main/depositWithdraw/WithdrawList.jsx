@@ -28,6 +28,7 @@ import {
 } from '../../../features/ui/filterSlice';
 import { useDeleteDepositWithdraw } from '../../../hooks/useDeposit';
 import { FaMoneyBillWave } from 'react-icons/fa';
+import { formatNumber } from '../../../utils/formatNumber';
 const WithdrawList = () => {
   const { t } = useTranslation();
 
@@ -245,7 +246,7 @@ const WithdrawList = () => {
                             <td className="px-2 py-2">
                               <div className="flex items-center gap-2">
                                 <span className="font-bold text-md text-red-600">
-                                  {c.withdraw?.toLocaleString()}
+                                  {formatNumber(c.withdraw)}
                                 </span>
                               </div>
                             </td>

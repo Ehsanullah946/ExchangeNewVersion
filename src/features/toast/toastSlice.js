@@ -1,3 +1,4 @@
+// features/toast/toastSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -5,6 +6,8 @@ const initialState = {
   message: '',
   type: 'error', // 'error' | 'success' | 'warning' | 'info'
   duration: 5000,
+  position: 'top-center',
+  actions: [],
 };
 
 const toastSlice = createSlice({
@@ -12,20 +15,26 @@ const toastSlice = createSlice({
   initialState,
   reducers: {
     showToast: (state, action) => {
-      const { message, type = 'error', duration = 5000 } = action.payload;
+      const {
+        message,
+        type = 'error',
+        duration = 5000,
+        position = 'top-center',
+        actions = [],
+      } = action.payload;
       state.isVisible = true;
       state.message = message;
       state.type = type;
       state.duration = duration;
+      state.position = position;
+      state.actions = actions;
     },
     hideToast: (state) => {
       state.isVisible = false;
+      // Don't reset other fields immediately to avoid flickering during exit animation
     },
     clearToast: (state) => {
-      state.isVisible = false;
-      state.message = '';
-      state.type = 'error';
-      state.duration = 5000;
+      return initialState; // This properly resets everything
     },
   },
 });

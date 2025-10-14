@@ -12,6 +12,7 @@ import { BsPrinter, BsSearch, BsShare } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 import { setPage } from '../../features/ui/filterSlice';
 import Button from '../../components/layout/Button';
+import { formatNumber } from '../../utils/formatNumber';
 const AccountTransaction = () => {
   const { accountId } = useParams();
   const { t } = useTranslation();
@@ -331,7 +332,7 @@ const AccountTransaction = () => {
                                   : 'text-gray-600'
                               }`}
                             >
-                              {c.runningBalance?.toLocaleString()}
+                              {formatNumber(c.runningBalance)}
                             </span>
                           </td>
 

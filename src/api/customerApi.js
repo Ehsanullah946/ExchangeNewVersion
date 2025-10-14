@@ -28,6 +28,13 @@ export const getCustomer = async (filters = {}) => {
 
 export const getSingleCustomer = async (id) => {
   const { data } = await axiosClient.get(`/customer/${id}`);
+
+  return data;
+};
+
+export const getCustomerAccount = async (customerId) => {
+  const { data } = await axiosClient.get(`/customer/${customerId}/account`);
+  console.log('customer account summary', data);
   return data;
 };
 

@@ -58,6 +58,12 @@ export const getSingleAccount = async (id) => {
   return data;
 };
 
+export const getAccountSummary = async (id) => {
+  const { data } = await axiosClient.get(`/account/${id}/accountSummary`);
+  console.log('account summary', data);
+  return data;
+};
+
 export const updateAccount = async ({ id, payload }) => {
   const { data } = await axiosClient.patch(`/account/${id}`, payload);
   return data;

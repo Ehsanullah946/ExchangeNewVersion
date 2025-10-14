@@ -12,6 +12,7 @@ import {
 } from '../../features/ui/filterSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAccount, useDeleteAccount } from '../../hooks/useAccount';
+import { formatNumber } from '../../utils/formatNumber';
 const AccountList = () => {
   const { t } = useTranslation();
 
@@ -251,7 +252,7 @@ const AccountList = () => {
                                     : 'text-gray-600'
                                 }`}
                               >
-                                {c.credit?.toLocaleString()}
+                                {formatNumber(c.credit)?.toLocaleString()}
                               </span>
                             </div>
                           </td>

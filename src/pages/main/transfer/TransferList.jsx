@@ -25,6 +25,7 @@ import {
   toggleOpen,
 } from '../../../features/ui/filterSlice';
 import { useDeleteTransfer, useTransfer } from '../../../hooks/useTransfer';
+import { formatNumber } from '../../../utils/formatNumber';
 const TransferList = () => {
   const { t } = useTranslation();
 
@@ -267,7 +268,9 @@ const TransferList = () => {
                             <td className="px-2 py-2">
                               <div className="flex items-center gap-2">
                                 <span className="font-bold text-md text-green-600">
-                                  {c.transferAmount?.toLocaleString()}
+                                  {formatNumber(
+                                    c.transferAmount
+                                  )?.toLocaleString()}
                                 </span>
                               </div>
                             </td>
@@ -281,7 +284,9 @@ const TransferList = () => {
                             <td className="px-2 py-2">
                               <div className="flex items-center gap-2">
                                 <span className="font-bold text-md text-green-600">
-                                  {c.chargesAmount?.toLocaleString()}
+                                  {formatNumber(
+                                    c.chargesAmount
+                                  )?.toLocaleString()}
                                 </span>
                               </div>
                             </td>

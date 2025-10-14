@@ -13,9 +13,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const Toast = () => {
   const dispatch = useDispatch();
-  const { isVisible, message, type, duration } = useSelector(
-    (state) => state.toast
-  );
+  const {
+    isVisible,
+    message,
+    type,
+    duration,
+    position = 'top-center',
+    actions = [],
+  } = useSelector((state) => state.toast);
   const [progress, setProgress] = useState(100);
 
   useEffect(() => {
@@ -46,6 +51,13 @@ const Toast = () => {
   }, [isVisible]);
 
   const handleClose = () => {
+    dispatch(hideToast());
+  };
+
+  const handleActionClick = (action) => {
+    if (action && typeof action === 'function') {
+      action();
+    }
     dispatch(hideToast());
   };
 
@@ -92,27 +104,51 @@ const Toast = () => {
     return baseStyles[type] || baseStyles.info;
   };
 
+  const getPositionStyles = () => {
+    const positions = {
+      'top-right': 'top-4 right-4',
+      'top-left': 'top-4 left-4',
+      'top-center': 'top-4 left-1/2 transform -translate-x-1/2',
+      'bottom-right': 'bottom-4 right-4',
+      'bottom-left': 'bottom-4 left-4',
+      'bottom-center': 'bottom-4 left-1/2 transform -translate-x-1/2',
+    };
+    return positions[position] || positions['top-center'];
+  };
+
   const styles = getToastStyles();
+  const positionStyles = getPositionStyles();
 
   const toastVariants = {
     hidden: {
       opacity: 0,
-      y: -50,
+      x: position.includes('right')
+        ? 100
+        : position.includes('left')
+        ? -100
+        : 0,
+      y: position.includes('top') ? -50 : position.includes('bottom') ? 50 : 0,
       scale: 0.8,
     },
     visible: {
       opacity: 1,
+      x: 0,
       y: 0,
       scale: 1,
       transition: {
         type: 'spring',
-        damping: 25,
+        damping: 30,
         stiffness: 500,
       },
     },
     exit: {
       opacity: 0,
-      y: -50,
+      x: position.includes('right')
+        ? 100
+        : position.includes('left')
+        ? -100
+        : 0,
+      y: position.includes('top') ? -50 : position.includes('bottom') ? 50 : 0,
       scale: 0.8,
       transition: {
         duration: 0.2,
@@ -123,38 +159,61 @@ const Toast = () => {
   return (
     <AnimatePresence>
       {isVisible && (
-        <div className="fixed top-0 bottom-0 right-0 left-0 md:left-auto md:right-4 z-[999999] max-w-sm mx-auto md:mx-0 pointer-events-none">
+        <div
+          className={`fixed ${positionStyles} z-[999999] max-w-sm pointer-events-none`}
+        >
           <motion.div
             variants={toastVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            className={`relative rounded-2xl shadow-2xl backdrop-blur-sm ${styles.bg} ${styles.border} pointer-events-auto overflow-hidden`}
+            className={`relative rounded-2xl shadow-2xl backdrop-blur-lg ${styles.bg} ${styles.border} pointer-events-auto overflow-hidden transform-gpu`}
           >
             {/* Main Content */}
-            <div className="flex items-start p-5">
-              {/* Icon */}
-              <div className="flex-shrink-0 mr-4">
+            <div className="flex items-start p-4">
+              {/* Icon with background */}
+              <div className="flex-shrink-0 mr-3">
                 <div
-                  className={`p-2 rounded-xl bg-white/80 shadow-lg border ${styles.border}`}
+                  className={`p-2 rounded-xl bg-white/80 shadow-lg border ${styles.border} backdrop-blur-sm`}
                 >
                   <div className={styles.icon}>{styles.iconComponent}</div>
                 </div>
               </div>
 
-              {/* Message */}
-              <div className="flex-1 min-w-0 mr-3">
+              {/* Message and Actions */}
+              <div className="flex-1 min-w-0">
                 <p
-                  className={`text-sm font-semibold leading-relaxed ${styles.text}`}
+                  className={`text-sm font-semibold leading-relaxed ${styles.text} mb-2`}
                 >
                   {message}
                 </p>
+
+                {/* Action Buttons */}
+                {actions && actions.length > 0 && (
+                  <div className="flex gap-2 mt-2">
+                    {actions.map((action, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleActionClick(action.action)}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
+                          action.style === 'danger'
+                            ? 'bg-red-500 hover:bg-red-600 text-white shadow-lg hover:shadow-xl'
+                            : action.style === 'primary'
+                            ? 'bg-blue-500 hover:bg-blue-600 text-white shadow-lg hover:shadow-xl'
+                            : 'bg-gray-500 hover:bg-gray-600 text-white shadow-lg hover:shadow-xl'
+                        } hover:scale-105 active:scale-95`}
+                      >
+                        {action.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Close Button */}
               <button
                 onClick={handleClose}
-                className="flex-shrink-0 p-1 hover:bg-white/50 rounded-lg transition-all duration-200 group"
+                className="flex-shrink-0 p-1 hover:bg-white/50 rounded-lg transition-all duration-200 group flex items-center justify-center ml-2"
               >
                 <IoClose
                   className={`w-4 h-4 ${styles.icon} group-hover:scale-110 transition-transform`}
@@ -162,8 +221,8 @@ const Toast = () => {
               </button>
             </div>
 
-            {/* Progress Bar */}
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200/50">
+            {/* Animated Progress Bar */}
+            <div className="h-1 bg-gray-200/30 overflow-hidden">
               <motion.div
                 className={`h-full bg-gradient-to-r ${styles.gradient} shadow-sm`}
                 initial={{ width: '100%' }}
@@ -172,11 +231,13 @@ const Toast = () => {
               />
             </div>
 
-            {/* Decorative Elements */}
-            <div className="absolute top-0 left-0 w-16 h-16 -translate-x-8 -translate-y-8 opacity-10">
-              <div
-                className={`w-full h-full rounded-full bg-gradient-to-r ${styles.gradient}`}
-              />
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-5 pointer-events-none">
+              <div className="absolute top-0 right-0 w-20 h-20 -translate-y-10 translate-x-10">
+                <div
+                  className={`w-full h-full rounded-full bg-gradient-to-r ${styles.gradient}`}
+                />
+              </div>
             </div>
           </motion.div>
         </div>

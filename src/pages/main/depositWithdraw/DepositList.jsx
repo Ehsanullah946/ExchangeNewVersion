@@ -30,6 +30,7 @@ import {
   useDeleteDepositWithdraw,
   useDeposit,
 } from '../../../hooks/useDeposit';
+import { formatNumber } from '../../../utils/formatNumber';
 const DepositList = () => {
   const { t } = useTranslation();
 
@@ -247,7 +248,7 @@ const DepositList = () => {
                             <td className="px-2 py-2">
                               <div className="flex items-center gap-2">
                                 <span className="font-bold text-md text-green-600">
-                                  {c.deposit?.toLocaleString()}
+                                  {formatNumber(c.deposit)}
                                 </span>
                               </div>
                             </td>

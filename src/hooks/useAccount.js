@@ -3,6 +3,7 @@ import {
   createAccount,
   deleteAccount,
   getAccounts,
+  getAccountSummary,
   getAllAccountTransaction,
   getSingleAccount,
   updateAccount,
@@ -24,6 +25,15 @@ export const useSingleAccount = (id) => {
   return useQuery({
     queryKey: ['accounts', id],
     queryFn: () => getSingleAccount(id),
+    onError: (error) => {
+      console.log('something went single Account worng:', error);
+    },
+  });
+};
+export const useAccountSummary = (id) => {
+  return useQuery({
+    queryKey: ['accounts', id],
+    queryFn: () => getAccountSummary(id),
     onError: (error) => {
       console.log('something went single Account worng:', error);
     },

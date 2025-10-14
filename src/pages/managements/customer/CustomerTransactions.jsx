@@ -13,6 +13,7 @@ import {
   useCustomerDetails,
   useSingleCustomer,
 } from '../../../hooks/useCustomers';
+import { formatNumber } from '../../../utils/formatNumber';
 
 const CustomerTransactions = () => {
   const { customerId } = useParams();
@@ -236,7 +237,7 @@ const CustomerTransactions = () => {
                             : 'text-gray-600'
                         }`}
                       >
-                        {account.balance?.toLocaleString()}
+                        {formatNumber(account.balance)?.toLocaleString()}
                       </p>
                       <p className="text-sm opacity-80 mt-1">
                         {account.currency}

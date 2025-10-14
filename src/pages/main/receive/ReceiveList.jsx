@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
@@ -30,9 +30,12 @@ import {
   useReceive,
   useRejectReceive,
 } from '../../../hooks/useReceive';
+import { showToast } from '../../../features/toast/toastSlice';
+import { formatNumber } from '../../../utils/formatNumber';
 
 const ReceiveList = () => {
   const { t } = useTranslation();
+  const [pendingAction, setPendingAction] = useState({ type: null, id: null });
 
   const { open, search, limit, page, debouncedSearch } = useSelector(
     (state) => state.filters
@@ -76,15 +79,115 @@ const ReceiveList = () => {
     navigate(`/main/receive/${id}/edit`);
   };
 
+  // Toast confirmation for delete
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this Receive?')) {
-      deleteMutation.mutate(id);
-    }
+    setPendingAction({ type: 'delete', id });
+    dispatch(
+      showToast({
+        message: t('Are you sure you want to delete this receive?'),
+        type: 'warning',
+        duration: 6000,
+        position: 'top-center',
+        actions: [
+          {
+            label: t('Confirm'),
+            action: () => confirmDelete(id),
+            style: 'danger',
+          },
+          {
+            label: t('Cancel'),
+            action: () => cancelAction(),
+            style: 'secondary',
+          },
+        ],
+      })
+    );
   };
+
+  // Toast confirmation for reject
   const handleReject = (id) => {
-    if (window.confirm('Are you sure you want to reject this Receive?')) {
-      rejectMutation.mutate(id);
+    setPendingAction({ type: 'reject', id });
+    dispatch(
+      showToast({
+        message: t('Are you sure you want to reject this receive?'),
+        type: 'warning',
+        duration: 6000,
+        position: 'top-center',
+        actions: [
+          {
+            label: t('Confirm Reject'),
+            action: () => confirmReject(id),
+            style: 'danger',
+          },
+          {
+            label: t('Cancel'),
+            action: () => cancelAction(),
+            style: 'secondary',
+          },
+        ],
+      })
+    );
+  };
+
+  const confirmDelete = (id) => {
+    deleteMutation.mutate(id);
+    setPendingAction({ type: null, id: null });
+    dispatch(
+      showToast({
+        message: t('Receive deleted successfully'),
+        type: 'success',
+        duration: 3000,
+      })
+    );
+  };
+
+  const confirmReject = (id) => {
+    rejectMutation.mutate(id);
+    setPendingAction({ type: null, id: null });
+    dispatch(
+      showToast({
+        message: t('Receive rejected successfully'),
+        type: 'success',
+        duration: 3000,
+      })
+    );
+  };
+
+  const cancelAction = () => {
+    setPendingAction({ type: null, id: null });
+  };
+
+  // Check if item is rejected (you might need to adjust this based on your data structure)
+  const isRejected = (item) => {
+    // Adjust this condition based on your actual data structure
+    return item.rejected === true || item.status === 'rejected';
+  };
+
+  const getRowStyles = (item) => {
+    if (isRejected(item)) {
+      return 'bg-gradient-to-r from-red-50/80 to-rose-50/60 border-l-4 border-red-400';
     }
+    return 'group hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/30 transition-all duration-200 border-b border-gray-100 last:border-b-0';
+  };
+
+  const getStatusBadge = (item) => {
+    if (isRejected(item)) {
+      return (
+        <span className="bg-gradient-to-br from-red-500 to-rose-600 rounded-full flex items-center justify-center text-white font-bold text-xs px-3 py-1">
+          {t('Rejected')}
+        </span>
+      );
+    }
+
+    return item.receiveStatus === true ? (
+      <span className="bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-bold text-xs px-3 py-1">
+        {t('Completed')}
+      </span>
+    ) : (
+      <span className="bg-gradient-to-br from-amber-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-xs px-3 py-1">
+        {t('Uncomplete')}
+      </span>
+    );
   };
 
   return (
@@ -214,7 +317,7 @@ const ReceiveList = () => {
                     <tbody className="divide-y divide-gray-100">
                       {receive.length === 0 ? (
                         <tr>
-                          <td colSpan="7" className="px-6 py-16 text-center">
+                          <td colSpan="10" className="px-6 py-16 text-center">
                             <div className="flex flex-col items-center justify-center">
                               <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-4">
                                 <BsInbox className="text-4xl text-gray-400" />
@@ -232,16 +335,25 @@ const ReceiveList = () => {
                         </tr>
                       ) : (
                         receive.map((c, index) => (
-                          <tr
-                            key={c.id}
-                            className="group hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/30 transition-all duration-200 border-b border-gray-100 last:border-b-0"
-                          >
+                          <tr key={c.id} className={getRowStyles(c)}>
                             <td className="px-2 py-2">
                               <div className="flex items-center gap-3">
-                                <div className="w-6 h-7 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                                <div
+                                  className={`w-6 h-7 rounded-lg flex items-center justify-center text-white font-bold text-sm ${
+                                    isRejected(c)
+                                      ? 'bg-gradient-to-br from-red-500 to-rose-500'
+                                      : 'bg-gradient-to-br from-blue-500 to-cyan-500'
+                                  }`}
+                                >
                                   {index + 1}
                                 </div>
-                                <span className="font-semibold text-gray-700">
+                                <span
+                                  className={`font-semibold ${
+                                    isRejected(c)
+                                      ? 'text-red-700'
+                                      : 'text-gray-700'
+                                  }`}
+                                >
                                   #{c.receiveNo}
                                 </span>
                               </div>
@@ -249,14 +361,32 @@ const ReceiveList = () => {
 
                             <td className="px-1 py-1">
                               <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                <div
+                                  className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
+                                    isRejected(c)
+                                      ? 'bg-gradient-to-br from-red-400 to-rose-400'
+                                      : 'bg-gradient-to-br from-purple-500 to-pink-500'
+                                  }`}
+                                >
                                   {c.senderName?.charAt(0) || 'U'}
                                 </div>
                                 <div>
-                                  <p className="font-semibold text-gray-800">
+                                  <p
+                                    className={`font-semibold ${
+                                      isRejected(c)
+                                        ? 'text-red-800'
+                                        : 'text-gray-800'
+                                    }`}
+                                  >
                                     {c.senderName || 'Unknown'}
                                   </p>
-                                  <p className="text-sm text-gray-500">
+                                  <p
+                                    className={`text-sm ${
+                                      isRejected(c)
+                                        ? 'text-red-500'
+                                        : 'text-gray-500'
+                                    }`}
+                                  >
                                     {t('Transfer')}
                                   </p>
                                 </div>
@@ -265,14 +395,32 @@ const ReceiveList = () => {
 
                             <td className="px-1 py-1">
                               <div className="flex items-center gap-2">
-                                <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                                <div
+                                  className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
+                                    isRejected(c)
+                                      ? 'bg-gradient-to-br from-red-400 to-rose-400'
+                                      : 'bg-gradient-to-br from-purple-500 to-pink-500'
+                                  }`}
+                                >
                                   {c.receiverName?.charAt(0) || 'U'}
                                 </div>
                                 <div>
-                                  <p className="font-semibold text-gray-800">
+                                  <p
+                                    className={`font-semibold ${
+                                      isRejected(c)
+                                        ? 'text-red-800'
+                                        : 'text-gray-800'
+                                    }`}
+                                  >
                                     {c.receiverName || 'Unknown'}
                                   </p>
-                                  <p className="text-sm text-gray-500">
+                                  <p
+                                    className={`text-sm ${
+                                      isRejected(c)
+                                        ? 'text-red-500'
+                                        : 'text-gray-500'
+                                    }`}
+                                  >
                                     {t('Receiver')}
                                   </p>
                                 </div>
@@ -281,45 +429,74 @@ const ReceiveList = () => {
 
                             <td className="px-2 py-2">
                               <div className="flex items-center gap-2">
-                                <span className="font-bold text-md text-green-600">
-                                  {c.receiveAmount?.toLocaleString()}
+                                <span
+                                  className={`font-bold text-md ${
+                                    isRejected(c)
+                                      ? 'text-red-600'
+                                      : 'text-green-600'
+                                  }`}
+                                >
+                                  {formatNumber(
+                                    c.receiveAmount
+                                  )?.toLocaleString()}
                                 </span>
                               </div>
                             </td>
 
                             <td className="px-2 py-1">
-                              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200">
+                              <span
+                                className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${
+                                  isRejected(c)
+                                    ? 'bg-red-100 text-red-800 border-red-200'
+                                    : 'bg-blue-100 text-blue-800 border-blue-200'
+                                }`}
+                              >
                                 {c.MainMoneyType.typeName || 'N/A'}
                               </span>
                             </td>
 
                             <td className="px-2 py-2">
                               <div className="flex items-center gap-2">
-                                <span className="font-bold text-md text-green-600">
-                                  {c.chargesAmount?.toLocaleString()}
+                                <span
+                                  className={`font-bold text-md ${
+                                    isRejected(c)
+                                      ? 'text-red-600'
+                                      : 'text-green-600'
+                                  }`}
+                                >
+                                  {formatNumber(
+                                    c.chargesAmount
+                                  )?.toLocaleString()}
                                 </span>
                               </div>
                             </td>
 
                             <td className="px-2 py-1">
-                              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 border border-blue-200">
+                              <span
+                                className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${
+                                  isRejected(c)
+                                    ? 'bg-red-100 text-red-800 border-red-200'
+                                    : 'bg-blue-100 text-blue-800 border-blue-200'
+                                }`}
+                              >
                                 {c.ChargesMoneyType.typeName || 'N/A'}
                               </span>
                             </td>
-                            <td className=" w-16 items-center">
-                              {c.receiveStatus === true ? (
-                                <span className=" bg-gradient-to-br from-red-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                                  {t('Completed')}
-                                </span>
-                              ) : (
-                                <span className="bg-gradient-to-br from-green-500 to-green-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
-                                  {t('Uncomplete')}
-                                </span>
-                              )}
+
+                            <td className="w-16 items-center">
+                              {getStatusBadge(c)}
                             </td>
 
                             <td className="px-2 py-1 max-w-xs">
-                              <p className="text-gray-600 ">{c.description}</p>
+                              <p
+                                className={
+                                  isRejected(c)
+                                    ? 'text-red-600'
+                                    : 'text-gray-600'
+                                }
+                              >
+                                {c.description}
+                              </p>
                             </td>
 
                             {/* Action Buttons */}
@@ -333,39 +510,51 @@ const ReceiveList = () => {
                                   </div>
                                 </button>
 
-                                {/* Edit Button */}
+                                {/* Edit Button - Disabled for rejected items */}
                                 <button
                                   onClick={() => handleEdit(c.id)}
-                                  className="p-2 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 group"
+                                  disabled={isRejected(c)}
+                                  className={`p-2 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 group ${
+                                    isRejected(c)
+                                      ? 'bg-gray-400 cursor-not-allowed'
+                                      : 'bg-gradient-to-br from-blue-500 to-cyan-500'
+                                  } text-white`}
                                 >
                                   <BiSolidEdit className="text-md" />
                                   <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
-                                    {t('Edit')}
+                                    {isRejected(c)
+                                      ? t('Cannot edit rejected')
+                                      : t('Edit')}
                                   </div>
                                 </button>
+
+                                {/* Reject Button - Hide for already rejected items */}
+                                {!isRejected(c) && (
+                                  <button
+                                    onClick={() => handleReject(c.id)}
+                                    disabled={rejectMutation.isLoading}
+                                    className="p-2 bg-gradient-to-br from-red-500 to-pink-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none group"
+                                  >
+                                    {rejectMutation.isLoading &&
+                                    pendingAction.id === c.id ? (
+                                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                    ) : (
+                                      <BsArrowReturnRight className="text-md" />
+                                    )}
+                                    <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
+                                      {t('Reject')}
+                                    </div>
+                                  </button>
+                                )}
 
                                 {/* Delete Button */}
-                                <button
-                                  onClick={() => handleReject(c.id)}
-                                  disabled={rejectMutation.isLoading}
-                                  className="p-2 bg-gradient-to-br from-red-500 to-pink-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none group"
-                                >
-                                  {rejectMutation.isLoading ? (
-                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                  ) : (
-                                    <BsArrowReturnRight className="text-md" />
-                                  )}
-                                  <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
-                                    {t('Reject')}
-                                  </div>
-                                </button>
-
                                 <button
                                   onClick={() => handleDelete(c.id)}
                                   disabled={deleteMutation.isLoading}
                                   className="p-2 bg-gradient-to-br from-red-500 to-pink-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none group"
                                 >
-                                  {deleteMutation.isLoading ? (
+                                  {deleteMutation.isLoading &&
+                                  pendingAction.id === c.id ? (
                                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                                   ) : (
                                     <BsTrash className="text-md" />
