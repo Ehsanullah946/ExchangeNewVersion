@@ -22,7 +22,6 @@ const SideBar = ({ children }) => {
   //       setIsOpen(false);
   //     }
   //   };
-
   //   window.addEventListener('resize', handleResize);
   //   return () => window.removeEventListener('resize', handleResize);
   // }, [isOpen]);

@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
+import React, { useEffect } from 'react';
+import { BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
-import Button from '../../../components/layout/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import {
+  BsArrowReturnRight,
   BsChevronLeft,
   BsChevronRight,
   BsCurrencyDollar,
@@ -25,7 +25,11 @@ import {
   setPage,
   toggleOpen,
 } from '../../../features/ui/filterSlice';
-import { useDeleteReceive, useReceive } from '../../../hooks/useReceive';
+import {
+  useDeleteReceive,
+  useReceive,
+  useRejectReceive,
+} from '../../../hooks/useReceive';
 
 const ReceiveList = () => {
   const { t } = useTranslation();
@@ -66,14 +70,20 @@ const ReceiveList = () => {
   const navigate = useNavigate();
 
   const deleteMutation = useDeleteReceive();
+  const rejectMutation = useRejectReceive();
 
   const handleEdit = (id) => {
     navigate(`/main/receive/${id}/edit`);
   };
 
   const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this transfer?')) {
+    if (window.confirm('Are you sure you want to delete this Receive?')) {
       deleteMutation.mutate(id);
+    }
+  };
+  const handleReject = (id) => {
+    if (window.confirm('Are you sure you want to reject this Receive?')) {
+      rejectMutation.mutate(id);
     }
   };
 
@@ -335,6 +345,21 @@ const ReceiveList = () => {
                                 </button>
 
                                 {/* Delete Button */}
+                                <button
+                                  onClick={() => handleReject(c.id)}
+                                  disabled={rejectMutation.isLoading}
+                                  className="p-2 bg-gradient-to-br from-red-500 to-pink-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none group"
+                                >
+                                  {rejectMutation.isLoading ? (
+                                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                  ) : (
+                                    <BsArrowReturnRight className="text-md" />
+                                  )}
+                                  <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
+                                    {t('Reject')}
+                                  </div>
+                                </button>
+
                                 <button
                                   onClick={() => handleDelete(c.id)}
                                   disabled={deleteMutation.isLoading}

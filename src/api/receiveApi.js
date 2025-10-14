@@ -41,6 +41,11 @@ export const deleteReceive = async (id) => {
   return data;
 };
 
+export const rejectReceive = async (id) => {
+  const { data } = await axiosClient.patch(`/receive/${id}/reject`);
+  return data;
+};
+
 export const getSingleReceive = async (id) => {
   const { data } = await axiosClient.get(`/receive/${id}`);
   return data;

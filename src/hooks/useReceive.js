@@ -4,6 +4,7 @@ import {
   deleteReceive,
   getReceive,
   getSingleReceive,
+  rejectReceive,
   updateReceive,
 } from '../api/receiveApi';
 
@@ -54,6 +55,15 @@ export const useDeleteReceive = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteReceive,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['receive']);
+    },
+  });
+};
+export const useRejectReceive = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: rejectReceive,
     onSuccess: () => {
       queryClient.invalidateQueries(['receive']);
     },
