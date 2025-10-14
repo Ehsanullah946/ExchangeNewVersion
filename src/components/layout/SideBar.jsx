@@ -13,19 +13,30 @@ const SideBar = ({ children }) => {
   const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     const mobile = window.innerWidth < 768;
+  //     setIsMobile(mobile);
+
+  //     if (!mobile && isOpen) {
+  //       setIsOpen(false);
+  //     }
+  //   };
+
+  //   window.addEventListener('resize', handleResize);
+  //   return () => window.removeEventListener('resize', handleResize);
+  // }, [isOpen]);
+
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-
-      if (!mobile && isOpen) {
-        setIsOpen(false);
-      }
     };
 
     window.addEventListener('resize', handleResize);
+    handleResize(); // set initial state
     return () => window.removeEventListener('resize', handleResize);
-  }, [isOpen]);
+  }, []);
 
   const toggle = () => setIsOpen(!isOpen);
 

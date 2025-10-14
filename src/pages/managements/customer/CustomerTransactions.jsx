@@ -1,30 +1,34 @@
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import {
-  BiShare,
-  BiSolidDetail,
-  BiSolidEdit,
-  BiSolidUserAccount,
-} from 'react-icons/bi';
+import { BiSolidDetail, BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
-import Button from '../../../components/layout/Button';
 import { Link } from 'react-router-dom';
 import { ImMinus } from 'react-icons/im';
 import { RiAddBoxFill } from 'react-icons/ri';
 import { BsPrinter, BsSearch, BsShare } from 'react-icons/bs';
-import { PulseLoader } from 'react-spinners';
 import { setPage, toggleOpen } from '../../../features/ui/filterSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAllTransaction } from '../../../hooks/useCustomers';
+import {
+  useAllTransaction,
+  useCustomerDetails,
+  useSingleCustomer,
+} from '../../../hooks/useCustomers';
 
 const CustomerTransactions = () => {
   const { customerId } = useParams();
   const { t } = useTranslation();
+  const location = useLocation();
 
   const { open, limit, page } = useSelector((state) => state.filters);
   const dispatch = useDispatch();
 
   const { data, isLoading, error } = useAllTransaction(customerId, limit, page);
+
+  const { data: customerData } = useCustomerDetails(customerId);
+  const customer = customerData?.data || {};
+  const customerName = customer?.Stakeholder?.Person
+    ? `${customer.Stakeholder.Person.firstName} ${customer.Stakeholder.Person.lastName}`
+    : 'Customer';
 
   const customerTransaction = data?.data || [];
   const total = data?.total || 0;
@@ -47,6 +51,33 @@ const CustomerTransactions = () => {
     }
   }, [total, totalPages, page, dispatch]);
 
+  const getTransactionDescription = (transaction) => {
+    if (transaction.description) {
+      return transaction.description;
+    }
+
+    switch (transaction.type) {
+      case 'deposit':
+        return t('Deposit to account');
+      case 'withdraw':
+        return t('Withdrawal from account');
+      case 'transfer':
+        return `${transaction.senderName || t('Sender')} → ${
+          transaction.receiverName || t('Receiver')
+        }`;
+      case 'receive':
+        return `${transaction.senderName || t('Sender')} → ${
+          transaction.receiverName || t('Receiver')
+        }`;
+      case 'exchange_sale':
+        return t('Currency Sale');
+      case 'exchange_purchase':
+        return t('Currency Purchase');
+      default:
+        return t('Transaction');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-6">
       <div className="max-w-7xl mx-auto">
@@ -56,6 +87,18 @@ const CustomerTransactions = () => {
             <h1 className="text-2xl font-bold text-gray-900 mb-2">
               {t('Transaction History')}
             </h1>
+            <div className="flex items-center gap-4">
+              <p className="text-gray-600">
+                {t('Customer')}:{' '}
+                <span className="font-semibold text-blue-600">
+                  {customerName}
+                </span>
+              </p>
+              <p className="text-sm text-gray-500">ID: {customerId}</p>
+              {/* {customerData?.phone && (
+                <p className="text-sm text-gray-500">📞 {customerData.phone}</p>
+              )} */}
+            </div>
             <p className="text-gray-600">
               {t('View and manage all financial transactions')}
             </p>
@@ -155,6 +198,100 @@ const CustomerTransactions = () => {
           </div>
         </div>
 
+        {/* Summary Cards */}
+        {!isLoading && customerTransaction.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-4 text-white shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm opacity-90">{t('Current Balance')}</p>
+                  <p className="text-2xl font-bold">
+                    {data?.accountSummary[0].balance.toLocaleString()}
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                  <RiAddBoxFill className="text-xl" />
+                </div>
+              </div>
+            </div> */}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              {data?.accountSummary?.map((account, index) => (
+                <div
+                  key={account.accountNo}
+                  className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-4 text-white shadow-lg"
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm opacity-90">
+                        {t('Account')} {account.accountNo}
+                      </p>
+                      <p
+                        dir="ltr"
+                        className={`text-2xl font-bold ${
+                          account.balance < 0
+                            ? 'text-red-400'
+                            : account.balance > 0
+                            ? 'text-white'
+                            : 'text-gray-600'
+                        }`}
+                      >
+                        {account.balance?.toLocaleString()}
+                      </p>
+                      <p className="text-sm opacity-80 mt-1">
+                        {account.currency}
+                      </p>
+                    </div>
+                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                      <RiAddBoxFill className="text-xl" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl p-4 text-white shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm opacity-90">{t('Total Accounts')}</p>
+                  <p className="text-2xl font-bold">
+                    {data?.accountCount || 0}
+                  </p>
+                </div>
+                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                  <BiSolidUserAccount className="text-xl" />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-4 text-white shadow-lg">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm opacity-90">
+                    {t('Total Transactions')}
+                  </p>
+                  <p className="text-2xl font-bold">{total}</p>
+                </div>
+                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Main Content Card */}
         <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
           {isLoading ? (
@@ -187,10 +324,10 @@ const CustomerTransactions = () => {
                         {t('Details')}
                       </th>
                       <th className="px-4 py-3 text-center text-white font-semibold text-xs uppercase tracking-wider">
-                        {t('Withdraw')}
+                        {t('Debit')}
                       </th>
                       <th className="px-4 py-3 text-center text-white font-semibold text-xs uppercase tracking-wider">
-                        {t('Deposit')}
+                        {t('Credit')}
                       </th>
                       <th className="px-4 py-3 text-center text-white font-semibold text-xs uppercase tracking-wider">
                         {t('Currency')}
@@ -239,7 +376,7 @@ const CustomerTransactions = () => {
                         </td>
                       </tr>
                     ) : (
-                      customerTransaction.map((c, index) => (
+                      customerTransaction.map((transaction, index) => (
                         <tr
                           key={index}
                           className="group hover:bg-gradient-to-r hover:from-blue-50/30 hover:to-indigo-50/20 transition-all duration-200 border-b border-gray-100 last:border-b-0"
@@ -247,12 +384,49 @@ const CustomerTransactions = () => {
                           {/* Transaction ID */}
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-3">
-                              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-xs">
-                                #
+                              <div
+                                className={`w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-xs ${
+                                  transaction.type === 'deposit' ||
+                                  transaction.type === 'exchange_purchase'
+                                    ? 'bg-gradient-to-br from-green-500 to-emerald-500'
+                                    : transaction.type === 'withdraw' ||
+                                      transaction.type === 'exchange_sale'
+                                    ? 'bg-gradient-to-br from-red-500 to-pink-500'
+                                    : transaction.type === 'transfer'
+                                    ? 'bg-gradient-to-br from-blue-500 to-cyan-500'
+                                    : transaction.type === 'receive'
+                                    ? 'bg-gradient-to-br from-yellow-500 to-amber-500'
+                                    : 'bg-gradient-to-br from-purple-500 to-indigo-500'
+                                }`}
+                              >
+                                {transaction.type === 'deposit'
+                                  ? 'D'
+                                  : transaction.type === 'withdraw'
+                                  ? 'W'
+                                  : transaction.type === 'transfer'
+                                  ? 'T'
+                                  : transaction.type === 'receive'
+                                  ? 'R'
+                                  : transaction.type === 'exchange_sale'
+                                  ? 'S'
+                                  : 'P'}
                               </div>
-                              <span className="font-mono text-sm font-semibold text-gray-700">
-                                {c.No || c.transferNo || c.receiveNo || 'N/A'}
-                              </span>
+                              <div className="flex flex-col">
+                                <span className="font-mono text-sm font-semibold text-gray-700">
+                                  {transaction.No ||
+                                    transaction.transferNo ||
+                                    transaction.receiveNo ||
+                                    transaction.id ||
+                                    'N/A'}
+                                  {transaction.exchangeDetails &&
+                                    ` (Ex-${transaction.exchangeDetails.exchangeId})`}
+                                </span>
+                                {transaction.accountNo && (
+                                  <span className="text-xs text-gray-500">
+                                    Acc: {transaction.accountNo}
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           </td>
 
@@ -260,55 +434,67 @@ const CustomerTransactions = () => {
                           <td className="px-4 py-3">
                             <div className="flex flex-col">
                               <span className="font-semibold text-gray-800 text-sm">
-                                {new Date(c.date).toLocaleDateString('en-GB')}
+                                {new Date(transaction.date).toLocaleDateString(
+                                  'en-GB'
+                                )}
                               </span>
                               <span className="text-xs text-gray-500">
-                                {new Date(c.date).toLocaleTimeString()}
+                                {new Date(
+                                  transaction.date
+                                ).toLocaleTimeString()}
                               </span>
                             </div>
                           </td>
 
                           {/* Details */}
-                          <td className="px-3 py-2">
-                            {c.description ||
-                              (c.type === 'transfer'
-                                ? `${c.senderName || ''} ⬅️ ${
-                                    c.receiverName || '-'
-                                  }`
-                                : c.type === 'receive'
-                                ? `${c.senderName || ''} ⬅️ ${
-                                    c.receiverName || '-'
-                                  }`
-                                : '-')}
+                          <td className="px-4 py-3">
+                            <div className="flex flex-col">
+                              <span className="text-sm text-gray-800 font-medium">
+                                {getTransactionDescription(transaction)}
+                              </span>
+                              {transaction.exchangeDetails && (
+                                <div className="text-xs text-gray-600 mt-1">
+                                  <div>
+                                    {t('Rates')}:{' '}
+                                    {transaction.exchangeDetails.rate}
+                                  </div>
+                                  {transaction.exchangeDetails.isSale && (
+                                    <div>
+                                      {transaction.exchangeDetails.saleCurrency}
+                                    </div>
+                                  )}
+                                  {transaction.exchangeDetails.isPurchase && (
+                                    <div>
+                                      {
+                                        transaction.exchangeDetails
+                                          .purchaseCurrency
+                                      }
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
                           </td>
 
-                          {/* Withdraw */}
+                          {/* Debit */}
                           <td className="px-4 py-3 text-right">
-                            {(c.withdraw ||
-                              (c.type === 'transfer' ? c.transferAmount : 0)) >
-                              0 && (
+                            {transaction.debit > 0 && (
                               <div className="flex items-center justify-end gap-1">
                                 <ImMinus className="text-red-500 text-xs" />
                                 <span className="text-red-600 font-bold text-sm">
-                                  {(
-                                    c.withdraw || c.transferAmount
-                                  )?.toLocaleString()}
+                                  {transaction.debit?.toLocaleString()}
                                 </span>
                               </div>
                             )}
                           </td>
 
-                          {/* Deposit */}
+                          {/* Credit */}
                           <td className="px-4 py-3 text-right">
-                            {(c.deposit ||
-                              (c.type === 'receive' ? c.receiveAmount : 0)) >
-                              0 && (
+                            {transaction.credit > 0 && (
                               <div className="flex items-center justify-end gap-1">
                                 <RiAddBoxFill className="text-green-500 text-xs" />
                                 <span className="text-green-600 font-bold text-sm">
-                                  {(
-                                    c.deposit || c.receiveAmount
-                                  )?.toLocaleString()}
+                                  {transaction.credit?.toLocaleString()}
                                 </span>
                               </div>
                             )}
@@ -317,9 +503,7 @@ const CustomerTransactions = () => {
                           {/* Currency */}
                           <td className="px-4 py-3">
                             <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 border border-gray-200">
-                              {c.Account?.MoneyType?.typeName ||
-                                c.MainMoneyType?.typeName ||
-                                'N/A'}
+                              {transaction.moneyType || 'N/A'}
                             </span>
                           </td>
 
@@ -327,14 +511,14 @@ const CustomerTransactions = () => {
                           <td dir="ltr" className="px-4 py-3 text-right">
                             <span
                               className={`font-bold text-sm ${
-                                c.runningBalance < 0
+                                transaction.runningBalance < 0
                                   ? 'text-red-600'
-                                  : c.runningBalance > 0
+                                  : transaction.runningBalance > 0
                                   ? 'text-green-600'
                                   : 'text-gray-600'
                               }`}
                             >
-                              {c.runningBalance?.toLocaleString()}
+                              {transaction.runningBalance?.toLocaleString()}
                             </span>
                           </td>
 
@@ -342,50 +526,58 @@ const CustomerTransactions = () => {
                           <td className="px-4 py-3 text-center">
                             <span
                               className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                                c.type === 'deposit'
+                                transaction.type === 'deposit' ||
+                                transaction.type === 'exchange_purchase'
                                   ? 'bg-green-100 text-green-800 border border-green-200'
-                                  : c.type === 'withdraw'
+                                  : transaction.type === 'withdraw' ||
+                                    transaction.type === 'exchange_sale'
                                   ? 'bg-red-100 text-red-800 border border-red-200'
-                                  : c.type === 'transfer'
+                                  : transaction.type === 'transfer'
                                   ? 'bg-blue-100 text-blue-800 border border-blue-200'
-                                  : c.type === 'receive'
+                                  : transaction.type === 'receive'
                                   ? 'bg-yellow-100 text-yellow-800 border border-yellow-200'
-                                  : 'bg-gray-100 text-gray-800 border border-gray-200'
+                                  : 'bg-purple-100 text-purple-800 border border-purple-200'
                               }`}
                             >
-                              {t(c.type)}
+                              {t(
+                                transaction.type === 'exchange_sale'
+                                  ? 'Exchange Sale'
+                                  : transaction.type === 'exchange_purchase'
+                                  ? 'Exchange Purchase'
+                                  : transaction.type
+                              )}
                             </span>
                           </td>
 
-                          {/* Actions */}
+                          {/* Actions - same as before */}
                           <td className="px-4 py-3">
                             <div className="flex items-center justify-center gap-1">
                               {/* Print */}
-                              <button className="p-1.5 bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-lg transition-all duration-200 shadow hover:shadow-lg hover:scale-110 active:scale-95 group">
+                              <button className="p-1.5 bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-lg transition-all duration-200 shadow hover:shadow-lg hover:scale-110 active:scale-95 group relative">
                                 <BsPrinter className="text-xs" />
-                                <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
+                                <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg whitespace-nowrap z-10">
                                   {t('Print')}
                                 </div>
                               </button>
 
                               {/* Details */}
-                              <button className="p-1.5 bg-gradient-to-br from-purple-500 to-indigo-500 text-white rounded-lg transition-all duration-200 shadow hover:shadow-lg hover:scale-110 active:scale-95 group">
+                              <button className="p-1.5 bg-gradient-to-br from-purple-500 to-indigo-500 text-white rounded-lg transition-all duration-200 shadow hover:shadow-lg hover:scale-110 active:scale-95 group relative">
                                 <BiSolidDetail className="text-xs" />
-                                <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
+                                <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg whitespace-nowrap z-10">
                                   {t('Details')}
                                 </div>
                               </button>
 
                               {/* Edit */}
-                              <button className="p-1.5 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-lg transition-all duration-200 shadow hover:shadow-lg hover:scale-110 active:scale-95 group">
+                              <button className="p-1.5 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-lg transition-all duration-200 shadow hover:shadow-lg hover:scale-110 active:scale-95 group relative">
                                 <BiSolidEdit className="text-xs" />
-                                <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
+                                <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg whitespace-nowrap z-10">
                                   {t('Edit')}
                                 </div>
                               </button>
 
                               {/* Delete */}
-                              <button className="p-1.5 bg-gradient-to-br from-red-500 to-pink-500 text-white rounded-lg transition-all duration-200 shadow hover:shadow-lg hover:scale-110 active:scale-95 group">
+                              <button className="p-1.5 bg-gradient-to-br from-red-500 to-pink-500 text-white rounded-lg transition-all duration-200 shadow hover:shadow-lg hover:scale-110 active:scale-95 group relative">
                                 <svg
                                   className="w-3 h-3"
                                   fill="none"
@@ -399,7 +591,7 @@ const CustomerTransactions = () => {
                                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                                   />
                                 </svg>
-                                <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
+                                <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg whitespace-nowrap z-10">
                                   {t('Delete')}
                                 </div>
                               </button>

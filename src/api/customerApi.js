@@ -31,6 +31,11 @@ export const getSingleCustomer = async (id) => {
   return data;
 };
 
+export const getCustomerDetails = async (customerId) => {
+  const { data } = await axiosClient.get(`/customer/${customerId}`);
+  return data;
+};
+
 // Update your getAllTransaction function
 export const getAllTransaction = async (
   customerId,

@@ -30,6 +30,16 @@ export const useSingleCustomer = (id) => {
     },
   });
 };
+export const useCustomerDetails = (customerId) => {
+  return useQuery({
+    queryKey: ['customers', customerId],
+    queryFn: () => getSingleCustomer(customerId),
+    enabled: !!customerId,
+    onError: (error) => {
+      console.error('Error fetching customer by id:', error);
+    },
+  });
+};
 
 export const useAllTransaction = (customerId, limit = 10, page = 1) => {
   return useQuery({
