@@ -27,6 +27,7 @@ import {
 } from '../../features/ui/filterSlice';
 import { useDeleteExchange, useExchange } from '../../hooks/useExchange';
 import { useDispatch, useSelector } from 'react-redux';
+import { formatNumber } from '../../utils/formatNumber';
 const ExchangeList = () => {
   const { t } = useTranslation();
 
@@ -248,14 +249,14 @@ const ExchangeList = () => {
                             <td className="px-2 py-2">
                               <div className="flex items-center gap-2">
                                 <span className="font-bold text-md text-green-600">
-                                  {c.rate?.toLocaleString()}
+                                  {formatNumber(c.rate)?.toLocaleString()}
                                 </span>
                               </div>
                             </td>
                             <td className="px-2 py-2">
                               <div className="flex items-center gap-2">
                                 <span className="font-bold text-md text-green-600">
-                                  {c.saleAmount?.toLocaleString()}
+                                  {formatNumber(c.saleAmount)?.toLocaleString()}
                                 </span>
                               </div>
                             </td>
@@ -269,7 +270,9 @@ const ExchangeList = () => {
                             <td className="px-2 py-2">
                               <div className="flex items-center gap-2">
                                 <span className="font-bold text-md text-green-600">
-                                  {c.purchaseAmount?.toLocaleString()}
+                                  {formatNumber(
+                                    c.purchaseAmount
+                                  )?.toLocaleString()}
                                 </span>
                               </div>
                             </td>

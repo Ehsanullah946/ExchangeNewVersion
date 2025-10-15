@@ -103,17 +103,6 @@ const Withdraw = () => {
     });
   };
 
-  const formatCurrency = (amount, currency) => {
-    return (
-      new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(amount) +
-      ' ' +
-      currency
-    );
-  };
-
   // Helper function to determine balance color
   const getBalanceColor = (balance) => {
     if (balance < 0) return 'text-red-600';
@@ -388,7 +377,7 @@ const Withdraw = () => {
                           <div className="bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl p-3 text-white">
                             <div className="flex items-center justify-between">
                               <div>
-                                <p className="text-blue-100 text-sm">
+                                <p className="text-blue-100 font-bold text-sm">
                                   {t('Total Balance')}
                                 </p>
                                 <p dir="ltr" className="text-xl font-bold mt-1">
@@ -402,7 +391,7 @@ const Withdraw = () => {
 
                           <div className="grid grid-cols-2 gap-4">
                             <div className="bg-white rounded-xl p-3 shadow-lg border border-green-100">
-                              <div className="text-sm text-gray-500 font-medium">
+                              <div className="text-sm text-gray-500 font-bold">
                                 {t('Main Currency')}
                               </div>
                               <div className="text-lg font-bold text-green-600 mt-1">
@@ -410,7 +399,7 @@ const Withdraw = () => {
                               </div>
                             </div>
                             <div className="bg-white rounded-xl p-3 shadow-lg border border-purple-100">
-                              <div className="text-sm text-gray-500 font-medium">
+                              <div className="text-sm text-gray-500 font-bold">
                                 {t('Total Accounts')}
                               </div>
                               <div className="text-lg font-bold text-purple-600 mt-1">

@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '../../components/layout/Button';
+import DateInput from '../../components/common/DateInput';
 
 function Languages() {
   const { i18n } = useTranslation();
@@ -22,6 +23,7 @@ function Languages() {
       <Button type="primary" onClick={() => switchLanguage('fa')}>
         فارسی
       </Button>
+      <DateInput />
     </div>
   );
 }

@@ -13,27 +13,15 @@ const SideBar = ({ children }) => {
   const { t } = useTranslation();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     const mobile = window.innerWidth < 768;
-  //     setIsMobile(mobile);
-
-  //     if (!mobile && isOpen) {
-  //       setIsOpen(false);
-  //     }
-  //   };
-  //   window.addEventListener('resize', handleResize);
-  //   return () => window.removeEventListener('resize', handleResize);
-  // }, [isOpen]);
-
   useEffect(() => {
     const handleResize = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
+      clearTimeout(window.resizeTimer);
+      window.resizeTimer = setTimeout(() => {
+        setIsMobile(window.innerWidth < 768);
+      }, 150);
     };
-
     window.addEventListener('resize', handleResize);
-    handleResize(); // set initial state
+    handleResize();
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -45,7 +33,7 @@ const SideBar = ({ children }) => {
       padding: 0,
       opacity: 0,
       transition: {
-        duration: 0.2,
+        duration: 0.1,
       },
     },
     show: {
@@ -53,7 +41,7 @@ const SideBar = ({ children }) => {
       padding: '5px 15px',
       opacity: 1,
       transition: {
-        duration: 0.2,
+        duration: 0.1,
       },
     },
   };
@@ -63,14 +51,14 @@ const SideBar = ({ children }) => {
       width: 0,
       opacity: 0,
       transition: {
-        duration: 0.5,
+        duration: 0.15,
       },
     },
     show: {
       opacity: 1,
       width: 'auto',
       transition: {
-        duration: 0.5,
+        duration: 0.3,
       },
     },
   };
@@ -99,7 +87,7 @@ const SideBar = ({ children }) => {
             ? '0'
             : '60px',
           transition: {
-            duration: 0.3,
+            duration: 0.2,
             type: 'spring',
             damping: 15,
           },
@@ -173,19 +161,9 @@ const SideBar = ({ children }) => {
                       onClick={handleLinkClick}
                     >
                       <div className="icon">{route.icon}</div>
-                      <AnimatePresence>
-                        {isOpen && (
-                          <motion.div
-                            variants={showAnimation}
-                            initial="hidden"
-                            animate="show"
-                            exit="hidden"
-                            className="link_text"
-                          >
-                            {t(route.nameKey)}
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                      {isOpen && (
+                        <span className="link_text">{t(route.nameKey)}</span>
+                      )}
                     </NavLink>
                   );
                 })}

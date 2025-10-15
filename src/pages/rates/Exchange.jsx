@@ -16,6 +16,7 @@ import { useToast } from '../../hooks/useToast';
 import { useCustomers } from '../../hooks/useCustomers';
 import { useExchanger } from '../../hooks/useExchanger';
 import { useMoneyType } from '../../hooks/useMoneyType';
+import { formatNumber } from '../../utils/formatNumber';
 const Exchange = () => {
   const { t } = useTranslation();
 

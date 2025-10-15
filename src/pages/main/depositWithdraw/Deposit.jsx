@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Select from 'react-select';
 import {
   BsListCheck,
@@ -14,9 +14,12 @@ import { useToast } from '../../../hooks/useToast';
 import { useCreateDeposit } from '../../../hooks/useDeposit';
 import { useAccount, useAccountSummary } from '../../../hooks/useAccount';
 import { formatNumber } from '../../../utils/formatNumber';
+import { useDateFormatter } from '../../../hooks/useDateFormatter';
 
 const Deposit = () => {
   const { t } = useTranslation();
+  const { currentCalendar } = useDateFormatter();
+
   const toast = useToast();
   const { mutate, isLoading } = useCreateDeposit();
   const navigate = useNavigate();
@@ -102,17 +105,6 @@ const Deposit = () => {
         toast.error(errorMessage);
       },
     });
-  };
-
-  const formatCurrency = (amount, currency) => {
-    return (
-      new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(amount) +
-      ' ' +
-      currency
-    );
   };
 
   // Helper function to determine balance color
@@ -252,13 +244,14 @@ const Deposit = () => {
                         {t('Date')}
                       </label>
                       <input
-                        type="date"
                         name="DWData"
+                        type={currentCalendar === 'persian' ? 'text' : 'date'}
                         value={form.DWData}
-                        onChange={handleChange}
+                        onChange={handleDateChange}
                         className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
                         required
                       />
+                      Current calendar: {currentCalendar}
                     </div>
 
                     {/* Description Textarea */}
@@ -389,7 +382,7 @@ const Deposit = () => {
                           <div className="bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl p-3 text-white">
                             <div className="flex items-center justify-between">
                               <div>
-                                <p className="text-blue-100 text-sm">
+                                <p className="text-blue-100 font-bold text-sm">
                                   {t('Total Balance')}
                                 </p>
                                 <p dir="ltr" className="text-xl font-bold mt-1">
@@ -403,7 +396,7 @@ const Deposit = () => {
 
                           <div className="grid grid-cols-2 gap-4">
                             <div className="bg-white rounded-xl p-3 shadow-lg border border-green-100">
-                              <div className="text-sm text-gray-500 font-medium">
+                              <div className="text-sm text-gray-500 font-bold">
                                 {t('Main Currency')}
                               </div>
                               <div className="text-lg font-bold text-green-600 mt-1">
@@ -411,7 +404,7 @@ const Deposit = () => {
                               </div>
                             </div>
                             <div className="bg-white rounded-xl p-3 shadow-lg border border-purple-100">
-                              <div className="text-sm text-gray-500 font-medium">
+                              <div className="text-sm text-gray-500 font-bold">
                                 {t('Total Accounts')}
                               </div>
                               <div className="text-lg font-bold text-purple-600 mt-1">

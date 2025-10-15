@@ -29,9 +29,10 @@ import {
 import { useDeleteDepositWithdraw } from '../../../hooks/useDeposit';
 import { FaMoneyBillWave } from 'react-icons/fa';
 import { formatNumber } from '../../../utils/formatNumber';
+import { useDateFormatter } from '../../../hooks/useDateFormatter';
 const WithdrawList = () => {
   const { t } = useTranslation();
-
+  const { formatDate } = useDateFormatter();
   const { open, search, limit, page, debouncedPhone, debouncedSearch } =
     useSelector((state) => state.filters);
 
@@ -264,10 +265,7 @@ const WithdrawList = () => {
                             <td className="px-2 py-1">
                               <div className="flex flex-col">
                                 <span className="font-semibold text-gray-800">
-                                  {new Date(c.DWDate).toLocaleDateString()}
-                                </span>
-                                <span className="text-sm text-gray-500">
-                                  {new Date(c.DWDate).toLocaleTimeString()}
+                                  {formatDate(c.DWDate)}
                                 </span>
                               </div>
                             </td>
