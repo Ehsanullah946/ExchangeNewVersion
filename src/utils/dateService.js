@@ -1,6 +1,20 @@
 // utils/dateService.js
 import moment from 'moment-jalaali';
 
+const afghanMonths = [
+  'حمل',
+  'ثور',
+  'جوزا',
+  'سرطان',
+  'اسد',
+  'سنبله',
+  'میزان',
+  'عقرب',
+  'قوس',
+  'جدی',
+  'دلو',
+  'حوت',
+];
 export class DateService {
   constructor() {
     this.currentCalendar =
@@ -16,96 +30,174 @@ export class DateService {
     return this.currentCalendar;
   }
 
-  // Convert Gregorian to Persian
-  gregorianToPersian(gregorianDate) {
+  // Convert Gregorian to Persian for display
+  toPersian(gregorianDate) {
     if (!gregorianDate) return '';
-
     try {
-      return moment(gregorianDate).format('jYYYY/jMM/jDD');
+      // Handle both Date objects and strings
+      const date = moment(gregorianDate);
+      return date.format('jYYYY/jMM/jDD');
     } catch (error) {
-      console.error('Error converting to Persian date:', error);
+      console.error('Error converting to Persian:', error, gregorianDate);
       return gregorianDate;
     }
   }
 
-  // Convert Persian to Gregorian
-  persianToGregorian(persianDateStr) {
+  // Convert Persian to Gregorian for backend
+  toGregorian(persianDateStr) {
     if (!persianDateStr) return '';
-
     try {
-      return moment(persianDateStr, 'jYYYY/jMM/jDD').format('YYYY-MM-DD');
+      // Parse Persian date and convert to Gregorian
+      const persianDate = moment(persianDateStr, 'jYYYY/jMM/jDD');
+      if (!persianDate.isValid()) {
+        throw new Error('Invalid Persian date');
+      }
+      return persianDate.format('YYYY-MM-DD');
     } catch (error) {
-      console.error('Error converting to Gregorian date:', error);
-      return persianDateStr;
+      console.error('Error converting to Gregorian:', error, persianDateStr);
+      return '';
     }
   }
 
-  // Format date based on current calendar
-  formatDate(date, format = 'default') {
+  // Format date for display
+  formatDisplay(date, options = {}) {
     if (!date) return '';
 
+    const { showTime = false } = options;
+
     if (this.currentCalendar === 'persian') {
-      return this.formatPersianDate(date, format);
+      return this.formatPersianDate(date, showTime);
     } else {
-      return this.formatGregorianDate(date, format);
+      return this.formatGregorianDate(date, showTime);
     }
   }
 
-  formatGregorianDate(date, format = 'default') {
-    const dateObj = new Date(date);
-
-    if (format === 'short') {
-      return dateObj.toLocaleDateString('en-US');
-    } else if (format === 'time') {
-      return dateObj.toLocaleTimeString('en-US');
-    } else if (format === 'datetime') {
-      return dateObj.toLocaleString('en-US');
-    } else if (format === 'input') {
-      return dateObj.toISOString().split('T')[0]; // YYYY-MM-DD for input
-    } else {
-      return dateObj.toLocaleString('en-US', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: true,
-      });
-    }
-  }
-
-  formatPersianDate(date, format = 'default') {
+  formatGregorianDate(date, showTime = false) {
     try {
-      if (format === 'short') {
-        return moment(date).format('jYYYY/jMM/jDD');
-      } else if (format === 'time') {
-        return moment(date).format('HH:mm:ss');
-      } else if (format === 'datetime') {
-        return moment(date).format('jYYYY/jMM/jDD HH:mm:ss');
-      } else if (format === 'input') {
-        return moment(date).format('jYYYY/jMM/jDD'); // For Persian input
+      const dateObj = moment(date);
+      if (showTime) {
+        return dateObj.format('YYYY-MM-DD HH:mm:ss');
       } else {
-        return moment(date).format('jYYYY/jMM/jDD HH:mm:ss');
+        return dateObj.format('YYYY-MM-DD');
       }
     } catch (error) {
-      console.error('Error formatting Persian date:', error);
-      return this.formatGregorianDate(date, format);
+      console.error('Error formatting Gregorian date:', error);
+      return date;
     }
   }
 
-  // Check if string is valid Persian date
+  formatPersianDate(date, showTime = false) {
+    try {
+      const dateObj = moment(date);
+      const year = dateObj.jYear();
+      const month = afghanMonths[dateObj.jMonth()]; // Use Afghan months
+      const day = dateObj.jDate();
+
+      if (showTime) {
+        return `${day} ${month} ${year} ${dateObj.format('HH:mm:ss')}`;
+      } else {
+        return `${day} ${month} ${year}`;
+      }
+    } catch (error) {
+      console.error('Error formatting Afghan date:', error);
+      return this.formatGregorianDate(date, showTime);
+    }
+  }
+
+  // Format for input field (always returns string in current calendar format)
+  formatInput(date) {
+    if (!date) return '';
+
+    try {
+      if (this.currentCalendar === 'persian') {
+        return this.toPersian(date);
+      } else {
+        // For Gregorian input (HTML date input expects YYYY-MM-DD)
+        const dateObj = moment(date);
+        return dateObj.format('YYYY-MM-DD');
+      }
+    } catch (error) {
+      console.error('Error formatting input:', error);
+      return '';
+    }
+  }
+
+  // Parse input value to Gregorian for backend
+  parseInput(inputValue) {
+    if (!inputValue) return '';
+
+    try {
+      if (this.currentCalendar === 'persian') {
+        return this.toGregorian(inputValue);
+      } else {
+        // Already in Gregorian, ensure proper format
+        const dateObj = moment(inputValue);
+        return dateObj.format('YYYY-MM-DD');
+      }
+    } catch (error) {
+      console.error('Error parsing input:', error);
+      return '';
+    }
+  }
+
+  // Check if Persian date is valid
   isValidPersianDate(dateString) {
     return moment(dateString, 'jYYYY/jMM/jDD', true).isValid();
   }
 
+  // Check if Gregorian date is valid
+  isValidGregorianDate(dateString) {
+    return moment(dateString, 'YYYY-MM-DD', true).isValid();
+  }
+
   // Get today's date in current calendar format
   getToday() {
-    const today = new Date();
+    const today = moment();
     if (this.currentCalendar === 'persian') {
-      return moment(today).format('jYYYY/jMM/jDD');
+      return today.format('jYYYY/jMM/jDD');
     } else {
-      return today.toISOString().split('T')[0];
+      return today.format('YYYY-MM-DD');
+    }
+  }
+
+  // Validate date with business rules
+  validateDate(dateValue, calendarType = null) {
+    if (!dateValue) return { isValid: false, error: 'Date is required' };
+
+    const calendar = calendarType || this.currentCalendar;
+    let gregorianDate;
+
+    try {
+      if (calendar === 'persian') {
+        if (!this.isValidPersianDate(dateValue)) {
+          return { isValid: false, error: 'Invalid Persian date format' };
+        }
+        gregorianDate = moment(dateValue, 'jYYYY/jMM/jDD');
+      } else {
+        if (!this.isValidGregorianDate(dateValue)) {
+          return { isValid: false, error: 'Invalid Gregorian date format' };
+        }
+        gregorianDate = moment(dateValue, 'YYYY-MM-DD');
+      }
+
+      const today = moment().startOf('day');
+      const selectedDate = gregorianDate.startOf('day');
+      const oneYearAgo = moment().subtract(1, 'year').startOf('day');
+
+      if (selectedDate.isAfter(today)) {
+        return { isValid: false, error: 'Future dates are not allowed' };
+      }
+
+      if (selectedDate.isBefore(oneYearAgo)) {
+        return {
+          isValid: false,
+          error: 'Date is too old (max 1 year in past)',
+        };
+      }
+
+      return { isValid: true, error: '' };
+    } catch (error) {
+      return { isValid: false, error: 'Invalid date' };
     }
   }
 }

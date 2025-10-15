@@ -14,12 +14,15 @@ import { useCreateWithdraw } from '../../../hooks/useWithdraw';
 import { useToast } from '../../../hooks/useToast';
 import { useAccount, useAccountSummary } from '../../../hooks/useAccount';
 import { formatNumber } from '../../../utils/formatNumber';
+import { useDateFormatter } from '../../../hooks/useDateFormatter';
+import DateInput from '../../../components/common/DateInput';
 const Withdraw = () => {
   const { t } = useTranslation();
 
   const toast = useToast();
   const { mutate, isLoading } = useCreateWithdraw();
   const navigate = useNavigate();
+  const { currentCalendar } = useDateFormatter();
 
   const [form, setForm] = useState({
     deposit: '',
@@ -235,16 +238,16 @@ const Withdraw = () => {
                     </div>
 
                     {/* Date Input */}
-                    <div className="group">
-                      <label className="block text-sm font-semibold text-gray-700 mb-1 ml-1">
-                        {t('Date')}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {t('Date')} (
+                        {currentCalendar === 'persian' ? 'هجری شمسی' : 'میلادی'}
+                        )
                       </label>
-                      <input
-                        type="date"
+                      <DateInput
                         name="DWData"
                         value={form.DWData}
                         onChange={handleChange}
-                        className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
                         required
                       />
                     </div>

@@ -188,5 +188,13 @@
   "No Employee found for your search": "کارمند یافت نشد🙃",
   "No Exchanger found for your search": "تبادله کننده یافت نشد🙃",
   "No Transaction found for your search": "تراکنش یافت نشد🙃",
-  "No SenderReceiver found for your search": "ارسال و یا دریافت کننده یافت نشد🙃"
+  "No SenderReceiver found for your search": "ارسال و یا دریافت کننده یافت نشد🙃",
+  "dateRequired": "تاریخ الزامی است",
+  "dateConversionError": "خطا در تبدیل تاریخ",
+  "Invalid Persian date format": "فرمت تاریخ شمسی نامعتبر است. از فرمت YYYY/MM/DD استفاده کنید",
+  "Invalid Gregorian date format": "فرمت تاریخ میلادی نامعتبر است. از فرمت YYYY-MM-DD استفاده کنید",
+  "Future dates are not allowed": "تاریخ های آینده مجاز نیستند",
+  "Date is too old (max 1 year in past)": "تاریخ بسیار قدیمی است (حداکثر یک سال گذشته)",
+  "Invalid date": "تاریخ نامعتبر",
+  "persianDateFormat": "فرمت: YYYY/MM/DD (مثال: ۱۴۰۳/۰۱/۰۱)"
 }

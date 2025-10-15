@@ -1,3 +1,4 @@
+// hooks/useDateFormatter.js
 import { useState, useEffect } from 'react';
 import { dateService } from '../utils/dateService';
 
@@ -8,6 +9,7 @@ export const useDateFormatter = () => {
 
   useEffect(() => {
     const handleCalendarChange = () => {
+      console.log('Calendar changed to:', dateService.getCurrentCalendar());
       setCurrentCalendar(dateService.getCurrentCalendar());
     };
 
@@ -16,23 +18,40 @@ export const useDateFormatter = () => {
       window.removeEventListener('calendarChanged', handleCalendarChange);
   }, []);
 
-  const formatDate = (date, format = 'default') => {
-    return dateService.formatDate(date, format);
+  const formatDisplay = (date, options = {}) => {
+    return dateService.formatDisplay(date, options);
   };
 
-  const formatForBackend = (date) => {
-    return dateService.formatForBackend(date);
+  const formatInput = (date) => {
+    return dateService.formatInput(date);
   };
 
-  const formatForDisplay = (backendDate) => {
-    return dateService.formatForDisplay(backendDate);
+  const parseInput = (inputValue) => {
+    return dateService.parseInput(inputValue);
+  };
+
+  const validateDate = (dateValue) => {
+    return dateService.validateDate(dateValue);
+  };
+
+  const isValidPersianDate = (dateString) => {
+    return dateService.isValidPersianDate(dateString);
+  };
+
+  const setCalendar = (calendarType) => {
+    console.log('Setting calendar to:', calendarType);
+    dateService.setCalendar(calendarType);
+    setCurrentCalendar(calendarType);
+    window.dispatchEvent(new Event('calendarChanged'));
   };
 
   return {
     currentCalendar,
-    formatDate,
-    formatForBackend,
-    formatForDisplay,
-    setCalendar: dateService.setCalendar.bind(dateService),
+    formatDisplay,
+    formatInput,
+    parseInput,
+    validateDate,
+    isValidPersianDate,
+    setCalendar,
   };
 };

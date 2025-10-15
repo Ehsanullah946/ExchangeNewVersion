@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Select from 'react-select';
 import {
   BsListCheck,
@@ -15,6 +15,9 @@ import { useCreateDeposit } from '../../../hooks/useDeposit';
 import { useAccount, useAccountSummary } from '../../../hooks/useAccount';
 import { formatNumber } from '../../../utils/formatNumber';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
+import PersianDatePicker from '../../../components/common/PersianDatePicker';
+import DateInput from '../../../components/common/DateInput';
+import AfghanDatePicker from '../../../components/common/AfghanDatePicker';
 
 const Deposit = () => {
   const { t } = useTranslation();
@@ -30,8 +33,13 @@ const Deposit = () => {
     description: '',
     accountNo: '',
     employeeId: '',
-    DWData: new Date().toISOString().split('T')[0],
+    DWDate: '',
   });
+
+  useEffect(() => {
+    const today = new Date().toISOString().split('T')[0];
+    setForm((prev) => ({ ...prev, date: today }));
+  }, []);
 
   const { data: accountResponse } = useAccount();
   console.log('Account Response:', accountResponse);
@@ -238,21 +246,33 @@ const Deposit = () => {
                       </div>
                     </div>
 
-                    {/* Date Input */}
-                    <div className="group">
-                      <label className="block text-sm font-semibold text-gray-700 mb-1 ml-1">
-                        {t('Date')}
-                      </label>
-                      <input
-                        name="DWData"
-                        type={currentCalendar === 'persian' ? 'text' : 'date'}
-                        value={form.DWData}
-                        onChange={handleDateChange}
-                        className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
-                        required
-                      />
-                      Current calendar: {currentCalendar}
-                    </div>
+                    {currentCalendar === 'persian' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          {t('Date')} (هجری شمسی) - با تقویم
+                        </label>
+                        <AfghanDatePicker
+                          name="DWDate"
+                          value={form.DWDate}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                    )}
+
+                    {currentCalendar === 'gregorian' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          {t('Date')}
+                        </label>
+                        <DateInput
+                          name="DWDate"
+                          value={form.DWDate}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                    )}
 
                     {/* Description Textarea */}
                     <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">

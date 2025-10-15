@@ -31,8 +31,11 @@ import {
   useDeposit,
 } from '../../../hooks/useDeposit';
 import { formatNumber } from '../../../utils/formatNumber';
+import { useDateFormatter } from '../../../hooks/useDateFormatter';
 const DepositList = () => {
   const { t } = useTranslation();
+
+  const { formatDisplay } = useDateFormatter();
 
   const { open, search, limit, page, debouncedSearch } = useSelector(
     (state) => state.filters
@@ -266,10 +269,7 @@ const DepositList = () => {
                             <td className="px-2 py-1">
                               <div className="flex flex-col">
                                 <span className="font-semibold text-gray-800">
-                                  {new Date(c.DWDate).toLocaleDateString()}
-                                </span>
-                                <span className="text-sm text-gray-500">
-                                  {new Date(c.DWDate).toLocaleTimeString()}
+                                  {formatDisplay(c.DWDate, { showTime: true })}
                                 </span>
                               </div>
                             </td>

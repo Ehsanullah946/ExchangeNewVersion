@@ -1,8 +1,7 @@
 // components/DateInput.jsx
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDateFormatter } from '../../hooks/useDateFormatter';
 import { useTranslation } from 'react-i18next';
-import { dateService } from '../../utils/dateService';
 
 const DateInput = ({
   value,
@@ -12,80 +11,108 @@ const DateInput = ({
   disabled = false,
 }) => {
   const { t } = useTranslation();
-  const { currentCalendar, formatForBackend, formatForDisplay } =
-    useDateFormatter();
+  const {
+    currentCalendar,
+    formatInput,
+    parseInput,
+    isValidPersianDate,
+    validateDate,
+  } = useDateFormatter();
+
   const [displayValue, setDisplayValue] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
-  const inputRef = useRef(null);
+  const [error, setError] = useState('');
+  const [isTouched, setIsTouched] = useState(false);
 
   // Initialize display value
   useEffect(() => {
+    console.log(
+      'DateInput - Initializing with value:',
+      value,
+      'calendar:',
+      currentCalendar
+    );
     if (value) {
-      const formatted = formatForDisplay(value);
+      const formatted = formatInput(value);
+      console.log('DateInput - Formatted value:', formatted);
       setDisplayValue(formatted);
     } else {
       setDisplayValue('');
     }
-  }, [value, currentCalendar, formatForDisplay]);
+  }, [value, currentCalendar, formatInput]);
 
   const handleFocus = () => {
-    setIsFocused(true);
-    // For Persian calendar, show placeholder in focus
-    if (currentCalendar === 'persian' && !displayValue) {
-      setDisplayValue('۱۴۰۳/۰۱/۰۱'); // Example format
-    }
+    setIsTouched(true);
   };
 
   const handleBlur = () => {
-    setIsFocused(false);
+    setIsTouched(true);
 
-    if (currentCalendar === 'persian') {
-      // Validate and convert Persian date
-      if (displayValue && dateService.isValidPersianDate(displayValue)) {
-        const gregorianDate = dateService.persianToGregorian(displayValue);
+    if (!displayValue) {
+      if (required) {
+        setError(t('dateRequired'));
+      }
+      return;
+    }
+
+    // Validate the date
+    const validation = validateDate(displayValue);
+    if (!validation.isValid) {
+      setError(validation.error);
+      return;
+    }
+
+    setError('');
+
+    // Convert to Gregorian for backend
+    try {
+      const gregorianDate = parseInput(displayValue);
+      console.log('DateInput - Converted to Gregorian:', gregorianDate);
+
+      if (gregorianDate) {
         onChange({ target: { name, value: gregorianDate } });
-      } else if (
-        displayValue &&
-        !dateService.isValidPersianDate(displayValue)
-      ) {
-        // Invalid date, revert to previous value or clear
-        setDisplayValue(value ? formatForDisplay(value) : '');
       }
-    } else {
-      // Gregorian - browser handles validation
-      if (displayValue) {
-        onChange({ target: { name, value: displayValue } });
-      }
+    } catch (error) {
+      console.error('DateInput - Conversion error:', error);
+      setError(t('dateConversionError'));
     }
   };
 
   const handleChange = (e) => {
     const newValue = e.target.value;
+    console.log('DateInput - Raw input:', newValue);
     setDisplayValue(newValue);
 
-    // For Gregorian calendar, update immediately
-    if (currentCalendar === 'gregorian') {
-      onChange({ target: { name, value: newValue } });
+    // Clear error when user starts typing
+    if (error) {
+      setError('');
+    }
+
+    // For Gregorian calendar with native date input, update immediately
+    if (currentCalendar === 'gregorian' && e.target.type === 'date') {
+      const validation = validateDate(newValue);
+      if (validation.isValid) {
+        onChange({ target: { name, value: newValue } });
+      }
     }
   };
 
   const getPlaceholder = () => {
-    if (currentCalendar === 'persian') {
-      return '۱۴۰۳/۰۱/۰۱'; // Example: 1403/01/01
-    } else {
-      return 'YYYY-MM-DD';
-    }
+    return currentCalendar === 'persian' ? '۱۴۰۳/۰۱/۰۱' : 'YYYY-MM-DD';
   };
 
   const getInputType = () => {
     return currentCalendar === 'persian' ? 'text' : 'date';
   };
 
+  const getInputMode = () => {
+    return currentCalendar === 'persian' ? 'numeric' : 'none';
+  };
+
   return (
     <div className="relative">
       <input
-        ref={inputRef}
         type={getInputType()}
+        inputMode={getInputMode()}
         value={displayValue}
         onChange={handleChange}
         onFocus={handleFocus}
@@ -93,25 +120,46 @@ const DateInput = ({
         placeholder={getPlaceholder()}
         required={required}
         disabled={disabled}
-        className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+        max={
+          currentCalendar === 'gregorian'
+            ? new Date().toISOString().split('T')[0]
+            : undefined
+        }
+        className={`w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
+          error ? 'border-red-500 bg-red-50' : 'border-gray-300'
+        } ${currentCalendar === 'persian' ? 'text-right' : 'text-left'}`}
         dir={currentCalendar === 'persian' ? 'rtl' : 'ltr'}
       />
 
-      {/* Help text for Persian date format */}
-      {currentCalendar === 'persian' && !isFocused && !displayValue && (
-        <div className="absolute top-full left-0 mt-1 text-xs text-gray-500">
+      {/* Debug info - remove in production */}
+      <div className="text-xs text-gray-400 mt-1">
+        Debug: {currentCalendar} - Display: {displayValue} - Stored: {value}
+      </div>
+
+      {/* Help text */}
+      {currentCalendar === 'persian' && !error && (
+        <div className="text-xs text-gray-500 mt-1">
           {t('persianDateFormat')}
         </div>
       )}
 
-      {/* Validation error */}
-      {currentCalendar === 'persian' &&
-        displayValue &&
-        !dateService.isValidPersianDate(displayValue) && (
-          <div className="absolute top-full left-0 mt-1 text-xs text-red-500">
-            {t('invalidPersianDate')}
-          </div>
-        )}
+      {/* Error message */}
+      {error && (
+        <div className="text-xs text-red-500 mt-1 flex items-center gap-1">
+          <svg
+            className="w-3 h-3 flex-shrink-0"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fillRule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+              clipRule="evenodd"
+            />
+          </svg>
+          {t(error)}
+        </div>
+      )}
     </div>
   );
 };
