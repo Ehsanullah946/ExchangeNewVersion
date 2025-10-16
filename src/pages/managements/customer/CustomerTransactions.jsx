@@ -6,19 +6,18 @@ import { Link } from 'react-router-dom';
 import { ImMinus } from 'react-icons/im';
 import { RiAddBoxFill } from 'react-icons/ri';
 import { BsPrinter, BsSearch, BsShare } from 'react-icons/bs';
-import { setPage, toggleOpen } from '../../../features/ui/filterSlice';
+import { setPage } from '../../../features/ui/filterSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   useAllTransaction,
   useCustomerDetails,
-  useSingleCustomer,
+  useLiquidateCustomer,
 } from '../../../hooks/useCustomers';
 import { formatNumber } from '../../../utils/formatNumber';
 
 const CustomerTransactions = () => {
   const { customerId } = useParams();
   const { t } = useTranslation();
-  const location = useLocation();
 
   const { open, limit, page } = useSelector((state) => state.filters);
   const dispatch = useDispatch();
@@ -33,6 +32,43 @@ const CustomerTransactions = () => {
 
   const customerTransaction = data?.data || [];
   const total = data?.total || 0;
+
+  const [showLiquidateModal, setShowLiquidateModal] = useState(false);
+  const [showLiquidations, setShowLiquidations] = useState(false);
+
+  const [liquidateData, setLiquidateData] = useState({
+    startDate: '',
+    endDate: new Date().toISOString().split('T')[0], // Today as default end date
+    closeAccounts: false,
+    description: '',
+  });
+
+  const { mutate: liquidateCustomer, isLoading: isLiquidating } =
+    useLiquidateCustomer();
+
+  const handleLiquidate = () => {
+    liquidateCustomer(
+      { customerId, ...liquidateData },
+      {
+        onSuccess: (data) => {
+          setShowLiquidateModal(false);
+          // Show success message or download report
+          console.log('Liquidation successful:', data);
+          // You can trigger download or show report here
+        },
+        onError: (error) => {
+          console.error('Liquidation failed:', error);
+        },
+      }
+    );
+  };
+
+  const handleDateChange = (field, value) => {
+    setLiquidateData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   // Add validation
   useEffect(() => {
@@ -133,7 +169,10 @@ const CustomerTransactions = () => {
               <span>{t('Filter')}</span>
             </button>
 
-            <button className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm">
+            <button
+              onClick={() => setShowLiquidateModal(true)}
+              className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm"
+            >
               <svg
                 className="w-4 h-4"
                 fill="none"
@@ -149,7 +188,25 @@ const CustomerTransactions = () => {
               </svg>
               <span>{t('Liquidate')}</span>
             </button>
-
+            <button
+              onClick={() => setShowLiquidations(true)}
+              className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                />
+              </svg>
+              <span>{t('View Liquidations')}</span>
+            </button>
             <button className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gray-600 to-slate-700 hover:from-gray-700 hover:to-slate-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm">
               <BsPrinter className="text-base" />
               <span>{t('Print')}</span>
@@ -728,6 +785,176 @@ const CustomerTransactions = () => {
               )}
             </>
           )}
+
+          {showLiquidateModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">
+                    {t('Liquidate Customer Accounts')}
+                  </h3>
+
+                  <div className="space-y-4">
+                    {/* Date Range */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          {t('Start Date')}
+                        </label>
+                        <input
+                          type="date"
+                          value={liquidateData.startDate}
+                          onChange={(e) =>
+                            handleDateChange('startDate', e.target.value)
+                          }
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          {t('End Date')}
+                        </label>
+                        <input
+                          type="date"
+                          value={liquidateData.endDate}
+                          onChange={(e) =>
+                            handleDateChange('endDate', e.target.value)
+                          }
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Close Accounts Toggle */}
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="checkbox"
+                        id="closeAccounts"
+                        checked={liquidateData.closeAccounts}
+                        onChange={(e) =>
+                          handleDateChange('closeAccounts', e.target.checked)
+                        }
+                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <label
+                        htmlFor="closeAccounts"
+                        className="text-sm text-gray-700"
+                      >
+                        {t('Close all accounts after liquidation')}
+                      </label>
+                    </div>
+
+                    {/* Description */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        {t('Description (Optional)')}
+                      </label>
+                      <textarea
+                        value={liquidateData.description}
+                        onChange={(e) =>
+                          handleDateChange('description', e.target.value)
+                        }
+                        placeholder={t('Add notes about this liquidation...')}
+                        rows="3"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-3 mt-6">
+                    <button
+                      onClick={() => setShowLiquidateModal(false)}
+                      className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors"
+                    >
+                      {t('Cancel')}
+                    </button>
+                    <button
+                      onClick={handleLiquidate}
+                      disabled={
+                        !liquidateData.startDate ||
+                        !liquidateData.endDate ||
+                        isLiquidating
+                      }
+                      className="flex-1 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isLiquidating
+                        ? t('Processing...')
+                        : t('Generate Report')}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {/* {showLiquidations && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+                <div className="p-6 border-b border-gray-200">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    {t('Liquidation History')}
+                  </h3>
+                  <p className="text-gray-600 mt-1">
+                    {t('Manage liquidated periods for this customer')}
+                  </p>
+                </div>
+
+                <div className="p-6 overflow-y-auto max-h-[60vh]">
+                  {liquidationsData?.data?.map((liquidation) => (
+                    <div
+                      key={liquidation.id}
+                      className="bg-gray-50 rounded-lg p-4 mb-3 border border-gray-200"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-semibold text-gray-800">
+                            {new Date(
+                              liquidation.startDate
+                            ).toLocaleDateString()}{' '}
+                            -{' '}
+                            {new Date(liquidation.endDate).toLocaleDateString()}
+                          </p>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {liquidation.description}
+                          </p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {liquidation.transactionCount} transactions •{' '}
+                            {liquidation.closedAccounts
+                              ? 'Accounts Closed'
+                              : 'Accounts Active'}
+                          </p>
+                        </div>
+                        <button
+                          onClick={() =>
+                            handleDeleteLiquidation(liquidation.id)
+                          }
+                          className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded-lg transition-colors"
+                        >
+                          {t('Delete')}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
+                  {(!liquidationsData?.data ||
+                    liquidationsData.data.length === 0) && (
+                    <p className="text-gray-500 text-center py-8">
+                      {t('No liquidation records found')}
+                    </p>
+                  )}
+                </div>
+
+                <div className="p-6 border-t border-gray-200">
+                  <button
+                    onClick={() => setShowLiquidations(false)}
+                    className="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors"
+                  >
+                    {t('Close')}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )} */}
         </div>
       </div>
     </div>

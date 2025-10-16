@@ -1,4 +1,3 @@
-// hooks/useDateFormatter.js
 import { useState, useEffect } from 'react';
 import { dateService } from '../utils/dateService';
 

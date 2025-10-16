@@ -12,7 +12,7 @@ import {
   MdOutlineLightMode,
   MdOutlineDarkMode,
 } from 'react-icons/md';
-import avatar from '../../data/admin.jpg';
+// import avatar from '../../data/admin.jpg';
 import { useLogout } from '../../hooks/useAuth.js';
 import { useSelector } from 'react-redux';
 import NotificationPanel from './NotificationPanel.jsx';
@@ -167,7 +167,7 @@ const Navbar = () => {
           >
             <div className="relative">
               <img
-                src={avatar}
+                src=""
                 alt="Profile"
                 className="rounded-2xl h-10 w-10 border-1 border-white shadow-md transition-transform duration-300 group-hover:scale-105"
               />
@@ -195,7 +195,7 @@ const Navbar = () => {
               <div className="px-4 py-3 border-b border-gray-200/60">
                 <div className="flex items-center gap-3">
                   <img
-                    src={avatar}
+                    src=""
                     alt="Profile"
                     className="rounded-xl h-12 w-12 border-2 border-white shadow-sm"
                   />

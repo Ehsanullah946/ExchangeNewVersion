@@ -1,10 +1,8 @@
-// components/AfghanDatePicker.jsx
 import React, { useState } from 'react';
 import DatePicker from 'react-multi-date-picker';
 import persian from 'react-date-object/calendars/persian';
 import { useTranslation } from 'react-i18next';
 
-// Fixed Afghan Dari locale configuration
 const afghanDariLocale = {
   name: 'afghan-dari',
   months: [
@@ -80,22 +78,24 @@ const AfghanDatePicker = ({ value, onChange, name, required = false }) => {
   };
 
   return (
-    <div className="afghan-date-picker" dir="rtl">
+    <div
+      className="afghan-date-picker flex  gap-6 flex-wrap md:flex-nowrap justify-between "
+      dir="rtl"
+    >
       <DatePicker
         value={selectedDate}
         onChange={handleDateChange}
         calendar={persian}
         locale={afghanDariLocale}
         calendarPosition="bottom-right"
-        inputClass="w-full border border-gray-300 rounded-lg px-3 py-2 text-right focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        inputClass="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
         containerClassName="w-full"
         placeholder={t('selectDate') || 'انتخاب تاریخ'}
         required={required}
-        format="YYYY/MM/DD"
+        format="YYYY-MM-DD hh:mm:ss"
         showOtherDays
         digits={['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']}
         zIndex={1000}
-        // Add weekDays display format to prevent corruption
         weekDays={['ش', 'ی', 'د', 'س', 'چ', 'پ', 'ج']}
       />
     </div>

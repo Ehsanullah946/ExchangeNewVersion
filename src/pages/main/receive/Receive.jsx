@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import Select from 'react-select';
+import Select from '../../../components/common/LazySelect';
 import { BiChevronDown } from 'react-icons/bi';
-import Button from '../../../components/layout/Button';
 import { BsSearch } from 'react-icons/bs';
 import { BsListCheck } from 'react-icons/bs';
 import { BsPrinter } from 'react-icons/bs';
@@ -13,13 +12,17 @@ import { useCreateReceive } from '../../../hooks/useReceive';
 import { useMoneyType } from '../../../hooks/useMoneyType';
 import { useCustomers } from '../../../hooks/useCustomers';
 import { useBranch } from '../../../hooks/useBranch';
+import { useDateFormatter } from '../../../hooks/useDateFormatter';
+import AfghanDatePicker from '../../../components/common/AfghanDatePicker';
+import DateInput from '../../../components/common/DateInput';
 const Receive = () => {
-  const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
 
   const navigate = useNavigate();
   const toast = useToast();
   const { mutate, isLoading } = useCreateReceive();
+
+  const { currentCalendar } = useDateFormatter();
 
   const { data: moneyTypeResponse } = useMoneyType();
 
@@ -381,18 +384,6 @@ const Receive = () => {
                 </div>
               </div>
               <div className="w-full space-y-1">
-                <div className="flex gap-4 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('Date')}:</label>
-                  <input
-                    type="date"
-                    name="rDate"
-                    value={form.rDate}
-                    onChange={handleChange}
-                    className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
-                    required
-                  />
-                </div>
-
                 <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('Customer')}:</label>
                   <Select
@@ -441,6 +432,33 @@ const Receive = () => {
                     placeholder="more...."
                   />
                 </div>
+
+                {currentCalendar === 'persian' && (
+                  <div className="flex w-full flex-wrap md:flex-nowrap justify-between">
+                    <label className="sm:w-32">{t('Date')}</label>
+                    <AfghanDatePicker
+                      name="rDate"
+                      value={form.rDate}
+                      onChange={handleChange}
+                      required
+                      className="border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
+                    />
+                  </div>
+                )}
+
+                {currentCalendar === 'gregorian' && (
+                  <div className="flex  gap-6 flex-wrap md:flex-nowrap justify-between">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {t('Date')}
+                    </label>
+                    <DateInput
+                      name="rDate"
+                      value={form.rDate}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                )}
                 <div>
                   <input
                     type="checkbox"

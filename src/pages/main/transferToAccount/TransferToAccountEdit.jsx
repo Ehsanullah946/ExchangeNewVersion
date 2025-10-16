@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '../../../hooks/useToast';
 import { MdCompareArrows } from 'react-icons/md';
-import Select from 'react-select';
+import Select from '../../../components/common/LazySelect';
 import {
   useSingleTransferToAccount,
   useUpdateTransferToAccount,

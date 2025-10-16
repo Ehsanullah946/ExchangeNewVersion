@@ -26,8 +26,10 @@ import {
 } from '../../../features/ui/filterSlice';
 import { useDeleteTransfer, useTransfer } from '../../../hooks/useTransfer';
 import { formatNumber } from '../../../utils/formatNumber';
+import { useDateFormatter } from '../../../hooks/useDateFormatter';
 const TransferList = () => {
   const { t } = useTranslation();
+  const { formatDisplay } = useDateFormatter();
 
   const { open, search, limit, page, debouncedSearch } = useSelector(
     (state) => state.filters

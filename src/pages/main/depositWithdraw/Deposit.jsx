@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Select from 'react-select';
+import Select from '../../../components/common/LazySelect';
 import {
   BsListCheck,
   BsPrinter,
@@ -15,7 +15,6 @@ import { useCreateDeposit } from '../../../hooks/useDeposit';
 import { useAccount, useAccountSummary } from '../../../hooks/useAccount';
 import { formatNumber } from '../../../utils/formatNumber';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
-import PersianDatePicker from '../../../components/common/PersianDatePicker';
 import DateInput from '../../../components/common/DateInput';
 import AfghanDatePicker from '../../../components/common/AfghanDatePicker';
 
@@ -33,13 +32,8 @@ const Deposit = () => {
     description: '',
     accountNo: '',
     employeeId: '',
-    DWDate: '',
+    DWDate: new Date().toISOString().split('T')[0],
   });
-
-  useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    setForm((prev) => ({ ...prev, date: today }));
-  }, []);
 
   const { data: accountResponse } = useAccount();
   console.log('Account Response:', accountResponse);
@@ -275,6 +269,20 @@ const Deposit = () => {
                     )}
 
                     {/* Description Textarea */}
+
+                    <div className="group">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {t('Description')}:
+                      </label>
+                      <textarea
+                        rows="4"
+                        value={form.description}
+                        onChange={handleChange}
+                        name="description"
+                        className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                        placeholder="more...."
+                      />
+                    </div>
                     <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
                       <button
                         onClick={handleSubmit}

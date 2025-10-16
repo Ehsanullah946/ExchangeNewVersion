@@ -38,6 +38,14 @@ export const getCustomerAccount = async (customerId) => {
   return data;
 };
 
+export const liquidateCustomer = async (customerId, liquidateData) => {
+  const { data } = await axiosClient.post(
+    `/customer/${customerId}/liquidate`,
+    liquidateData
+  );
+  return data;
+};
+
 export const getCustomerDetails = async (customerId) => {
   const { data } = await axiosClient.get(`/customer/${customerId}`);
   return data;

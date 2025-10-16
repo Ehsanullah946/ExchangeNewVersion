@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
-import { useStateContext } from '../../../context/contextProvider';
-import Select from 'react-select';
-import Button from '../../../components/layout/Button';
+import Select from '../../../components/common/LazySelect';
 import { BsListCheck, BsPhone, BsPrinter, BsSearch } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
-import { RiAccountBox2Fill } from 'react-icons/ri';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
-import { useCreateCustomer } from '../../../hooks/useCustomers';
 import { useToast } from '../../../hooks/useToast';
 import { useCreateExchanger } from '../../../hooks/useExchanger';
 const ExchangerAdd = () => {

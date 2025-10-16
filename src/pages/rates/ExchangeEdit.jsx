@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Select from 'react-select';
+import Select from '../../components/common/LazySelect';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../hooks/useToast';
 import { useSingleExchange, useUpdateExchange } from '../../hooks/useExchange';

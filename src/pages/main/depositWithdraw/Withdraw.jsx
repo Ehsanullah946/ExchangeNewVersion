@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import Select from 'react-select';
+import React, { useEffect, useState } from 'react';
+import Select from '../../../components/common/LazySelect';
 import {
   BsCurrencyDollar,
   BsListCheck,
@@ -16,6 +16,7 @@ import { useAccount, useAccountSummary } from '../../../hooks/useAccount';
 import { formatNumber } from '../../../utils/formatNumber';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
 import DateInput from '../../../components/common/DateInput';
+import AfghanDatePicker from '../../../components/common/AfghanDatePicker';
 const Withdraw = () => {
   const { t } = useTranslation();
 
@@ -30,7 +31,7 @@ const Withdraw = () => {
     description: '',
     accountNo: '',
     employeeId: '',
-    DWData: new Date().toISOString().split('T')[0],
+    DWDate: new Date().toISOString().split('T')[0],
   });
 
   const { data: accountResponse } = useAccount();
@@ -39,8 +40,6 @@ const Withdraw = () => {
 
   const { data: accountSummary, isLoading: summaryLoading } =
     useAccountSummary(selectedAccountId);
-
-  console.log(accountSummary);
 
   const accountOptions = (accountResponse?.data || []).map((c) => ({
     value: c.No,
@@ -238,21 +237,48 @@ const Withdraw = () => {
                     </div>
 
                     {/* Date Input */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        {t('Date')} (
-                        {currentCalendar === 'persian' ? 'هجری شمسی' : 'میلادی'}
-                        )
-                      </label>
-                      <DateInput
-                        name="DWData"
-                        value={form.DWData}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
+                    {currentCalendar === 'persian' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          {t('Date')} (هجری شمسی) - با تقویم
+                        </label>
+                        <AfghanDatePicker
+                          name="DWDate"
+                          value={form.DWDate}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                    )}
+
+                    {currentCalendar === 'gregorian' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          {t('Date')}
+                        </label>
+                        <DateInput
+                          name="DWDate"
+                          value={form.DWDate}
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+                    )}
 
                     {/* Description Textarea */}
+                    <div className="group">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {t('Description')}:
+                      </label>
+                      <textarea
+                        rows="4"
+                        value={form.description}
+                        onChange={handleChange}
+                        name="description"
+                        className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
+                        placeholder="more...."
+                      />
+                    </div>
                     <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
                       <button
                         onClick={handleSubmit}

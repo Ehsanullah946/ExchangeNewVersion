@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Select from 'react-select';
-import Button from '../../../components/layout/Button';
+import Select from '../../../components/common/LazySelect';
 import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
 import { MdCompareArrows } from 'react-icons/md';
@@ -9,7 +8,6 @@ import { useToast } from '../../../hooks/useToast';
 import { useCreateTransferToAccount } from '../../../hooks/useTransferToAccount';
 import { useAccount } from '../../../hooks/useAccount';
 const TransferToAccount = () => {
-  const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
 
   const toast = useToast();

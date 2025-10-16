@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import Select from 'react-select';
+import Select from '../../../components/common/LazySelect';
 import { BiChevronDown } from 'react-icons/bi';
-import Button from '../../../components/layout/Button';
 import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
 import { RiSendPlaneLine } from 'react-icons/ri';
@@ -11,12 +10,17 @@ import { useMoneyType } from '../../../hooks/useMoneyType';
 import { useToast } from '../../../hooks/useToast';
 import { useBranch } from '../../../hooks/useBranch';
 import { useCreateTransfer } from '../../../hooks/useTransfer';
+import { useDateFormatter } from '../../../hooks/useDateFormatter';
+import AfghanDatePicker from '../../../components/common/AfghanDatePicker';
+import DateInput from '../../../components/common/DateInput';
 const Transfer = () => {
   const { t } = useTranslation();
 
   const navigate = useNavigate();
   const toast = useToast();
   const { mutate, isLoading } = useCreateTransfer();
+
+  const { currentCalendar } = useDateFormatter();
 
   const { data: moneyTypeResponse } = useMoneyType();
 
@@ -375,19 +379,7 @@ const Transfer = () => {
                 </div>
               </div>
 
-              <div className="w-full  space-y-1 p-2">
-                <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
-                  <label className="sm:w-32">{t('Date')}:</label>
-                  <input
-                    type="date"
-                    name="tDate"
-                    value={form.tDate}
-                    onChange={handleChange}
-                    className="w-full border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1"
-                    required
-                  />
-                </div>
-
+              <div className="w-full  space-y-1 p-2 ">
                 <div className="flex gap-5 flex-wrap md:flex-nowrap justify-between ">
                   <label className="sm:w-32">{t('Customer')}:</label>
                   <Select
@@ -425,6 +417,33 @@ const Transfer = () => {
                     placeholder="more...."
                   />
                 </div>
+
+                {currentCalendar === 'persian' && (
+                  <div className="flex w-full flex-wrap md:flex-nowrap justify-between">
+                    <label className="sm:w-32">{t('Date')}</label>
+                    <AfghanDatePicker
+                      name="tDate"
+                      value={form.tDate}
+                      onChange={handleChange}
+                      required
+                      className="border border-gray-300 shadow-sm text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1"
+                    />
+                  </div>
+                )}
+
+                {currentCalendar === 'gregorian' && (
+                  <div className="flex  gap-6 flex-wrap md:flex-nowrap justify-between">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      {t('Date')}
+                    </label>
+                    <DateInput
+                      name="tDate"
+                      value={form.tDate}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                )}
               </div>
               <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
                 <button

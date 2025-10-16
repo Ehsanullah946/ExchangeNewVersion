@@ -58,7 +58,7 @@ const SideBar = ({ children }) => {
       opacity: 1,
       width: 'auto',
       transition: {
-        duration: 0.3,
+        duration: 0.1,
       },
     },
   };
@@ -87,7 +87,7 @@ const SideBar = ({ children }) => {
             ? '0'
             : '60px',
           transition: {
-            duration: 0.2,
+            duration: 0.1,
             type: 'spring',
             damping: 15,
           },

@@ -1,5 +1,8 @@
 // utils/dateService.js
 import moment from 'moment-jalaali';
+// import moment from 'dayjs';
+// // import jalali from 'dayjs/plugin/jalali';
+// import 'dayjs/locale/fa';
 
 const afghanMonths = [
   'حمل',
@@ -76,7 +79,8 @@ export class DateService {
     try {
       const dateObj = moment(date);
       if (showTime) {
-        return dateObj.format('YYYY-MM-DD HH:mm:ss');
+        // Change from 24-hour to 12-hour format
+        return dateObj.format('YYYY-MM-DD hh:mm:ss A'); // hh for 12-hour, A for AM/PM
       } else {
         return dateObj.format('YYYY-MM-DD');
       }
@@ -90,11 +94,13 @@ export class DateService {
     try {
       const dateObj = moment(date);
       const year = dateObj.jYear();
-      const month = afghanMonths[dateObj.jMonth()]; // Use Afghan months
+      const month = afghanMonths[dateObj.jMonth()];
       const day = dateObj.jDate();
 
       if (showTime) {
-        return `${day} ${month} ${year} ${dateObj.format('HH:mm:ss')}`;
+        // Persian date with 12-hour time
+        const time12Hour = dateObj.format('hh:mm:ss A');
+        return `${day} ${month} ${year} ${time12Hour}`;
       } else {
         return `${day} ${month} ${year}`;
       }
@@ -103,7 +109,6 @@ export class DateService {
       return this.formatGregorianDate(date, showTime);
     }
   }
-
   // Format for input field (always returns string in current calendar format)
   formatInput(date) {
     if (!date) return '';
@@ -114,7 +119,7 @@ export class DateService {
       } else {
         // For Gregorian input (HTML date input expects YYYY-MM-DD)
         const dateObj = moment(date);
-        return dateObj.format('YYYY-MM-DD');
+        return dateObj.format('YYYY-MM-DD hh:mm:ss A');
       }
     } catch (error) {
       console.error('Error formatting input:', error);

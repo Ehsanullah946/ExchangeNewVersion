@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Select from 'react-select';
+import Select from '../../components/common/LazySelect';
 import { BiChevronDown } from 'react-icons/bi';
 import Button from '../../components/layout/Button';
 import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';

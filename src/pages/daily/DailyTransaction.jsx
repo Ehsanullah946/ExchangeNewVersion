@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { useStateContext } from '../../context/contextProvider';
-import Select from 'react-select';
-import Button from '../../components/layout/Button';
+import Select from '../../components/common/LazySelect';
 import { BsListCheck, BsPrinter, BsSearch } from 'react-icons/bs';
 import { useTranslation } from 'react-i18next';
 import { MdToday } from 'react-icons/md';
@@ -9,7 +7,6 @@ import { BiChevronDown } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 
 const DailyTransaction = () => {
-  const { currentColor } = useStateContext();
   const [isActive, setIsActive] = useState(false);
   const { t } = useTranslation();
   return (

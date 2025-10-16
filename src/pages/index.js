@@ -1,66 +1,129 @@
-export { default as Dashboard } from './Dashboard';
-export { default as Daily } from './Daily';
-export { default as Management } from './Management';
-export { default as Rates } from './Rates';
-export { default as Settings } from './Settings';
-export { default as Main } from './Main';
+// lazyComponents.js - Lazy load all components
+import { lazy } from 'react';
 
-export { default as Customers } from './managements/customer/Customers';
-export { default as CustomerEdit } from './managements/customer/CustomerEdit';
-export { default as Branches } from './managements/branch/Branches';
-export { default as BranchEdit } from './managements/branch/BranchEdit';
-export { default as EmployeeAdd } from './managements/employee/EmployeeAdd';
-export { default as EmployeeEdit } from './managements/employee/EmployeeEdit';
-export { default as EmployeeList } from './managements/employee/EmployeeList';
-export { default as ExchangerList } from './managements/exchanger/ExchangerList';
-export { default as ExchangerEdit } from './managements/exchanger/ExchangerEdit';
-export { default as ExchangerAdd } from './managements/exchanger/ExchangerAdd';
-export { default as SenderReceiverList } from './managements/senderReceiver/SenderReceiverList';
-export { default as SenderReceiverEdit } from './managements/senderReceiver/SenderReceiverEdit';
-export { default as SenderReceiverAdd } from './managements/senderReceiver/SenderReceiverAdd';
-export { default as CustomerAdd } from './managements/customer/CustomerAdd';
-export { default as CustomerTransactions } from './managements/customer/CustomerTransactions';
-export { default as AccountTransaction } from './account/AccountTransaction';
-export { default as BranchTransaction } from './managements/branch/BranchTransaction';
-export { default as BranchAdd } from './managements/branch/BranchAdd';
+// Layout components
+export const Dashboard = lazy(() => import('./Dashboard'));
+export const Daily = lazy(() => import('./Daily'));
+export const Management = lazy(() => import('./Management'));
+export const Rates = lazy(() => import('./Rates'));
+export const Settings = lazy(() => import('./Settings'));
+export const Main = lazy(() => import('./Main'));
 
-/// main route
-export { default as Receive } from './main/receive/Receive';
-export { default as ReceiveEdit } from './main/receive/ReceiveEdit';
-export { default as ReceiveList } from './main/receive/ReceiveList';
-export { default as Transfer } from './main/transfer/Transfer';
-export { default as TransferEdit } from './main/transfer/TransferEdit';
-export { default as TransferList } from './main/transfer/TransferList';
-export { default as Deposit } from './main/depositWithdraw/Deposit';
-export { default as DepositList } from './main/depositWithdraw/DepositList';
-export { default as DepositEdit } from './main/depositWithdraw/DepositEdit';
-export { default as Withdraw } from './main/depositWithdraw/Withdraw';
-export { default as WithdrawEdit } from './main/depositWithdraw/WithdrawEdit';
-export { default as WithdrawList } from './main/depositWithdraw/WithdrawList';
-export { default as Consumption } from './main/consumption/Consumption';
-export { default as ConsumptionEdit } from './main/consumption/ConsumptionEdit';
-export { default as ConsumptionList } from './main/consumption/ConsumptionList';
-export { default as TransferToAccount } from './main/transferToAccount/TransferToAccount';
-export { default as TransferToAccountEdit } from './main/transferToAccount/TransferToAccountEdit';
-export { default as TransferToAccountList } from './main/transferToAccount/TransferToAccountList';
+// Management components
+export const Customers = lazy(() => import('./managements/customer/Customers'));
+export const CustomerEdit = lazy(() =>
+  import('./managements/customer/CustomerEdit')
+);
+export const CustomerAdd = lazy(() =>
+  import('./managements/customer/CustomerAdd')
+);
+export const CustomerTransactions = lazy(() =>
+  import('./managements/customer/CustomerTransactions')
+);
 
-//setting
-export { default as Languages } from './settings/Languages';
+export const Branches = lazy(() => import('./managements/branch/Branches'));
+export const BranchEdit = lazy(() => import('./managements/branch/BranchEdit'));
+export const BranchAdd = lazy(() => import('./managements/branch/BranchAdd'));
+export const BranchTransaction = lazy(() =>
+  import('./managements/branch/BranchTransaction')
+);
 
-export { default as Accounts } from './Accounts';
-export { default as Account } from './account/Account';
-export { default as AccountEdit } from './account/AccountEdit';
-export { default as AccountList } from './account/AccountList';
+export const EmployeeAdd = lazy(() =>
+  import('./managements/employee/EmployeeAdd')
+);
+export const EmployeeEdit = lazy(() =>
+  import('./managements/employee/EmployeeEdit')
+);
+export const EmployeeList = lazy(() =>
+  import('./managements/employee/EmployeeList')
+);
 
-//Daily
-export { default as DailyTransaction } from './daily/DailyTransaction';
-export { default as DailyTransactionList } from './daily/DailyTransactionList';
+export const ExchangerList = lazy(() =>
+  import('./managements/exchanger/ExchangerList')
+);
+export const ExchangerEdit = lazy(() =>
+  import('./managements/exchanger/ExchangerEdit')
+);
+export const ExchangerAdd = lazy(() =>
+  import('./managements/exchanger/ExchangerAdd')
+);
 
-//login
-export { default as Login } from './Login';
+export const SenderReceiverList = lazy(() =>
+  import('./managements/senderReceiver/SenderReceiverList')
+);
+export const SenderReceiverEdit = lazy(() =>
+  import('./managements/senderReceiver/SenderReceiverEdit')
+);
+export const SenderReceiverAdd = lazy(() =>
+  import('./managements/senderReceiver/SenderReceiverAdd')
+);
 
-// Rate
-export { default as Exchange } from './rates/Exchange';
-export { default as ExchangeList } from './rates/ExchangeList';
-export { default as ExchangeEdit } from './rates/ExchangeEdit';
-export { default as Rate } from './rates/Rate';
+// Account components
+export const AccountTransaction = lazy(() =>
+  import('./account/AccountTransaction')
+);
+export const Accounts = lazy(() => import('./Accounts'));
+export const Account = lazy(() => import('./account/Account'));
+export const AccountEdit = lazy(() => import('./account/AccountEdit'));
+export const AccountList = lazy(() => import('./account/AccountList'));
+
+// Main transaction components
+export const Receive = lazy(() => import('./main/receive/Receive'));
+export const ReceiveEdit = lazy(() => import('./main/receive/ReceiveEdit'));
+export const ReceiveList = lazy(() => import('./main/receive/ReceiveList'));
+
+export const Transfer = lazy(() => import('./main/transfer/Transfer'));
+export const TransferEdit = lazy(() => import('./main/transfer/TransferEdit'));
+export const TransferList = lazy(() => import('./main/transfer/TransferList'));
+
+export const Deposit = lazy(() => import('./main/depositWithdraw/Deposit'));
+export const DepositList = lazy(() =>
+  import('./main/depositWithdraw/DepositList')
+);
+export const DepositEdit = lazy(() =>
+  import('./main/depositWithdraw/DepositEdit')
+);
+
+export const Withdraw = lazy(() => import('./main/depositWithdraw/Withdraw'));
+export const WithdrawEdit = lazy(() =>
+  import('./main/depositWithdraw/WithdrawEdit')
+);
+export const WithdrawList = lazy(() =>
+  import('./main/depositWithdraw/WithdrawList')
+);
+
+export const Consumption = lazy(() => import('./main/consumption/Consumption'));
+export const ConsumptionEdit = lazy(() =>
+  import('./main/consumption/ConsumptionEdit')
+);
+export const ConsumptionList = lazy(() =>
+  import('./main/consumption/ConsumptionList')
+);
+
+export const TransferToAccount = lazy(() =>
+  import('./main/transferToAccount/TransferToAccount')
+);
+export const TransferToAccountEdit = lazy(() =>
+  import('./main/transferToAccount/TransferToAccountEdit')
+);
+export const TransferToAccountList = lazy(() =>
+  import('./main/transferToAccount/TransferToAccountList')
+);
+
+// Settings
+export const Languages = lazy(() => import('./settings/Languages'));
+
+// Daily
+export const DailyTransaction = lazy(() => import('./daily/DailyTransaction'));
+export const DailyTransactionList = lazy(() =>
+  import('./daily/DailyTransactionList')
+);
+
+// Login
+export const Login = lazy(() => import('./Login'));
+
+// Rates
+export const Exchange = lazy(() => import('./rates/Exchange'));
+export const ExchangeList = lazy(() => import('./rates/ExchangeList'));
+export const ExchangeEdit = lazy(() => import('./rates/ExchangeEdit'));
+export const Rate = lazy(() => import('./rates/Rate'));

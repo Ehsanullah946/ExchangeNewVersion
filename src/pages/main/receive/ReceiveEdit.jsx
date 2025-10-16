@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSingleReceive, useUpdateReceive } from '../../../hooks/useReceive';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import Select from 'react-select';
+import Select from '../../../components/common/LazySelect';
 import { useToast } from '../../../hooks/useToast';
 import { useMoneyType } from '../../../hooks/useMoneyType';
 import { useCustomers } from '../../../hooks/useCustomers';

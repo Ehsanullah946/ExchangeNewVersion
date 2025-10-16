@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Select from 'react-select';
+import Select from '../../components/common/LazySelect';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useCreateAccount } from '../../hooks/useAccount';
@@ -40,7 +40,7 @@ const Accounts = () => {
     deleted: false,
     moneyTypeId: '',
     customerId: '',
-    date: '', // <-- add date field
+    date: '',
   });
 
   const handleChange = (e) => {

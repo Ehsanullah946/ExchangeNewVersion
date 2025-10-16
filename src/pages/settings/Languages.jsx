@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import Button from '../../components/layout/Button';
 import DateInput from '../../components/common/DateInput';
 import CalendarSelector from '../../components/common/CalendarSelector';
-import CalendarTester from '../../components/common/CalendarTester';
 
 function Languages() {
   const { i18n } = useTranslation();
@@ -27,7 +26,6 @@ function Languages() {
       </Button>
       <DateInput />
       <CalendarSelector />
-      <CalendarTester />
     </div>
   );
 }

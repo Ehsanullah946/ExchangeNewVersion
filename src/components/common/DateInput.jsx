@@ -131,18 +131,6 @@ const DateInput = ({
         dir={currentCalendar === 'persian' ? 'rtl' : 'ltr'}
       />
 
-      {/* Debug info - remove in production */}
-      <div className="text-xs text-gray-400 mt-1">
-        Debug: {currentCalendar} - Display: {displayValue} - Stored: {value}
-      </div>
-
-      {/* Help text */}
-      {currentCalendar === 'persian' && !error && (
-        <div className="text-xs text-gray-500 mt-1">
-          {t('persianDateFormat')}
-        </div>
-      )}
-
       {/* Error message */}
       {error && (
         <div className="text-xs text-red-500 mt-1 flex items-center gap-1">

@@ -9,7 +9,7 @@ import Button from '../../components/layout/Button';
 import { useCustomers } from '../../hooks/useCustomers';
 import { RiAccountBox2Fill } from 'react-icons/ri';
 import { useMoneyType } from '../../hooks/useMoneyType';
-import Select from 'react-select';
+import Select from '../../components/common/LazySelect';
 
 const AccountEdit = () => {
   const { id } = useParams();

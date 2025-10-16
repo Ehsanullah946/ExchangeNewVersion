@@ -4,9 +4,7 @@ import {
   BsArrowDownLeft,
   BsPeople,
   BsCurrencyExchange,
-  BsGraphUp,
   BsWallet2,
-  BsClockHistory,
 } from 'react-icons/bs';
 import { FiDollarSign, FiTrendingUp, FiActivity } from 'react-icons/fi';
 import { useTranslation } from 'react-i18next';
