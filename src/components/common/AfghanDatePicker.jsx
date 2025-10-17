@@ -92,7 +92,7 @@ const AfghanDatePicker = ({ value, onChange, name, required = false }) => {
         containerClassName="w-full"
         placeholder={t('selectDate') || 'انتخاب تاریخ'}
         required={required}
-        format="YYYY-MM-DD hh:mm:ss"
+        format="YYYY-MM-DD"
         showOtherDays
         digits={['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹']}
         zIndex={1000}

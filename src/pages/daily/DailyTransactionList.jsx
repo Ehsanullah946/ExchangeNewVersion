@@ -5,9 +5,14 @@ import { BsPrinter, BsDownload, BsSearch, BsFilter } from 'react-icons/bs';
 import { RiAddBoxFill } from 'react-icons/ri';
 
 import { useDayBook } from '../../hooks/useDayBook';
+import AfghanDatePicker from '../../components/common/AfghanDatePicker';
+import { useDateFormatter } from '../../hooks/useDateFormatter';
+import { BiMinus } from 'react-icons/bi';
+import { MdToday } from 'react-icons/md';
 
 const DailyTransactionList = () => {
   const { t } = useTranslation();
+  const { formatDisplay } = useDateFormatter();
   const [filters, setFilters] = useState({
     date: new Date().toISOString().split('T')[0],
     startDate: '',
@@ -63,7 +68,6 @@ const DailyTransactionList = () => {
   };
 
   const handleExport = () => {
-    // Implement export functionality
     console.log('Exporting day book data...');
   };
 
@@ -112,12 +116,17 @@ const DailyTransactionList = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-6">
+        <div className="flex flex-col p-4 lg:flex-row rounded-2xl bg-gradient-to-r from-blue-600 rounded-t-2xl via-purple-600 to-indigo-700 justify-between items-start lg:items-center gap-4 mb-2">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">
-              {t('Day Book')}
-            </h1>
-            <p className="text-gray-600">
+            <div className="flex items-center gap-2 text-white ">
+              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                <MdToday className="text-xl" />
+              </div>
+              <h1 className="text-2xl font-bold tracking-tight text-white">
+                {t('Day Book')}
+              </h1>
+            </div>
+            <p className="text-white">
               {t('Complete transaction overview for selected period')}
             </p>
           </div>
@@ -143,7 +152,7 @@ const DailyTransactionList = () => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-4">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
             {/* View Mode Toggle */}
             <div className="flex gap-2">
@@ -176,7 +185,7 @@ const DailyTransactionList = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     {t('Date')}
                   </label>
-                  <input
+                  <AfghanDatePicker
                     type="date"
                     value={filters.date}
                     onChange={(e) => handleFilterChange('date', e.target.value)}
@@ -189,7 +198,7 @@ const DailyTransactionList = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       {t('Start Date')}
                     </label>
-                    <input
+                    <AfghanDatePicker
                       type="date"
                       value={filters.startDate}
                       onChange={(e) =>
@@ -202,7 +211,7 @@ const DailyTransactionList = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       {t('End Date')}
                     </label>
-                    <input
+                    <AfghanDatePicker
                       type="date"
                       value={filters.endDate}
                       onChange={(e) =>
@@ -219,14 +228,14 @@ const DailyTransactionList = () => {
             <div className="flex flex-col sm:flex-row gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t('Items per page')}
+                  {t('Rows per page')}
                 </label>
                 <select
                   value={filters.limit}
                   onChange={(e) =>
                     handleFilterChange('limit', parseInt(e.target.value))
                   }
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="px-4 py-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value={15}>15</option>
                   <option value={25}>25</option>
@@ -241,7 +250,7 @@ const DailyTransactionList = () => {
 
         {/* Summary Cards */}
         {!isLoading && transactions.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             {/* Total Transactions */}
             <div className="bg-gradient-to-r from-blue-500 to-cyan-600 rounded-2xl p-4 text-white shadow-lg">
               <div className="flex items-center justify-between">
@@ -269,7 +278,7 @@ const DailyTransactionList = () => {
                   </p>
                 </div>
                 <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                  {/* <ImMinus className="text-xl" /> */}
+                  <BiMinus className="text-xl" />
                 </div>
               </div>
             </div>
@@ -300,7 +309,7 @@ const DailyTransactionList = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm opacity-90">{t('Net Balance')}</p>
-                  <p className="text-2xl font-bold">
+                  <p dir="ltr" className="text-2xl font-bold">
                     {formatNumber(summary.netBalance)?.toLocaleString()}
                   </p>
                 </div>
@@ -308,7 +317,7 @@ const DailyTransactionList = () => {
                   {summary.netBalance >= 0 ? (
                     <RiAddBoxFill className="text-xl" />
                   ) : (
-                    <RiAddBoxFill className="text-xl" />
+                    <BiMinus className="text-lg font-extrabold" />
                   )}
                 </div>
               </div>
@@ -333,6 +342,7 @@ const DailyTransactionList = () => {
                       {currency}
                     </span>
                     <span
+                      dir="ltr"
                       className={`text-sm px-2 py-1 rounded-full ${
                         totals.balance >= 0
                           ? 'bg-green-100 text-green-800'
@@ -435,8 +445,9 @@ const DailyTransactionList = () => {
                               {transaction.transactionId}
                             </span>
                             <span className="text-xs text-gray-500">
-                              {new Date(transaction.date).toLocaleDateString()}{' '}
-                              {new Date(transaction.date).toLocaleTimeString()}
+                              {formatDisplay(transaction.date, {
+                                showTime: true,
+                              })}{' '}
                             </span>
                           </div>
                         </td>
@@ -476,7 +487,7 @@ const DailyTransactionList = () => {
                         <td className="px-4 py-3 text-right">
                           {transaction.debit > 0 && (
                             <div className="flex items-center justify-end gap-1">
-                              <RiAddBoxFill className="text-red-500 text-xs" />
+                              <BiMinus className="text-red-500 text-lg" />
                               <span className="text-red-600 font-bold text-sm">
                                 {formatNumber(
                                   transaction.debit
