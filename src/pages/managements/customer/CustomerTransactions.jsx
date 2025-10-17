@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   useAllTransaction,
   useCustomerDetails,
+  useCustomerLiquidations,
+  useDeleteLiquidation,
   useLiquidateCustomer,
 } from '../../../hooks/useCustomers';
 import { formatNumber } from '../../../utils/formatNumber';
@@ -22,7 +24,7 @@ const CustomerTransactions = () => {
   const { open, limit, page } = useSelector((state) => state.filters);
   const dispatch = useDispatch();
 
-  const { data, isLoading, error } = useAllTransaction(customerId, limit, page);
+  const { data, isLoading } = useAllTransaction(customerId, limit, page);
 
   const { data: customerData } = useCustomerDetails(customerId);
   const customer = customerData?.data || {};
@@ -63,6 +65,14 @@ const CustomerTransactions = () => {
     );
   };
 
+  const {
+    data: liquidationsData,
+    isLoading: liquidationsLoading,
+    refetch: refetchLiquidations,
+  } = useCustomerLiquidations(customerId);
+
+  const liquidations = liquidationsData?.data || [];
+
   const handleDateChange = (field, value) => {
     setLiquidateData((prev) => ({
       ...prev,
@@ -70,7 +80,25 @@ const CustomerTransactions = () => {
     }));
   };
 
-  // Add validation
+  // delete liquidation
+  const { mutate: deleteLiquidation } = useDeleteLiquidation();
+
+  const handleDeleteLiquidation = (liquidationId) => {
+    if (
+      window.confirm(
+        t(
+          'Are you sure you want to delete this liquidation? Transactions will be restored.'
+        )
+      )
+    ) {
+      deleteLiquidation(liquidationId, {
+        onSuccess: () => {
+          refetchLiquidations();
+        },
+      });
+    }
+  };
+
   useEffect(() => {
     if (!customerId) {
       console.error('No customerId found in URL parameters');
@@ -189,7 +217,10 @@ const CustomerTransactions = () => {
               <span>{t('Liquidate')}</span>
             </button>
             <button
-              onClick={() => setShowLiquidations(true)}
+              onClick={() => {
+                setShowLiquidations(true);
+                refetchLiquidations(); // Refresh data when opening
+              }}
               className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm"
             >
               <svg
@@ -206,6 +237,11 @@ const CustomerTransactions = () => {
                 />
               </svg>
               <span>{t('View Liquidations')}</span>
+              {liquidations.length > 0 && (
+                <span className="bg-white text-indigo-600 text-xs px-2 py-1 rounded-full font-bold">
+                  {liquidations.length}
+                </span>
+              )}
             </button>
             <button className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gray-600 to-slate-700 hover:from-gray-700 hover:to-slate-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm">
               <BsPrinter className="text-base" />
@@ -887,74 +923,201 @@ const CustomerTransactions = () => {
               </div>
             </div>
           )}
-          {/* {showLiquidations && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
-                <div className="p-6 border-b border-gray-200">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    {t('Liquidation History')}
-                  </h3>
-                  <p className="text-gray-600 mt-1">
-                    {t('Manage liquidated periods for this customer')}
-                  </p>
+
+          {showLiquidations && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-3">
+              <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
+                <div className="p-4 border-b border-gray-200">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-900">
+                        {t('Liquidation History')}
+                      </h3>
+                      <p className="text-gray-600 mt-1">
+                        {t('Liquidated periods for')}
+                        {' :'}
+                        <span className="font-semibold text-blue-600">
+                          {customerName} 🙋
+                        </span>
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setShowLiquidations(false)}
+                      className="text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      <svg
+                        className="w-6 h-6"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
 
-                <div className="p-6 overflow-y-auto max-h-[60vh]">
-                  {liquidationsData?.data?.map((liquidation) => (
-                    <div
-                      key={liquidation.id}
-                      className="bg-gray-50 rounded-lg p-4 mb-3 border border-gray-200"
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <p className="font-semibold text-gray-800">
-                            {new Date(
-                              liquidation.startDate
-                            ).toLocaleDateString()}{' '}
-                            -{' '}
-                            {new Date(liquidation.endDate).toLocaleDateString()}
-                          </p>
-                          <p className="text-sm text-gray-600 mt-1">
-                            {liquidation.description}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            {liquidation.transactionCount} transactions •{' '}
-                            {liquidation.closedAccounts
-                              ? 'Accounts Closed'
-                              : 'Accounts Active'}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() =>
-                            handleDeleteLiquidation(liquidation.id)
-                          }
-                          className="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded-lg transition-colors"
-                        >
-                          {t('Delete')}
-                        </button>
-                      </div>
+                <div className="p-4 overflow-y-auto max-h-[60vh]">
+                  {liquidationsLoading ? (
+                    <div className="flex justify-center items-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
                     </div>
-                  ))}
+                  ) : liquidations.length > 0 ? (
+                    <div className="space-y-3">
+                      {liquidations.map((liquidation) => (
+                        <div
+                          key={liquidation.id}
+                          className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-gray-300 transition-colors"
+                        >
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-3 mb-2">
+                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                <p className="font-semibold text-gray-800 text-lg">
+                                  {liquidation.period}
+                                </p>
+                                <span
+                                  className={`px-2 py-1 text-xs rounded-full ${
+                                    liquidation.closedAccounts
+                                      ? 'bg-red-100 text-red-800'
+                                      : 'bg-green-100 text-green-800'
+                                  }`}
+                                >
+                                  {liquidation.closedAccounts
+                                    ? t('Accounts Closed')
+                                    : t('Accounts Active')}
+                                </span>
+                              </div>
 
-                  {(!liquidationsData?.data ||
-                    liquidationsData.data.length === 0) && (
-                    <p className="text-gray-500 text-center py-8">
-                      {t('No liquidation records found')}
-                    </p>
+                              <p className="text-sm text-gray-600 mb-2">
+                                {liquidation.description}
+                              </p>
+
+                              <div className="flex items-center gap-3 text-xs text-gray-500">
+                                <span className="flex items-center gap-1">
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                                    />
+                                  </svg>
+                                  {liquidation.transactionCount}{' '}
+                                  {t('transactions')}
+                                </span>
+                                <span className="flex items-center gap-1">
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                    />
+                                  </svg>
+                                  {new Date(
+                                    liquidation.createdAt
+                                  ).toLocaleDateString()}
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="flex gap-2 ml-3">
+                              <button
+                                onClick={() =>
+                                  handleDeleteLiquidation(liquidation.id)
+                                }
+                                className="px-2 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded-lg transition-colors flex items-center gap-1"
+                                title={t(
+                                  'Delete liquidation and restore transactions'
+                                )}
+                              >
+                                <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                  />
+                                </svg>
+                                {t('Delete')}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg
+                          className="w-10 h-10 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </div>
+                      <h4 className="text-lg font-semibold text-gray-600 mb-1">
+                        {t('No Liquidations Found')}
+                      </h4>
+                      <p className="text-gray-500 max-w-md mx-auto">
+                        {t(
+                          'No liquidation records found for this customer. Create your first liquidation to archive transactions.'
+                        )}
+                      </p>
+                    </div>
                   )}
                 </div>
 
-                <div className="p-6 border-t border-gray-200">
-                  <button
-                    onClick={() => setShowLiquidations(false)}
-                    className="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg font-medium transition-colors"
-                  >
-                    {t('Close')}
-                  </button>
+                <div className="p-3 border-t border-gray-200 bg-gray-50">
+                  <div className="flex gap-3">
+                    <button
+                      onClick={() => setShowLiquidations(false)}
+                      className="flex-1 px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg font-medium transition-colors"
+                    >
+                      {t('Close')}
+                    </button>
+                    <button
+                      onClick={() => {
+                        setShowLiquidations(false);
+                        // Optionally open liquidation modal here
+                      }}
+                      className="flex-1 px-3 py-2 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white rounded-lg font-medium transition-colors"
+                    >
+                      {t('Create New Liquidation')}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          )} */}
+          )}
         </div>
       </div>
     </div>

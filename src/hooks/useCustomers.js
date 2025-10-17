@@ -2,8 +2,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createCustomer,
   deleteCustomer,
+  deleteLiquidation,
   getAllTransaction,
   getCustomer,
+  getCustomerLiquidations,
   getSingleCustomer,
   liquidateCustomer,
   updateCustomer,
@@ -40,6 +42,39 @@ export const useCustomerAccount = (customerId) => {
     enabled: !!customerId,
     onError: (error) => {
       console.error('Error fetching customer by id:', error);
+    },
+  });
+};
+
+// getting  the liquidations of a customer
+export const useCustomerLiquidations = (customerId) => {
+  return useQuery({
+    queryKey: ['customers', customerId, 'liquidations'],
+    queryFn: () => getCustomerLiquidations(customerId),
+    enabled: !!customerId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+};
+
+// use delete liquidation
+
+export const useDeleteLiquidation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (liquidationId) => deleteLiquidation(liquidationId),
+    onSuccess: (data, variables) => {
+      // Invalidate queries to refresh data
+      queryClient.invalidateQueries(['customers', 'liquidations']);
+      queryClient.invalidateQueries(['customers']); // Refresh transactions
+
+      // Show success message
+      toast.success(data.message);
+    },
+    onError: (error) => {
+      toast.error(
+        error.response?.data?.message || 'Failed to delete liquidation'
+      );
     },
   });
 };

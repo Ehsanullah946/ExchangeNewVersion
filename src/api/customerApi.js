@@ -46,6 +46,21 @@ export const liquidateCustomer = async (customerId, liquidateData) => {
   return data;
 };
 
+export const getCustomerLiquidations = async (customerId) => {
+  const { data } = await axiosClient.get(
+    `/customer/${customerId}/liquidations`
+  );
+  return data;
+};
+// delete liquidation
+
+export const deleteLiquidation = async (liquidationId) => {
+  const { data } = await axiosClient.delete(
+    `/customer/${liquidationId}/deleteLiquidation`
+  );
+  return data;
+};
+
 export const getCustomerDetails = async (customerId) => {
   const { data } = await axiosClient.get(`/customer/${customerId}`);
   return data;
