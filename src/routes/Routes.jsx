@@ -18,7 +18,6 @@ import { BiCog } from 'react-icons/bi';
 import { AiFillHome, AiOutlineDashboard, AiOutlineRise } from 'react-icons/ai';
 import {
   RiDownloadLine,
-  RiExchange2Fill,
   RiExchangeDollarFill,
   RiSendPlaneLine,
 } from 'react-icons/ri';
@@ -166,6 +165,24 @@ export const routes = [
         path: '/settings/billing',
         nameKey: 'Billing',
         icon: <FaMoneyBill />,
+      },
+    ],
+  },
+  {
+    path: '/till',
+    nameKey: 'Tills',
+    icon: <BiCog />,
+    exact: true,
+    subRoutes: [
+      {
+        path: '/till/tillDashboard',
+        nameKey: 'TillDashboard',
+        icon: <FaUser />,
+      },
+      {
+        path: '/till/tillHistory',
+        nameKey: 'TillHistory',
+        icon: <FaUser />,
       },
     ],
   },

@@ -63,6 +63,7 @@ import {
   ExchangeEdit,
   TransferEdit,
   ReceiveEdit,
+  TillDashboard,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -168,6 +169,10 @@ const App = () => {
             </Route>
             <Route path="/settings" element={<Settings />}>
               <Route path="languages" element={<Languages />} />
+            </Route>
+
+            <Route path="/till" element={<Settings />}>
+              <Route path="tillDashboard" element={<TillDashboard />} />
             </Route>
           </Route>
 

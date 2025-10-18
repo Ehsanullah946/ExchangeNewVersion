@@ -1,7 +1,7 @@
 import React from 'react';
 
-const tillDetail = () => {
-  return <div>tillDetail</div>;
+const TillDetail = () => {
+  return <div>T</div>;
 };
 
-export default tillDetail;
+export default TillDetail;

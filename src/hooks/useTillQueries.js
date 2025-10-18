@@ -1,5 +1,12 @@
 // hooks/queries/useTillQueries.js
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  closeTill,
+  getTillDetail,
+  getTillHistory,
+  getTodayTill,
+  updateTotals,
+} from '../api/tillApi';
 
 // Query keys
 export const tillKeys = {
@@ -13,8 +20,8 @@ export const tillKeys = {
 export const useTodayTill = () => {
   return useQuery({
     queryKey: tillKeys.today(),
-    queryFn: () => tillService.getTodayTill().then((res) => res.data.data),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    queryFn: () => getTodayTill().then((res) => res.data.data),
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true,
   });
 };
@@ -22,7 +29,7 @@ export const useTodayTill = () => {
 export const useTillHistory = (filters = {}) => {
   return useQuery({
     queryKey: tillKeys.history(filters),
-    queryFn: () => tillService.getTillHistory(filters).then((res) => res.data),
+    queryFn: () => getTillHistory(filters).then((res) => res.data),
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 };
@@ -30,7 +37,7 @@ export const useTillHistory = (filters = {}) => {
 export const useTillDetail = (id) => {
   return useQuery({
     queryKey: tillKeys.detail(id),
-    queryFn: () => tillService.getTillDetail(id).then((res) => res.data.data),
+    queryFn: () => getTillDetail(id).then((res) => res.data.data),
     enabled: !!id,
   });
 };
@@ -40,7 +47,7 @@ export const useCloseTill = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (closeData) => tillService.closeTill(closeData),
+    mutationFn: (closeData) => closeTill(closeData),
     onSuccess: () => {
       // Invalidate and refetch today's till
       queryClient.invalidateQueries({ queryKey: tillKeys.today() });
@@ -54,7 +61,7 @@ export const useUpdateTillTotals = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => tillService.updateTotals(),
+    mutationFn: () => updateTotals(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: tillKeys.today() });
     },

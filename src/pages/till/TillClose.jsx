@@ -1,7 +1,7 @@
 import React from 'react';
 
-const tillClose = () => {
+const TillClose = () => {
   return <div>tillClose</div>;
 };
 
-export default tillClose;
+export default TillClose;

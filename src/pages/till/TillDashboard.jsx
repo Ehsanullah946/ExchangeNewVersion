@@ -1,44 +1,47 @@
 // pages/till/TillDashboard.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { fetchTodayTill } from '../../store/slices/tillSlice';
-import { useCloseTill } from '../../hooks/queries/useTillQueries';
 import TillStats from '../../components/till/TillStats';
 import CashFlowBreakdown from '../../components/till/CashFlowBreakdown';
 import CloseTillModal from '../../components/till/CloseTillModal';
 import { BsCashCoin, BsClockHistory } from 'react-icons/bs';
+import { useCloseTill, useTodayTill } from '../../hooks/useTillQueries';
 
 const TillDashboard = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { todayTill, cashFlow, loading, error } = useSelector(
-    (state) => state.till
-  );
+  const { data: todayTill, isLoading, isError } = useTodayTill();
   const closeTillMutation = useCloseTill();
-
   const [showCloseModal, setShowCloseModal] = useState(false);
 
-  useEffect(() => {
-    dispatch(fetchTodayTill());
-  }, [dispatch]);
+  // Example: If you also fetch cash flow separately
+  const cashFlow = {
+    deposits: { count: 2 },
+    withdrawals: { count: 1 },
+  };
 
   const handleCloseTill = async (closeData) => {
     try {
       await closeTillMutation.mutateAsync(closeData);
       setShowCloseModal(false);
-      // Redux will automatically update via the mutation's invalidation
     } catch (error) {
-      // Error handled by mutation
+      console.error('Failed to close till', error);
     }
   };
 
-  if (loading && !todayTill) {
+  if (isLoading && !todayTill) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-red-600">
+        Failed to load till data.
       </div>
     );
   }
@@ -93,28 +96,18 @@ const TillDashboard = () => {
               Status: {todayTill?.status?.toUpperCase()}
             </span>
           </div>
-
-          {/* Error Display */}
-          {error && (
-            <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-800">{error}</p>
-            </div>
-          )}
         </div>
 
-        {/* Stats Grid */}
-        <TillStats />
+        {/* Stats */}
+        <TillStats todayTill={todayTill} />
 
-        {/* Main Content Grid */}
+        {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Cash Flow Breakdown */}
           <div className="lg:col-span-2">
             <CashFlowBreakdown cashFlow={cashFlow} />
           </div>
 
-          {/* Quick Actions & Info */}
           <div className="space-y-6">
-            {/* Today's Summary */}
             <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
                 Today's Summary

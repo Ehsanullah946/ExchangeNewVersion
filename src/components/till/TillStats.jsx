@@ -1,6 +1,5 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useUpdateTillTotals } from '../../hooks/queries/useTillQueries';
+import { useUpdateTillTotals, useTodayTill } from '../../hooks/useTillQueries';
 import {
   BsWallet2,
   BsArrowUpRight,
@@ -10,9 +9,17 @@ import {
 import { FiRefreshCw } from 'react-icons/fi';
 
 const TillStats = () => {
-  const dispatch = useDispatch();
-  const { todayTill, cashFlow } = useSelector((state) => state.till);
+  // Fetch today's till data directly from the backend
+  const { data: todayTill, isLoading, isError } = useTodayTill();
   const updateTotalsMutation = useUpdateTillTotals();
+
+  const handleUpdateTotals = () => {
+    updateTotalsMutation.mutate();
+  };
+
+  if (isLoading) return <p>Loading till data...</p>;
+  if (isError) return <p className="text-red-500">Failed to load till data.</p>;
+  if (!todayTill) return <p>No till record found for today.</p>;
 
   const stats = [
     {
@@ -40,12 +47,6 @@ const TillStats = () => {
       color: 'bg-purple-50 border-purple-200',
     },
   ];
-
-  const handleUpdateTotals = () => {
-    updateTotalsMutation.mutate();
-  };
-
-  if (!todayTill) return null;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
