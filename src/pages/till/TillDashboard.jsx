@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import TillStats from '../../components/till/TillStats';
 import CashFlowBreakdown from '../../components/till/CashFlowBreakdown';
 import CloseTillModal from '../../components/till/CloseTillModal';
-import { BsCashCoin, BsClockHistory, BsInbox } from 'react-icons/bs';
+import { BsCashCoin, BsClockHistory, BsInbox, BsGraphUp } from 'react-icons/bs';
 import { useCloseTill, useTodayTill } from '../../hooks/useTillQueries';
 import { useDateFormatter } from '../../hooks/useDateFormatter';
+import { formatNumber } from '../../utils/formatNumber';
 
 const TillDashboard = () => {
   const { t } = useTranslation();
@@ -18,8 +19,6 @@ const TillDashboard = () => {
   const closeTillMutation = useCloseTill();
   const [showCloseModal, setShowCloseModal] = useState(false);
 
-  console.log('🔍 Today Till Data:', todayTill);
-
   const handleCloseTill = async (closeData) => {
     try {
       await closeTillMutation.mutateAsync(closeData);
@@ -29,7 +28,6 @@ const TillDashboard = () => {
     }
   };
 
-  // ✅ FIXED: Calculate transaction count with correct property names
   const getTotalTransactionCount = () => {
     if (!todayTill?.cashFlow) return 0;
 
@@ -52,7 +50,6 @@ const TillDashboard = () => {
     );
   };
 
-  // ✅ FIXED: Calculate net flow correctly
   const calculateNetFlow = () => {
     if (!todayTill?.cashFlow?.summary) {
       return (
@@ -68,75 +65,93 @@ const TillDashboard = () => {
 
   if (isLoading && !todayTill) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent"></div>
+          <p className="text-gray-600 font-medium">Loading till data...</p>
+        </div>
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center">
-        <div className="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-4">
-          <BsInbox className="text-4xl text-gray-400" />
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center text-center p-8">
+          <div className="w-32 h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-6 shadow-lg">
+            <BsInbox className="text-5xl text-gray-400" />
+          </div>
+          <h3 className="text-2xl font-bold text-gray-700 mb-3">
+            {t('No Transaction found')}
+          </h3>
+          <p className="text-gray-500 max-w-md text-lg leading-relaxed">
+            {t('No records match criteria.')}
+          </p>
         </div>
-        <h3 className="text-xl font-bold text-gray-600 mb-2">
-          {t('No Transaction found')}
-        </h3>
-        <p className="text-gray-500 max-w-md">
-          {t('No records match criteria.')}
-        </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center">
+        <div className="mb-5">
+          <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                {t('Cash Till Management')}
-              </h1>
-              <p className="text-gray-600 mt-2">
-                {todayTill?.till?.date
-                  ? `${t('Today')}: ${formatDisplay(todayTill.till.date)}`
-                  : 'Loading...'}
-              </p>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="p-3 bg-white rounded-2xl shadow-lg border border-blue-100">
+                  <BsGraphUp className="text-2xl text-blue-600" />
+                </div>
+                <div>
+                  <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-blue-800 bg-clip-text text-transparent">
+                    {t('Cash Till Management')}
+                  </h1>
+                  <p className="text-gray-600 mt-2 text-lg">
+                    {todayTill?.till?.date
+                      ? `${t('Today')}: ${formatDisplay(todayTill.till.date)}`
+                      : 'Loading...'}
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-2">
               <button
                 onClick={() => navigate('/till/tillHistory')}
-                className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-3 px-6 py-2 bg-white text-gray-700 rounded-xl shadow-lg hover:shadow-xl border border-gray-200 hover:border-gray-300 transition-all duration-300 hover:-translate-y-0.5"
               >
-                <BsClockHistory />
-                {t('View History')}
+                <BsClockHistory className="text-md text-blue-600" />
+                <span className="font-semibold">{t('View History')}</span>
               </button>
 
               {todayTill?.till?.status === 'open' && (
                 <button
                   onClick={() => setShowCloseModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                  className="flex items-center gap-3 px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-green-500/25"
                 >
-                  <BsCashCoin />
-                  {t('Close Till')}
+                  <BsCashCoin className="text-md" />
+                  <span className="font-semibold">{t('Close Till')}</span>
                 </button>
               )}
             </div>
           </div>
 
           {/* Status Badge */}
-          <div className="mt-4">
+          <div className="mt-3">
             <span
-              className={`px-3 py-1 rounded-full text-sm font-medium ${
+              className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold shadow-lg ${
                 todayTill?.till?.status === 'open'
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-gray-100 text-gray-800'
+                  ? 'bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 border border-green-200'
+                  : 'bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 border border-gray-200'
               }`}
             >
+              <div
+                className={`w-2 h-2 rounded-full mr-2 ${
+                  todayTill?.till?.status === 'open'
+                    ? 'bg-green-500 animate-pulse'
+                    : 'bg-gray-500'
+                }`}
+              ></div>
               {t('Status')}: {t(todayTill?.till?.status?.toUpperCase())}
             </span>
           </div>
@@ -145,46 +160,45 @@ const TillDashboard = () => {
         {/* Stats */}
         <TillStats todayTill={todayTill?.till} />
 
-        {/* Main Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            {/* Pass the actual cashFlow data from API */}
             <CashFlowBreakdown cashFlow={todayTill?.cashFlow} />
           </div>
 
           <div className="space-y-6">
-            <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-white rounded-3xl p-6 shadow-xl border border-gray-200/60 backdrop-blur-sm">
+              <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                <div className="w-2 h-6 bg-blue-500 rounded-full"></div>
                 {t("Today's Summary")}
               </h3>
-              <div className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">{t('Net Flow')}:</span>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl border border-blue-100">
+                  <span className="text-gray-700 font-medium">
+                    {t('Net Flow')}:
+                  </span>
                   <span
-                    className={`font-semibold ${
+                    className={`font-bold text-lg ${
                       calculateNetFlow() >= 0
                         ? 'text-green-600'
                         : 'text-red-600'
                     }`}
                   >
-                    $
-                    {calculateNetFlow().toLocaleString(undefined, {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
+                    ${formatNumber(calculateNetFlow())}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">
+                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl border border-purple-100">
+                  <span className="text-gray-700 font-medium">
                     {t('Transaction Count')}:
                   </span>
-                  <span className="font-semibold">
+                  <span className="font-bold text-lg text-purple-600">
                     {getTotalTransactionCount()}
                   </span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">{t('Last Updated')}:</span>
-                  <span className="font-semibold">
+                <div className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-2xl border border-gray-100">
+                  <span className="text-gray-700 font-medium">
+                    {t('Last Updated')}:
+                  </span>
+                  <span className="font-semibold text-gray-900">
                     {todayTill?.till?.updatedAt
                       ? new Date(todayTill.till.updatedAt).toLocaleTimeString()
                       : todayTill?.till?.createdAt
