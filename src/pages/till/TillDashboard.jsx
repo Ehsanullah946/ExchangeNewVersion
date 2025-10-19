@@ -15,11 +15,7 @@ const TillDashboard = () => {
   const closeTillMutation = useCloseTill();
   const [showCloseModal, setShowCloseModal] = useState(false);
 
-  // Example: If you also fetch cash flow separately
-  const cashFlow = {
-    deposits: { count: 2 },
-    withdrawals: { count: 1 },
-  };
+  console.log('Today Till Data:', todayTill);
 
   const handleCloseTill = async (closeData) => {
     try {
@@ -28,6 +24,20 @@ const TillDashboard = () => {
     } catch (error) {
       console.error('Failed to close till', error);
     }
+  };
+
+  // Calculate transaction count from cashFlow data
+  const getTotalTransactionCount = () => {
+    if (!todayTill?.cashFlow) return 0;
+
+    const { deposits, exchangesIn, exchangesOut, withdrawals } =
+      todayTill.cashFlow;
+    return (
+      (deposits?.count || 0) +
+      (exchangesIn?.count || 0) +
+      (exchangesOut?.count || 0) +
+      (withdrawals?.count || 0)
+    );
   };
 
   if (isLoading && !todayTill) {
@@ -57,22 +67,24 @@ const TillDashboard = () => {
                 {t('Cash Till Management')}
               </h1>
               <p className="text-gray-600 mt-2">
-                {todayTill?.date
-                  ? `Today: ${new Date(todayTill.date).toLocaleDateString()}`
+                {todayTill?.till?.date
+                  ? `Today: ${new Date(
+                      todayTill.till.date
+                    ).toLocaleDateString()}`
                   : 'Loading...'}
               </p>
             </div>
 
             <div className="flex gap-3">
               <button
-                onClick={() => navigate('/till/history')}
+                onClick={() => navigate('/till/tillHistory')}
                 className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 <BsClockHistory />
                 View History
               </button>
 
-              {todayTill?.status === 'open' && (
+              {todayTill?.till?.status === 'open' && (
                 <button
                   onClick={() => setShowCloseModal(true)}
                   className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
@@ -88,23 +100,24 @@ const TillDashboard = () => {
           <div className="mt-4">
             <span
               className={`px-3 py-1 rounded-full text-sm font-medium ${
-                todayTill?.status === 'open'
+                todayTill?.till?.status === 'open'
                   ? 'bg-green-100 text-green-800'
                   : 'bg-gray-100 text-gray-800'
               }`}
             >
-              Status: {todayTill?.status?.toUpperCase()}
+              Status: {todayTill?.till?.status?.toUpperCase()}
             </span>
           </div>
         </div>
 
         {/* Stats */}
-        <TillStats todayTill={todayTill} />
+        <TillStats todayTill={todayTill?.till} />
 
         {/* Main Content */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <CashFlowBreakdown cashFlow={cashFlow} />
+            {/* Pass the actual cashFlow data from API */}
+            <CashFlowBreakdown cashFlow={todayTill?.cashFlow} />
           </div>
 
           <div className="space-y-6">
@@ -117,8 +130,8 @@ const TillDashboard = () => {
                   <span className="text-gray-600">Net Flow:</span>
                   <span
                     className={`font-semibold ${
-                      parseFloat(todayTill?.totalIn || 0) -
-                        parseFloat(todayTill?.totalOut || 0) >=
+                      parseFloat(todayTill?.till?.totalIn || 0) -
+                        parseFloat(todayTill?.till?.totalOut || 0) >=
                       0
                         ? 'text-green-600'
                         : 'text-red-600'
@@ -126,8 +139,8 @@ const TillDashboard = () => {
                   >
                     $
                     {(
-                      parseFloat(todayTill?.totalIn || 0) -
-                      parseFloat(todayTill?.totalOut || 0)
+                      parseFloat(todayTill?.till?.totalIn || 0) -
+                      parseFloat(todayTill?.till?.totalOut || 0)
                     ).toLocaleString(undefined, {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
@@ -137,15 +150,16 @@ const TillDashboard = () => {
                 <div className="flex justify-between">
                   <span className="text-gray-600">Transaction Count:</span>
                   <span className="font-semibold">
-                    {(cashFlow?.deposits?.count || 0) +
-                      (cashFlow?.withdrawals?.count || 0)}
+                    {getTotalTransactionCount()}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Last Updated:</span>
                   <span className="font-semibold">
-                    {todayTill
-                      ? new Date(todayTill.updatedAt).toLocaleTimeString()
+                    {todayTill?.till?.updatedAt
+                      ? new Date(todayTill.till.updatedAt).toLocaleTimeString()
+                      : todayTill?.till?.createdAt
+                      ? new Date(todayTill.till.createdAt).toLocaleTimeString()
                       : 'N/A'}
                   </span>
                 </div>

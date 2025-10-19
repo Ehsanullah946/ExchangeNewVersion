@@ -2,7 +2,7 @@ import axiosClient from './axiosClient';
 
 export const getTodayTill = async () => {
   const { data } = await axiosClient.get('/till/today');
-  return data;
+  return data.data;
 };
 
 export const closeTill = async (payload) => {

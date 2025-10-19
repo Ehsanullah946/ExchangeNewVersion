@@ -1,7 +1,7 @@
 // pages/till/TillHistory.jsx
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTillHistory } from '../../hooks/queries/useTillQueries';
+import { useTillHistory } from '../../hooks/useTillQueries';
 import { useNavigate } from 'react-router-dom';
 
 const TillHistory = () => {
@@ -67,7 +67,7 @@ const TillHistory = () => {
               <p className="text-gray-600 mt-2">Historical cash till records</p>
             </div>
             <button
-              onClick={() => navigate('/till')}
+              onClick={() => navigate('/till/tillDashboard')}
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
               Back to Today

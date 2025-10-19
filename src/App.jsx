@@ -64,6 +64,7 @@ import {
   TransferEdit,
   ReceiveEdit,
   TillDashboard,
+  TillHistory,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -173,6 +174,7 @@ const App = () => {
 
             <Route path="/till" element={<Settings />}>
               <Route path="tillDashboard" element={<TillDashboard />} />
+              <Route path="tillHistory" element={<TillHistory />} />
             </Route>
           </Route>
 

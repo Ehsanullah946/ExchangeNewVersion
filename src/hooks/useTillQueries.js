@@ -20,7 +20,7 @@ export const tillKeys = {
 export const useTodayTill = () => {
   return useQuery({
     queryKey: tillKeys.today(),
-    queryFn: () => getTodayTill().then((res) => res.data.data),
+    queryFn: () => getTodayTill(),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true,
   });
@@ -29,7 +29,7 @@ export const useTodayTill = () => {
 export const useTillHistory = (filters = {}) => {
   return useQuery({
     queryKey: tillKeys.history(filters),
-    queryFn: () => getTillHistory(filters).then((res) => res.data),
+    queryFn: () => getTillHistory(filters),
     staleTime: 10 * 60 * 1000, // 10 minutes
   });
 };
@@ -37,7 +37,7 @@ export const useTillHistory = (filters = {}) => {
 export const useTillDetail = (id) => {
   return useQuery({
     queryKey: tillKeys.detail(id),
-    queryFn: () => getTillDetail(id).then((res) => res.data.data),
+    queryFn: () => getTillDetail(id),
     enabled: !!id,
   });
 };
