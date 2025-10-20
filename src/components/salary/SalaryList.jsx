@@ -8,10 +8,11 @@ import {
   BsCheckCircle,
   BsClock,
   BsXCircle,
+  BsCashCoin,
 } from 'react-icons/bs';
-import { useSalaries } from '../../hooks/useSalaryQueries';
 import { formatNumber } from '../../utils/formatNumber';
 import { useDateFormatter } from '../../hooks/useDateFormatter';
+import { useSalaries } from '../../hooks/useSalaryQueries';
 
 const SalaryList = () => {
   const { t } = useTranslation();

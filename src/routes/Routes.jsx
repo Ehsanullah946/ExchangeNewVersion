@@ -169,6 +169,19 @@ export const routes = [
     ],
   },
   {
+    path: '/employees',
+    nameKey: 'Employees',
+    icon: <BiCog />,
+    exact: true,
+    subRoutes: [
+      {
+        path: '/employees/SalaryDashboard',
+        nameKey: 'Salary Dashboard',
+        icon: <FaUser />,
+      },
+    ],
+  },
+  {
     path: '/till',
     nameKey: 'Tills',
     icon: <BiCog />,

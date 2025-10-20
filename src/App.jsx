@@ -65,6 +65,9 @@ import {
   ReceiveEdit,
   TillDashboard,
   TillHistory,
+  SalaryDashboard,
+  Employee,
+  Till,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -172,9 +175,13 @@ const App = () => {
               <Route path="languages" element={<Languages />} />
             </Route>
 
-            <Route path="/till" element={<Settings />}>
+            <Route path="/till" element={<Till />}>
               <Route path="tillDashboard" element={<TillDashboard />} />
               <Route path="tillHistory" element={<TillHistory />} />
+            </Route>
+
+            <Route path="/employees" element={<Employee />}>
+              <Route path="SalaryDashboard" element={<SalaryDashboard />} />
             </Route>
           </Route>
 

@@ -12,9 +12,16 @@ export const Main = lazy(() => import('./Main'));
 // Management components
 export const Customers = lazy(() => import('./managements/customer/Customers'));
 export const TillDashboard = lazy(() => import('./till/TillDashboard'));
+export const Till = lazy(() => import('./Tills'));
 export const TillClose = lazy(() => import('./till/TillClose'));
 export const TillDetail = lazy(() => import('./till/TillDetail'));
 export const TillHistory = lazy(() => import('./till/TillHistory'));
+
+export const SalaryDashboard = lazy(() =>
+  import('./employees/SalaryDashboard')
+);
+
+export const Employee = lazy(() => import('./Employee'));
 
 export const CustomerEdit = lazy(() =>
   import('./managements/customer/CustomerEdit')

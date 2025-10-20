@@ -30,6 +30,8 @@ const SalaryDashboard = () => {
   const employees = employeesData?.data?.employees || [];
   const moneyTypes = employeesData?.data?.moneyTypes || [];
 
+  console.log(employees);
+
   const stats = [
     {
       title: 'Total Employees',
