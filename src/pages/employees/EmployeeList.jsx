@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
+import React, { useEffect } from 'react';
+import { BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
-import Button from '../../../components/layout/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   BsChevronLeft,
@@ -10,7 +9,6 @@ import {
   BsHash,
   BsInbox,
   BsPerson,
-  BsPrinter,
   BsSearch,
   BsTrash,
   BsX,
@@ -24,8 +22,8 @@ import {
   setPhone,
   setSearch,
   toggleOpen,
-} from '../../../features/ui/filterSlice';
-import { useDeleteEmployee, useEmployee } from '../../../hooks/useEmployee';
+} from '../../features/ui/filterSlice';
+import { useDeleteEmployee, useEmployee } from '../../hooks/useEmployee';
 import { useDispatch, useSelector } from 'react-redux';
 const EmployeeList = () => {
   const { t } = useTranslation();
@@ -45,7 +43,7 @@ const EmployeeList = () => {
     return () => clearTimeout(handler);
   }, [search, dispatch]);
 
-  const { data, isLoading, error } = useEmployee(
+  const { data, isLoading } = useEmployee(
     debouncedSearch,
     debouncedPhone,
     limit,
@@ -56,7 +54,7 @@ const EmployeeList = () => {
   const deleteMutation = useDeleteEmployee();
 
   const handleEdit = (id) => {
-    navigate(`/management/employee/${id}/edit`);
+    navigate(`/employees/employee/${id}/edit`);
   };
 
   const handleDelete = (id) => {
@@ -102,7 +100,7 @@ const EmployeeList = () => {
         {/* Header Actions */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-2 p-1 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20">
           <div className="flex flex-wrap items-center gap-3">
-            <Link to="/management/EmployeeAdd">
+            <Link to="/employees/EmployeeAdd">
               <button className="flex items-center gap-2  px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
                 <BsPerson className="mt-1" />
                 <span>{t('Add New Employee')}</span>

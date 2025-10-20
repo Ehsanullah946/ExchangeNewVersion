@@ -179,6 +179,16 @@ export const routes = [
         nameKey: 'Salary Dashboard',
         icon: <FaUser />,
       },
+      {
+        path: '/employees/employeeList',
+        nameKey: 'Employees List',
+        icon: <FaUserTie />,
+      },
+      {
+        path: '/employees/employeeAdd',
+        nameKey: 'Employees Add',
+        icon: <FaUserTie />,
+      },
     ],
   },
   {

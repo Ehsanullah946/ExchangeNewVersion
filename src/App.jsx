@@ -104,9 +104,7 @@ const App = () => {
                 path="branch/:id/transactions"
                 element={<BranchTransaction />}
               />
-              <Route path="employeeAdd" element={<EmployeeAdd />} />
-              <Route path="employee/:id/edit" element={<EmployeeEdit />} />
-              <Route path="employeeList" element={<EmployeeList />} />
+
               <Route path="exchangerList" element={<ExchangerList />} />
               <Route path="exchanger/:id/edit" element={<ExchangerEdit />} />
               <Route path="exchangerAdd" element={<ExchangerAdd />} />
@@ -182,6 +180,9 @@ const App = () => {
 
             <Route path="/employees" element={<Employee />}>
               <Route path="SalaryDashboard" element={<SalaryDashboard />} />
+              <Route path="employeeAdd" element={<EmployeeAdd />} />
+              <Route path="employee/:id/edit" element={<EmployeeEdit />} />
+              <Route path="employeeList" element={<EmployeeList />} />
             </Route>
           </Route>
 

@@ -22,9 +22,8 @@ const SalaryDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [showCreateModal, setShowCreateModal] = useState(false);
 
-  const { data: summaryData, isLoading: summaryLoading } = useSalarySummary();
-  const { data: employeesData, isLoading: employeesLoading } =
-    useEmployeesForSalary();
+  const { data: summaryData } = useSalarySummary();
+  const { data: employeesData } = useEmployeesForSalary();
 
   const summary = summaryData?.data || {};
   const employees = employeesData?.data?.employees || [];
@@ -82,7 +81,7 @@ const SalaryDashboard = () => {
                   {t('Salary Management')}
                 </h1>
                 <p className="text-gray-600 mt-2 text-lg">
-                  Manage employee salaries and payments
+                  {t('Manage employee salaries and payments')}
                 </p>
               </div>
             </div>
@@ -177,8 +176,6 @@ const SalaryDashboard = () => {
             )}
           </div>
         </div>
-
-        {/* Create Salary Modal */}
         <CreateSalaryModal
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}

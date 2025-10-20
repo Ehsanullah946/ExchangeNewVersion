@@ -27,6 +27,8 @@ const SalaryList = () => {
   const { data: salariesData, isLoading } = useSalaries(filters);
   const salaries = salariesData?.data || [];
 
+  console.log('salary list', salaries);
+
   const getStatusBadge = (status) => {
     const statusConfig = {
       paid: {
@@ -128,7 +130,7 @@ const SalaryList = () => {
                 }
                 className="w-full border border-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="">All Currencies</option>
+                <option value="">all</option>
                 {/* This would be populated from moneyTypes data */}
               </select>
             </div>
@@ -168,20 +170,20 @@ const SalaryList = () => {
                   key={salary.id}
                   className="hover:bg-gray-50 transition-colors"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
-                        {salary.employee?.stakeholder?.person?.firstName?.charAt(
+                  <td className="px-4 py-4 whitespace-nowrap">
+                    <div className="flex gap-1 items-center">
+                      <div className="flex-shrink-0 h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold">
+                        {salary.employee?.Stakeholder?.Person?.firstName?.charAt(
                           0
                         )}
-                        {salary.employee?.stakeholder?.person?.lastName?.charAt(
+                        {salary.employee?.Stakeholder?.Person?.lastName?.charAt(
                           0
                         )}
                       </div>
-                      <div className="ml-4">
+                      <div className="ltr:ml-2">
                         <div className="text-sm font-medium text-gray-900">
-                          {salary.employee?.stakeholder?.person?.firstName}{' '}
-                          {salary.employee?.stakeholder?.person?.lastName}
+                          {salary.employee?.Stakeholder?.Person?.firstName}{' '}
+                          {salary.employee?.Stakeholder?.Person?.lastName}
                         </div>
                         <div className="text-sm text-gray-500">
                           {salary.employee?.position}

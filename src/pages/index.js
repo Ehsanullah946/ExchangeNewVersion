@@ -23,6 +23,10 @@ export const SalaryDashboard = lazy(() =>
 
 export const Employee = lazy(() => import('./Employee'));
 
+export const EmployeeAdd = lazy(() => import('./employees/EmployeeAdd'));
+export const EmployeeEdit = lazy(() => import('./employees/EmployeeEdit'));
+export const EmployeeList = lazy(() => import('./employees/EmployeeList'));
+
 export const CustomerEdit = lazy(() =>
   import('./managements/customer/CustomerEdit')
 );
@@ -38,16 +42,6 @@ export const BranchEdit = lazy(() => import('./managements/branch/BranchEdit'));
 export const BranchAdd = lazy(() => import('./managements/branch/BranchAdd'));
 export const BranchTransaction = lazy(() =>
   import('./managements/branch/BranchTransaction')
-);
-
-export const EmployeeAdd = lazy(() =>
-  import('./managements/employee/EmployeeAdd')
-);
-export const EmployeeEdit = lazy(() =>
-  import('./managements/employee/EmployeeEdit')
-);
-export const EmployeeList = lazy(() =>
-  import('./managements/employee/EmployeeList')
 );
 
 export const ExchangerList = lazy(() =>

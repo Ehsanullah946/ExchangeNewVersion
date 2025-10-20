@@ -1,27 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useToast } from '../../../hooks/useToast';
+import React, { useState } from 'react';
 import {
-  useSingleEmployee,
-  useUpdateEmployee,
-} from '../../../hooks/useEmployee';
-import { BsListCheck, BsPhone } from 'react-icons/bs';
-import { PulseLoader } from 'react-spinners';
-import { RiSendPlaneLine } from 'react-icons/ri';
-import Button from '../../../components/layout/Button';
+  BsListCheck,
+  BsPersonAdd,
+  BsPhone,
+  BsPrinter,
+  BsSearch,
+} from 'react-icons/bs';
+import { useTranslation } from 'react-i18next';
 
-const EmployeeEdit = () => {
-  const { id } = useParams();
+import { Link, useNavigate } from 'react-router-dom';
+import { useToast } from '../../hooks/useToast';
+import { useCreateEmployee } from '../../hooks/useEmployee';
+const EmployeeAdd = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const toast = useToast();
-
-  const { data, isLoading: loadingEmployee } = useSingleEmployee(id);
-  const { mutate: updateEmployee, isLoading: updating } = useUpdateEmployee();
-
-  console.log(data);
-
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -35,6 +26,10 @@ const EmployeeEdit = () => {
     job: '',
   });
 
+  const { isLoading, mutate, error } = useCreateEmployee();
+  const toast = useToast();
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { value, type, checked, name } = e.target;
     setForm((prev) => ({
@@ -43,64 +38,76 @@ const EmployeeEdit = () => {
     }));
   };
 
-  useEffect(() => {
-    if (data?.data) {
-      const employee = data.data;
-      const stakeholder = employee.Stakeholder || {};
-      const person = stakeholder.Person || {};
-      setForm((prev) => ({
-        ...prev,
-        ...employee,
-        firstName: person.firstName,
-        lastName: person.lastName,
-        fatherName: person.fatherName,
-        phone: person.phone,
-        email: person.email,
-        nationalCode: person.nationalCode,
-        currentAddress: person.currentAddress,
-        permanentAddress: stakeholder.permanentAddress,
-        job: stakeholder.job,
-        gender: stakeholder.gender,
-        maritalStatus: stakeholder.maritalStatus,
-      }));
-    }
-  }, [data]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const cleanData = Object.fromEntries(
-      Object.entries(form).filter(([_, v]) => v !== '' && v !== null)
-    );
+    const validateForm = () => {
+      const errors = {};
 
-    updateEmployee(
-      { id, payload: cleanData },
-      {
-        onSuccess: () => {
-          toast.success(t('Update Successful'));
-          navigate('/management/employeeList');
-        },
-        onError: (err) => {
-          console.error(err);
-          toast.error(t('Update failed'));
-        },
+      if (!form.firstName.trim()) errors.firstName = t('firstNameRequired');
+      if (!form.lastName.trim()) errors.lastName = t('lastNameRequired');
+      if (form.phone && !/^[\d\s\-\+\(\)]{10,15}$/.test(form.phone)) {
+        errors.phone = t('invalidPhoneFormat');
       }
+      return errors;
+    };
+
+    const submitData = {
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      fatherName: form.fatherName.trim(),
+      nationalCode: form.nationalCode.trim(),
+      phone: form.phone.trim(),
+      currentAddress: form.currentAddress.trim(),
+      permanentAddress: form.permanentAddress.trim(),
+      maritalStatus: form.maritalStatus,
+      job: form.job.trim(),
+      gender: form.gender,
+    };
+
+    const cleanData = Object.fromEntries(
+      Object.entries(submitData).filter(
+        ([_, v]) => v !== '' && v !== null && v !== undefined
+      )
     );
+
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      toast.error(t('fix Errors') + '\n' + Object.values(errors).join('\n'));
+      return;
+    }
+
+    console.log('Submitting data:', cleanData);
+
+    mutate(cleanData, {
+      onSuccess: () => {
+        toast.success(t('Employee Created'));
+        setTimeout(() => navigate('/employees/employeeList'), 1000);
+      },
+      onError: (error) => {
+        console.error('Backend error:', error);
+        let errorMessage = t('createEmployeeFaild');
+
+        if (error.response?.data?.message) {
+          errorMessage = error.response.data.message;
+
+          if (error.response.data.message.includes('Validation error')) {
+            errorMessage = t('EmployeeDuplicate');
+          } else if (error.response.data.message.includes('validation')) {
+            errorMessage = t('invalidInputData');
+          }
+        }
+
+        toast.error(errorMessage);
+      },
+    });
   };
-
-  if (loadingEmployee)
-    return (
-      <p className="p-4 flex justify-center">
-        <PulseLoader color="green" size={15} />
-      </p>
-    );
-
   return (
     <>
       <div className="grid justify-center">
         <div className=" flex mt-1 justify-between  gap-1 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 mb-1">
           <div className="flex flex-wrap justify-center items-center p-2 gap-3">
-            <Link to="/management/employee">
+            <Link to="/employees/employeeList">
               <button className="flex  items-center gap-2 px-2 py-1 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-z-150 active:scale-110">
                 <span className="flex justify-between">
                   <BsListCheck className="mt-1 ml-3" />
@@ -147,12 +154,12 @@ const EmployeeEdit = () => {
                   <BsPersonAdd className="text-xl" />
                 </div>
                 <h1 className="text-2xl font-bold tracking-tight">
-                  {t('Update Employee')}
+                  {t('Add New Employee')}
                 </h1>
               </div>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-6 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl max-w-7xl mx-auto">
+            <div className="grid sm:grid-cols-2 gap-6 p-3 rounded-b-2xl ltr:mr-4 rtl:ml-4 px-4 md:px-6 lg:px-10 border-b-2 border-t-2 shadow-2xl w-full max-w-7xl mx-auto">
               {/* Left Column */}
               <div className="space-y-1 w-full">
                 <div className="flex gap-6 flex-wrap md:flex-nowrap justify-between">
@@ -290,13 +297,13 @@ const EmployeeEdit = () => {
               <div className="flex flex-wrap justify-center sm:justify-start gap-2 col-span-full">
                 <button
                   onClick={handleSubmit}
-                  disabled={updating}
+                  disabled={isLoading}
                   type="button"
                   className="flex items-center gap-2 px-4  bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-110 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
                   {t('Save')}
                 </button>
-                <Link to="/management/employeeList">
+                <Link to="/employees/employeeList">
                   <button
                     type="button"
                     className="flex items-center gap-2 px-4 py-1  bg-gradient-to-r from-gray-500 to-slate-600 hover:from-gray-600 hover:to-slate-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-110"
@@ -313,4 +320,4 @@ const EmployeeEdit = () => {
   );
 };
 
-export default EmployeeEdit;
+export default EmployeeAdd;
