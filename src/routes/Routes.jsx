@@ -13,7 +13,7 @@ import {
   MdRateReview,
   MdToday,
 } from 'react-icons/md';
-import { BiListCheck, BiTransferAlt } from 'react-icons/bi';
+import { BiHistory, BiListCheck, BiTransferAlt } from 'react-icons/bi';
 import { BiCog } from 'react-icons/bi';
 import { AiFillHome, AiOutlineDashboard, AiOutlineRise } from 'react-icons/ai';
 import {
@@ -23,7 +23,7 @@ import {
 } from 'react-icons/ri';
 import { FiUser, FiUsers } from 'react-icons/fi';
 import { GiPayMoney } from 'react-icons/gi';
-import { BsListCheck, BsViewList } from 'react-icons/bs';
+import { BsCash, BsGraphUp, BsListCheck, BsViewList } from 'react-icons/bs';
 
 export const routes = [
   {
@@ -84,11 +84,6 @@ export const routes = [
         icon: <MdAccountTree />,
       },
       {
-        path: '/management/employeeList',
-        nameKey: 'Employees',
-        icon: <FaUserTie />,
-      },
-      {
         path: '/management/exchangerList',
         nameKey: 'Exchanger',
         icon: <FaUser />,
@@ -145,33 +140,11 @@ export const routes = [
     nameKey: 'Account',
     icon: <FiUser />,
   },
-  {
-    path: '/settings',
-    nameKey: 'Settings',
-    icon: <BiCog />,
-    exact: true,
-    subRoutes: [
-      {
-        path: '/settings/languages',
-        nameKey: 'Languages',
-        icon: <FaUser />,
-      },
-      {
-        path: '/settings/2fa',
-        nameKey: '2FA',
-        icon: <FaLock />,
-      },
-      {
-        path: '/settings/billing',
-        nameKey: 'Billing',
-        icon: <FaMoneyBill />,
-      },
-    ],
-  },
+
   {
     path: '/employees',
     nameKey: 'Employees',
-    icon: <BiCog />,
+    icon: <FaUser />,
     exact: true,
     subRoutes: [
       {
@@ -186,7 +159,7 @@ export const routes = [
       },
       {
         path: '/employees/employeeAdd',
-        nameKey: 'Employees Add',
+        nameKey: 'Add Employee',
         icon: <FaUserTie />,
       },
     ],
@@ -194,17 +167,30 @@ export const routes = [
   {
     path: '/till',
     nameKey: 'Tills',
-    icon: <BiCog />,
+    icon: <BsCash />,
     exact: true,
     subRoutes: [
       {
         path: '/till/tillDashboard',
-        nameKey: 'TillDashboard',
-        icon: <FaUser />,
+        nameKey: 'Till Dashboard',
+        icon: <BsGraphUp />,
       },
       {
         path: '/till/tillHistory',
-        nameKey: 'TillHistory',
+        nameKey: 'Till History',
+        icon: <BiHistory />,
+      },
+    ],
+  },
+  {
+    path: '/settings',
+    nameKey: 'Settings',
+    icon: <BiCog />,
+    exact: true,
+    subRoutes: [
+      {
+        path: '/settings/languages',
+        nameKey: 'Languages',
         icon: <FaUser />,
       },
     ],

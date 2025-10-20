@@ -16,11 +16,15 @@ import {
   BsGraphUp,
 } from 'react-icons/bs';
 import { FiRefreshCw } from 'react-icons/fi';
+import AfghanDatePicker from '../../components/common/AfghanDatePicker';
+import { useDateFormatter } from '../../hooks/useDateFormatter';
+import { formatNumber } from '../../utils/formatNumber';
 
 const TillHistory = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  const { formatDisplay } = useDateFormatter();
   const [filters, setFilters] = useState({
     startDate: '',
     endDate: '',
@@ -93,10 +97,7 @@ const TillHistory = () => {
   };
 
   const formatCurrency = (amount) => {
-    return parseFloat(amount).toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
+    return formatNumber(amount);
   };
 
   return (
@@ -139,7 +140,7 @@ const TillHistory = () => {
                 placeholder="Search by date or amount..."
                 value={filters.search}
                 onChange={(e) => handleFilterChange('search', e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 bg-gray-50/50"
+                className="w-full pl-12 pr-4 py-2 border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 bg-gray-50/50"
               />
             </div>
 
@@ -147,7 +148,7 @@ const TillHistory = () => {
             <div className="flex gap-3 w-full lg:w-auto">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-gray-500 to-slate-600 text-white rounded-2xl hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
+                className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-gray-500 to-slate-600 text-white rounded-2xl hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5"
               >
                 <BsFilter className="text-lg" />
                 <span className="font-semibold">{t('Filters')}</span>
@@ -172,9 +173,9 @@ const TillHistory = () => {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                     <BsCalendar className="text-blue-600" />
-                    Start Date
+                    {t('Start Date')}
                   </label>
-                  <input
+                  <AfghanDatePicker
                     type="date"
                     value={filters.startDate}
                     onChange={(e) =>
@@ -186,9 +187,9 @@ const TillHistory = () => {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                     <BsCalendar className="text-blue-600" />
-                    End Date
+                    {t('End Date')}
                   </label>
-                  <input
+                  <AfghanDatePicker
                     type="date"
                     value={filters.endDate}
                     onChange={(e) =>
@@ -209,7 +210,7 @@ const TillHistory = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-blue-600 uppercase tracking-wide">
-                    Total Days
+                    {t('Total Days')}
                   </p>
                   <p className="text-2xl font-bold text-blue-800 mt-1">
                     {history.length}
@@ -225,7 +226,7 @@ const TillHistory = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-green-600 uppercase tracking-wide">
-                    Total Cash In
+                    {t('Total Cash In')}
                   </p>
                   <p className="text-2xl font-bold text-green-800 mt-1">
                     $
@@ -247,7 +248,7 @@ const TillHistory = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-red-600 uppercase tracking-wide">
-                    Total Cash Out
+                    {t('Total Cash Out')}
                   </p>
                   <p className="text-2xl font-bold text-red-800 mt-1">
                     $
@@ -269,7 +270,7 @@ const TillHistory = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-purple-600 uppercase tracking-wide">
-                    Perfect Days
+                    {t('Perfect Days')}
                   </p>
                   <p className="text-2xl font-bold text-purple-800 mt-1">
                     {
@@ -293,7 +294,7 @@ const TillHistory = () => {
             <div className="flex flex-col items-center justify-center p-10">
               <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mb-4"></div>
               <p className="text-gray-600 font-medium">
-                Loading historical data...
+                {t('Loading historical data')}...
               </p>
             </div>
           ) : (
@@ -304,38 +305,38 @@ const TillHistory = () => {
                     <th className="px-4 py-2 text-left text-sm font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200">
                       <div className="flex items-center gap-2">
                         <BsCalendar className="text-blue-600" />
-                        Date
+                        {t('Date')}
                       </div>
                     </th>
-                    <th className="px-4 py-2 text-left text-sm font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200">
+                    <th className="px-4 py-2 text-center text-sm font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200">
                       <div className="flex items-center gap-2">
                         <BsWallet2 className="text-blue-600" />
-                        Opening
+                        {t('Opening')}
                       </div>
                     </th>
-                    <th className="px-4 py-2 text-left text-sm font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200">
+                    <th className="px-4 py-2 text-center text-sm font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200">
                       <div className="flex items-center gap-2">
                         <BsArrowDownLeft className="text-green-600" />
-                        Cash In
+                        {t('Cash In')}
                       </div>
                     </th>
-                    <th className="px-4 py-2 text-left text-sm font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200">
+                    <th className="px-4 py-2 text-center text-sm font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200">
                       <div className="flex items-center gap-2">
                         <BsArrowUpRight className="text-red-600" />
-                        Cash Out
+                        {t('Cash Out')}
                       </div>
                     </th>
-                    <th className="px-4 py-2 text-left text-sm font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200">
+                    <th className="px-4 py-2 text-center text-sm font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200">
                       <div className="flex items-center gap-2">
                         <BsCashCoin className="text-purple-600" />
-                        Closing
+                        {t('Closing')}
                       </div>
                     </th>
-                    <th className="px-4 py-2 text-left text-sm font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200">
-                      Difference
+                    <th className="px-4 py-2 text-center text-sm font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200">
+                      {t('Difference')}
                     </th>
-                    <th className="px-4 py-2 text-left text-sm font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200">
-                      Status
+                    <th className="px-4 py-2 text-center text-sm font-bold text-gray-700 uppercase tracking-wider border-b border-gray-200">
+                      {t('Status')}
                     </th>
                   </tr>
                 </thead>
@@ -352,21 +353,19 @@ const TillHistory = () => {
                           </div>
                           <div>
                             <div className="text-md font-bold text-gray-900 group-hover:text-blue-800 transition-colors">
-                              {new Date(till.date).toLocaleDateString('en-US', {
-                                weekday: 'short',
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                              })}
+                              {formatDisplay(till.date)}
                             </div>
                             <div className="text-sm text-gray-500">
-                              {new Date(till.date).toLocaleDateString()}
+                              {formatDisplay(till.date, { showTime: true })}
                             </div>
                           </div>
                         </div>
                       </td>
                       <td className="px-4 py-6 whitespace-nowrap">
-                        <div className="text-sm font-bold text-gray-900">
+                        <div
+                          dir="ltr"
+                          className="text-sm font-bold text-gray-900"
+                        >
                           ${formatCurrency(till.openingBalance)}
                         </div>
                       </td>
@@ -381,7 +380,10 @@ const TillHistory = () => {
                         </div>
                       </td>
                       <td className="px-4 py-6 whitespace-nowrap">
-                        <div className="text-sm font-bold text-purple-600 bg-purple-50 px-3 py-2 rounded-2xl border border-purple-200">
+                        <div
+                          dir="ltr"
+                          className="text-sm font-bold text-purple-600 bg-purple-50 px-3 py-2 rounded-2xl border border-purple-200"
+                        >
                           ${formatCurrency(till.closingBalance)}
                         </div>
                       </td>
@@ -402,7 +404,7 @@ const TillHistory = () => {
                     <BsClockHistory className="text-3xl text-gray-400" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-600 mb-2">
-                    No Till Records Found
+                    {t('No Till Records Found')}
                   </h3>
                   <p className="text-gray-500 max-w-md mx-auto">
                     {filters.startDate || filters.endDate || filters.search

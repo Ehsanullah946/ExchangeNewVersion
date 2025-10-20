@@ -6,6 +6,8 @@ import {
   BsLightningCharge,
   BsSearch,
   BsXCircle,
+  BsPerson,
+  BsPersonPlus,
 } from 'react-icons/bs';
 import { BsListCheck } from 'react-icons/bs';
 import { BsPrinter } from 'react-icons/bs';
@@ -13,37 +15,376 @@ import { useTranslation } from 'react-i18next';
 import { RiDownload2Line } from 'react-icons/ri';
 import { Link, useNavigate } from 'react-router-dom';
 import { useToast } from '../../../hooks/useToast';
-import { useCreateReceive } from '../../../hooks/useReceive';
+import {
+  useCreateReceive,
+  useUpdateReceiveReceiver,
+  useUpdateReceiveSender,
+} from '../../../hooks/useReceive';
 import { useMoneyType } from '../../../hooks/useMoneyType';
 import { useCustomers } from '../../../hooks/useCustomers';
 import { useBranch } from '../../../hooks/useBranch';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
 import AfghanDatePicker from '../../../components/common/AfghanDatePicker';
 import DateInput from '../../../components/common/DateInput';
+
+// Modal Components
+const SenderModal = ({ isOpen, onClose, onSubmit, initialData, isLoading }) => {
+  const { t } = useTranslation();
+  const [form, setForm] = useState({
+    firstName: initialData?.firstName || initialData?.senderName || '',
+    lastName: initialData?.lastName || '',
+    fatherName: initialData?.fatherName || '',
+    nationalCode: initialData?.nationalCode || '',
+    phone: initialData?.phone || '',
+    photo: initialData?.photo || '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(form);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+        {/* Modal Header */}
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-t-2xl p-4">
+          <div className="flex items-center justify-between text-white">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                <BsPerson className="text-xl" />
+              </div>
+              <h2 className="text-xl font-bold">{t('Sender Information')}</h2>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+            >
+              <BsXCircle className="text-lg" />
+            </button>
+          </div>
+        </div>
+
+        {/* Modal Content */}
+        <div className="p-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  {t('First Name')} *
+                </label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={form.firstName}
+                  onChange={handleChange}
+                  className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+                  required
+                />
+              </div>
+
+              <div className="group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  {t('Last Name')}
+                </label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={form.lastName}
+                  onChange={handleChange}
+                  className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+                />
+              </div>
+            </div>
+
+            <div className="group">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('Father Name')}
+              </label>
+              <input
+                type="text"
+                name="fatherName"
+                value={form.fatherName}
+                onChange={handleChange}
+                className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+              />
+            </div>
+
+            <div className="group">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('National Code')}
+              </label>
+              <input
+                type="text"
+                name="nationalCode"
+                value={form.nationalCode}
+                onChange={handleChange}
+                className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+              />
+            </div>
+
+            <div className="group">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('Phone Number')}
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+              />
+            </div>
+
+            <div className="group">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('Photo URL')}
+              </label>
+              <input
+                type="url"
+                name="photo"
+                value={form.photo}
+                onChange={handleChange}
+                className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+                placeholder="https://example.com/photo.jpg"
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-4">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <BsCheckCircle className="text-md" />
+                )}
+                {t('Save Sender')}
+              </button>
+
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-gray-500 to-slate-600 hover:from-gray-600 hover:to-slate-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                <BsXCircle className="text-md" />
+                {t('Cancel')}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ReceiverModal = ({
+  isOpen,
+  onClose,
+  onSubmit,
+  initialData,
+  isLoading,
+}) => {
+  const { t } = useTranslation();
+  const [form, setForm] = useState({
+    firstName: initialData?.firstName || initialData?.receiverName || '',
+    lastName: initialData?.lastName || '',
+    fatherName: initialData?.fatherName || '',
+    nationalCode: initialData?.nationalCode || '',
+    phone: initialData?.phone || '',
+    photo: initialData?.photo || '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(form);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
+        {/* Modal Header */}
+        <div className="bg-gradient-to-r from-green-600 to-teal-600 rounded-t-2xl p-4">
+          <div className="flex items-center justify-between text-white">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                <BsPersonPlus className="text-xl" />
+              </div>
+              <h2 className="text-xl font-bold">{t('Receiver Information')}</h2>
+            </div>
+            <button
+              onClick={onClose}
+              className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+            >
+              <BsXCircle className="text-lg" />
+            </button>
+          </div>
+        </div>
+
+        {/* Modal Content */}
+        <div className="p-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  {t('First Name')} *
+                </label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={form.firstName}
+                  onChange={handleChange}
+                  className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+                  required
+                />
+              </div>
+
+              <div className="group">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  {t('Last Name')}
+                </label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={form.lastName}
+                  onChange={handleChange}
+                  className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+                />
+              </div>
+            </div>
+
+            <div className="group">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('Father Name')}
+              </label>
+              <input
+                type="text"
+                name="fatherName"
+                value={form.fatherName}
+                onChange={handleChange}
+                className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+              />
+            </div>
+
+            <div className="group">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('National Code')}
+              </label>
+              <input
+                type="text"
+                name="nationalCode"
+                value={form.nationalCode}
+                onChange={handleChange}
+                className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+              />
+            </div>
+
+            <div className="group">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('Phone Number')}
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+              />
+            </div>
+
+            <div className="group">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('Photo URL')}
+              </label>
+              <input
+                type="url"
+                name="photo"
+                value={form.photo}
+                onChange={handleChange}
+                className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+                placeholder="https://example.com/photo.jpg"
+              />
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-3 pt-4">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  <BsCheckCircle className="text-md" />
+                )}
+                {t('Save Receiver')}
+              </button>
+
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-gray-500 to-slate-600 hover:from-gray-600 hover:to-slate-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                <BsXCircle className="text-md" />
+                {t('Cancel')}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Receive = () => {
   const { t } = useTranslation();
-
   const navigate = useNavigate();
   const toast = useToast();
   const { mutate, isLoading } = useCreateReceive();
 
-  const { currentCalendar } = useDateFormatter();
+  // Add these hooks for the modal endpoints (you'll need to create these)
+  const { mutate: updateSender } = useUpdateReceiveSender();
+  const { mutate: updateReceiver } = useUpdateReceiveReceiver();
 
+  const { currentCalendar } = useDateFormatter();
   const { data: moneyTypeResponse } = useMoneyType();
+  const { data: customerResponse } = useCustomers();
+  const { data: branchResponse } = useBranch();
+
+  // Modal states
+  const [senderModalOpen, setSenderModalOpen] = useState(false);
+  const [receiverModalOpen, setReceiverModalOpen] = useState(false);
+  const [currentReceiveId, setCurrentReceiveId] = useState(null);
+  const [isUpdatingSender, setIsUpdatingSender] = useState(false);
+  const [isUpdatingReceiver, setIsUpdatingReceiver] = useState(false);
 
   const moneyTypeOptions = (moneyTypeResponse?.data || []).map((c) => ({
     value: c.id,
     label: `${c.typeName}`,
   }));
 
-  const { data: customerResponse } = useCustomers();
-
   const customerOptions = (customerResponse?.data || []).map((c) => ({
     value: c.id,
     label: `${c.Stakeholder?.Person?.firstName} ${c.Stakeholder?.Person?.lastName}`,
   }));
-
-  const { data: branchResponse } = useBranch();
 
   const branchOptions = (branchResponse?.data || []).map((b) => ({
     value: b.id,
@@ -79,10 +420,64 @@ const Receive = () => {
     }));
   };
 
+  // Functions to handle modal operations
+  const handleOpenSenderModal = () => {
+    if (!form.senderName) {
+      toast.error(t('Please enter sender name first'));
+      return;
+    }
+    setSenderModalOpen(true);
+  };
+
+  const handleOpenReceiverModal = () => {
+    if (!form.receiverName) {
+      toast.error(t('Please enter receiver name first'));
+      return;
+    }
+    setReceiverModalOpen(true);
+  };
+
+  const handleUpdateSender = async (senderData) => {
+    if (!currentReceiveId) {
+      toast.error(t('No receive selected'));
+      return;
+    }
+    setIsUpdatingSender(true);
+    try {
+      // Replace with your actual API call
+      await updateSender({ id: currentReceiveId, ...senderData });
+      toast.success(t('Sender information updated successfully'));
+      setSenderModalOpen(false);
+    } catch (error) {
+      toast.error(t('Failed to update sender information'));
+    } finally {
+      setIsUpdatingSender(false);
+    }
+  };
+
+  const handleUpdateReceiver = async (receiverData) => {
+    if (!currentReceiveId) {
+      toast.error(t('No receive selected'));
+      return;
+    }
+
+    setIsUpdatingReceiver(true);
+    try {
+      // Replace with your actual API call
+      await updateReceiver({ id: currentReceiveId, ...receiverData });
+      toast.success(t('Receiver information updated successfully'));
+      setReceiverModalOpen(false);
+    } catch (error) {
+      toast.error(t('Failed to update receiver information'));
+    } finally {
+      setIsUpdatingReceiver(false);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // simple validation
+    // Simple validation
     if (
       !form.fromWhere ||
       !form.senderName ||
@@ -108,9 +503,42 @@ const Receive = () => {
     );
 
     mutate(cleanData, {
-      onSuccess: () => {
+      onSuccess: (response) => {
+        // Set the current receive ID for modal operations
+        if (response?.receive?.id) {
+          setCurrentReceiveId(response.receive.id);
+        }
+
         toast.success(t('Receive Created'));
-        navigate('/main/receiveList');
+
+        // Show success message with options to complete sender/receiver info
+        toast.info(
+          <div className="flex flex-col gap-2">
+            <p>{t('Receive created successfully!')}</p>
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={handleOpenSenderModal}
+                className="flex items-center gap-1 px-3 py-1 bg-blue-500 text-white rounded-lg text-sm hover:bg-blue-600 transition-colors"
+              >
+                <BsPerson className="text-xs" />
+                {t('Complete Sender Info')}
+              </button>
+              <button
+                onClick={handleOpenReceiverModal}
+                className="flex items-center gap-1 px-3 py-1 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600 transition-colors"
+              >
+                <BsPersonPlus className="text-xs" />
+                {t('Complete Receiver Info')}
+              </button>
+            </div>
+          </div>,
+          { duration: 6000 }
+        );
+
+        // Navigate to list page after a delay
+        setTimeout(() => {
+          navigate('/main/receiveList');
+        }, 3000);
       },
       onError: (error) => {
         console.error('Backend error:', error);
@@ -136,11 +564,11 @@ const Receive = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-6">
         <div className="max-w-7xl mx-auto">
           {/* Header Actions */}
-          <div className=" flex mt-1 justify-between  gap-1 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 mb-1">
+          <div className="flex mt-1 justify-between gap-1 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 mb-1">
             <div className="flex flex-wrap justify-center items-center p-2 gap-3">
               <Link to="/main/receiveList">
                 <button
-                  className="flex  items-center gap-2 px-2 py-1 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-z-150 active:scale-110"
+                  className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-z-150 active:scale-110"
                   type="primary"
                 >
                   <span className="flex justify-between">
@@ -250,36 +678,59 @@ const Receive = () => {
                       />
                     </div>
 
-                    {/* Transfer Input */}
+                    {/* Sender Input with Complete Button */}
                     <div className="group">
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        {t('Transfer')}
+                        {t('Sender')}
                       </label>
-                      <input
-                        type="text"
-                        name="senderName"
-                        onChange={handleChange}
-                        value={form.senderName}
-                        className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
-                        required
-                      />
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          name="senderName"
+                          onChange={handleChange}
+                          value={form.senderName}
+                          className="flex-1 border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={handleOpenSenderModal}
+                          disabled={!form.senderName}
+                          className="flex items-center gap-1 px-3 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white rounded-xl transition-all duration-200 shadow-sm disabled:cursor-not-allowed"
+                          title={t('Complete sender information')}
+                        >
+                          <BsPerson className="text-sm" />
+                        </button>
+                      </div>
                     </div>
 
-                    {/* Receiver Input */}
+                    {/* Receiver Input with Complete Button */}
                     <div className="group">
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
                         {t('Receiver')}
                       </label>
-                      <input
-                        type="text"
-                        name="receiverName"
-                        onChange={handleChange}
-                        value={form.receiverName}
-                        className="w-full border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
-                        required
-                      />
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          name="receiverName"
+                          onChange={handleChange}
+                          value={form.receiverName}
+                          className="flex-1 border border-gray-200 bg-gray-50/50 rounded-xl py-2 px-4 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+                          required
+                        />
+                        <button
+                          type="button"
+                          onClick={handleOpenReceiverModal}
+                          disabled={!form.receiverName}
+                          className="flex items-center gap-1 px-3 py-2 bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white rounded-xl transition-all duration-200 shadow-sm disabled:cursor-not-allowed"
+                          title={t('Complete receiver information')}
+                        >
+                          <BsPersonPlus className="text-sm" />
+                        </button>
+                      </div>
                     </div>
 
+                    {/* Rest of your existing form fields... */}
                     {/* Amount with Currency */}
                     <div className="group">
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -418,7 +869,7 @@ const Receive = () => {
                     </div>
                   </div>
 
-                  {/* Right Column */}
+                  {/* Right Column - Keep your existing right column code */}
                   <div className="space-y-2">
                     {/* Customer vs Pass To Radio Group */}
                     <div className="group">
@@ -689,6 +1140,28 @@ const Receive = () => {
           </div>
         </div>
       </div>
+
+      <SenderModal
+        isOpen={senderModalOpen}
+        onClose={() => setSenderModalOpen(false)}
+        onSubmit={handleUpdateSender}
+        initialData={{
+          senderName: form.senderName,
+          firstName: form.senderName,
+        }}
+        isLoading={isUpdatingSender}
+      />
+
+      <ReceiverModal
+        isOpen={receiverModalOpen}
+        onClose={() => setReceiverModalOpen(false)}
+        onSubmit={handleUpdateReceiver}
+        initialData={{
+          receiverName: form.receiverName,
+          firstName: form.receiverName,
+        }}
+        isLoading={isUpdatingReceiver}
+      />
     </>
   );
 };

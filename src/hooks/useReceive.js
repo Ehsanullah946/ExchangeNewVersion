@@ -6,6 +6,8 @@ import {
   getSingleReceive,
   rejectReceive,
   updateReceive,
+  UpdateReceiveReceiver,
+  UpdateReceiveSender,
 } from '../api/receiveApi';
 
 export const useReceive = (search = '', limit = 10, page = 1) => {
@@ -20,6 +22,7 @@ export const useReceive = (search = '', limit = 10, page = 1) => {
     },
   });
 };
+
 export const useSingleReceive = (id) => {
   return useQuery({
     queryKey: ['receive', id],
@@ -42,6 +45,26 @@ export const useCreateReceive = () => {
     },
   });
 };
+export const useUpdateReceiveSender = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: UpdateReceiveSender,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['receive']);
+    },
+  });
+};
+
+export const useUpdateReceiveReceiver = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: UpdateReceiveReceiver,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['receive']);
+    },
+  });
+};
+
 export const useUpdateReceive = () => {
   const queryClient = useQueryClient();
   return useMutation({

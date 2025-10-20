@@ -22,7 +22,9 @@ const TillStats = ({
 
   const stats = [
     {
-      title: isMultiCurrency ? 'Total Opening Balance' : 'Opening Balance',
+      title: isMultiCurrency
+        ? `${t('Total Opening Balance')}`
+        : 'Opening Balance',
       value: todayTill?.openingBalance || '0.00',
       icon: <BsWallet2 className="text-xl" />,
       gradient: 'from-blue-500 to-cyan-500',
@@ -30,7 +32,7 @@ const TillStats = ({
       borderColor: 'border-blue-200',
     },
     {
-      title: isMultiCurrency ? 'Total Cash In' : 'Total Cash In',
+      title: isMultiCurrency ? `${t('Total Cash In')}` : 'Total Cash In',
       value: todayTill?.totalIn || '0.00',
       icon: <BsArrowDownLeft className="text-xl" />,
       gradient: 'from-green-500 to-emerald-500',
@@ -38,7 +40,7 @@ const TillStats = ({
       borderColor: 'border-green-200',
     },
     {
-      title: isMultiCurrency ? 'Total Cash Out' : 'Total Cash Out',
+      title: isMultiCurrency ? `${t('Total Cash Out')}` : 'Total Cash Out',
       value: todayTill?.totalOut || '0.00',
       icon: <BsArrowUpRight className="text-xl" />,
       gradient: 'from-red-500 to-rose-500',
@@ -46,7 +48,9 @@ const TillStats = ({
       borderColor: 'border-red-200',
     },
     {
-      title: isMultiCurrency ? 'Total Closing Balance' : 'Closing Balance',
+      title: isMultiCurrency
+        ? `${t('Total Closing Balance')}`
+        : 'Closing Balance',
       value: todayTill?.closingBalance || '0.00',
       icon: isMultiCurrency ? (
         <BsCurrencyExchange className="text-xl" />

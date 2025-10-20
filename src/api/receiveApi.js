@@ -50,3 +50,13 @@ export const getSingleReceive = async (id) => {
   const { data } = await axiosClient.get(`/receive/${id}`);
   return data;
 };
+
+export const UpdateReceiveReceiver = async ({ id, ...payload }) => {
+  const { data } = await axiosClient.post(`/receive/${id}/receiver`, payload);
+  return data;
+};
+
+export const UpdateReceiveSender = async ({ id, ...payload }) => {
+  const { data } = await axiosClient.post(`/receive/${id}/sender`, payload);
+  return data;
+};
