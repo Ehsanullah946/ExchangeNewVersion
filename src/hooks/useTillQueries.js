@@ -2,6 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   closeTill,
+  getMoneyTypes,
   getTillDetail,
   getTillHistory,
   getTodayTill,
@@ -23,6 +24,14 @@ export const useTodayTill = () => {
     queryFn: () => getTodayTill(),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true,
+  });
+};
+
+export const useMoneyTypes = () => {
+  return useQuery({
+    queryKey: ['moneyTypes'],
+    queryFn: () => getMoneyTypes(),
+    staleTime: 5 * 60 * 1000,
   });
 };
 

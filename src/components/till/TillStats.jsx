@@ -5,19 +5,24 @@ import {
   BsArrowUpRight,
   BsArrowDownLeft,
   BsCashCoin,
+  BsCurrencyExchange,
 } from 'react-icons/bs';
 import { FiRefreshCw } from 'react-icons/fi';
 import { useUpdateTillTotals } from '../../hooks/useTillQueries';
 import { useTranslation } from 'react-i18next';
 import { formatNumber } from '../../utils/formatNumber';
 
-const TillStats = ({ todayTill }) => {
+const TillStats = ({
+  todayTill,
+  isMultiCurrency = false,
+  currencyName = '',
+}) => {
   const updateTotalsMutation = useUpdateTillTotals();
   const { t } = useTranslation();
 
   const stats = [
     {
-      title: 'Opening Balance',
+      title: isMultiCurrency ? 'Total Opening Balance' : 'Opening Balance',
       value: todayTill?.openingBalance || '0.00',
       icon: <BsWallet2 className="text-xl" />,
       gradient: 'from-blue-500 to-cyan-500',
@@ -25,7 +30,7 @@ const TillStats = ({ todayTill }) => {
       borderColor: 'border-blue-200',
     },
     {
-      title: 'Total Cash In',
+      title: isMultiCurrency ? 'Total Cash In' : 'Total Cash In',
       value: todayTill?.totalIn || '0.00',
       icon: <BsArrowDownLeft className="text-xl" />,
       gradient: 'from-green-500 to-emerald-500',
@@ -33,7 +38,7 @@ const TillStats = ({ todayTill }) => {
       borderColor: 'border-green-200',
     },
     {
-      title: 'Total Cash Out',
+      title: isMultiCurrency ? 'Total Cash Out' : 'Total Cash Out',
       value: todayTill?.totalOut || '0.00',
       icon: <BsArrowUpRight className="text-xl" />,
       gradient: 'from-red-500 to-rose-500',
@@ -41,11 +46,19 @@ const TillStats = ({ todayTill }) => {
       borderColor: 'border-red-200',
     },
     {
-      title: 'Closing Balance',
+      title: isMultiCurrency ? 'Total Closing Balance' : 'Closing Balance',
       value: todayTill?.closingBalance || '0.00',
-      icon: <BsCashCoin className="text-xl" />,
-      gradient: 'from-purple-500 to-violet-500',
-      bgGradient: 'from-purple-50 to-violet-50',
+      icon: isMultiCurrency ? (
+        <BsCurrencyExchange className="text-xl" />
+      ) : (
+        <BsCashCoin className="text-xl" />
+      ),
+      gradient: isMultiCurrency
+        ? 'from-purple-500 to-indigo-500'
+        : 'from-purple-500 to-violet-500',
+      bgGradient: isMultiCurrency
+        ? 'from-purple-50 to-indigo-50'
+        : 'from-purple-50 to-violet-50',
       borderColor: 'border-purple-200',
     },
   ];
@@ -67,6 +80,20 @@ const TillStats = ({ todayTill }) => {
 
   return (
     <>
+      {isMultiCurrency && currencyName && (
+        <div className="mb-4 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl border border-blue-200">
+          <div className="flex items-center gap-3">
+            <BsCurrencyExchange className="text-blue-600 text-xl" />
+            <div>
+              <h3 className="font-bold text-blue-800">{t(currencyName)}</h3>
+              <p className="text-sm text-blue-600">
+                {t('Multi-currency aggregated view')}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat, index) => (
           <div
@@ -96,22 +123,24 @@ const TillStats = ({ todayTill }) => {
         ))}
       </div>
 
-      <div className="flex justify-end mb-8">
-        <button
-          onClick={handleUpdateTotals}
-          disabled={updateTotalsMutation.isPending}
-          className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
-        >
-          <FiRefreshCw
-            className={`text-lg ${
-              updateTotalsMutation.isPending ? 'animate-spin' : ''
-            }`}
-          />
-          {updateTotalsMutation.isPending
-            ? 'Updating...'
-            : `${t('Update Totals')}`}
-        </button>
-      </div>
+      {!isMultiCurrency && (
+        <div className="flex justify-end mb-8">
+          <button
+            onClick={handleUpdateTotals}
+            disabled={updateTotalsMutation.isPending}
+            className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:hover:translate-y-0"
+          >
+            <FiRefreshCw
+              className={`text-lg ${
+                updateTotalsMutation.isPending ? 'animate-spin' : ''
+              }`}
+            />
+            {updateTotalsMutation.isPending
+              ? 'Updating...'
+              : `${t('Update Totals')}`}
+          </button>
+        </div>
+      )}
     </>
   );
 };

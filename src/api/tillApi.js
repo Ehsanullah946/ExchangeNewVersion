@@ -10,6 +10,11 @@ export const closeTill = async (payload) => {
   return data;
 };
 
+export const getMoneyTypes = async () => {
+  const { data } = await axiosClient.get('/till/money-types');
+  return data.data;
+};
+
 export const getTillHistory = async (params) => {
   const { data } = await axiosClient.get(`/till/history`, { params });
   return data;
