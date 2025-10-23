@@ -67,7 +67,7 @@ const SalaryDashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-5">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -157,7 +157,6 @@ const SalaryDashboard = () => {
             </nav>
           </div>
 
-          {/* Tab Content */}
           <div className="p-6">
             {activeTab === 'overview' && <SalarySummary summary={summary} />}
             {activeTab === 'salaries' && <SalaryList />}

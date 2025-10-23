@@ -1,4 +1,3 @@
-// components/RateDetails.js - Fixed with Scrollable Modal
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -9,9 +8,12 @@ import {
   BsCurrencyExchange,
   BsArrowLeftRight,
 } from 'react-icons/bs';
+import { useDateFormatter } from '../../hooks/useDateFormatter';
 
 const RateDetails = ({ rate, onClose }) => {
   const { t } = useTranslation();
+
+  const { displayDate } = useDateFormatter();
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-500000 p-4">
@@ -55,7 +57,7 @@ const RateDetails = ({ rate, onClose }) => {
                     {rate.sourceCurrency?.typeName}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">
-                    ID: {rate.fromCurrency}
+                    {t('ID')}: {rate.fromCurrency}
                   </div>
                 </div>
 
@@ -71,7 +73,7 @@ const RateDetails = ({ rate, onClose }) => {
                     {rate.targetCurrency?.typeName}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">
-                    ID: {rate.toCurrency}
+                    {t('ID')}: {rate.toCurrency}
                   </div>
                 </div>
               </div>
@@ -178,7 +180,7 @@ const RateDetails = ({ rate, onClose }) => {
                       {t('Created At')}:
                     </span>
                     <p className="text-gray-900 font-medium">
-                      {new Date(rate.createdAt).toLocaleString()}
+                      {displayDate(rate.createdAt)}
                     </p>
                   </div>
                 </div>
