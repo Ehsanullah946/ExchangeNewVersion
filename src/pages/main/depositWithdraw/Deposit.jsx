@@ -20,7 +20,7 @@ import AfghanDatePicker from '../../../components/common/AfghanDatePicker';
 
 const Deposit = () => {
   const { t } = useTranslation();
-  const { currentCalendar } = useDateFormatter();
+  const { currentCalendar, formatDisplay } = useDateFormatter();
 
   const toast = useToast();
   const { mutate, isLoading } = useCreateDeposit();
@@ -109,19 +109,24 @@ const Deposit = () => {
     });
   };
 
-  // Helper function to determine balance color
-  const getBalanceColor = (balance) => {
-    if (balance < 0) return 'text-red-600';
-    if (balance > 0) return 'text-green-600';
-    return 'text-gray-600';
-  };
+  const getAccountStatus = (account) => {
+    if (account.conversionDirection === 'no_rate') {
+      return { color: 'bg-red-100 text-red-800', text: 'No Rate' };
+    }
 
-  const getStatus = (balance) => {
-    if (balance < 0)
-      return { text: t('Debtor'), color: 'bg-red-100 text-red-800' };
-    if (balance > 0)
-      return { text: t('Creditor'), color: 'bg-green-100 text-green-800' };
-    return { text: t('Balanced'), color: 'bg-gray-100 text-gray-800' };
+    if (account.isBaseCurrency) {
+      return { color: 'bg-green-100 text-green-800', text: 'Base Currency' };
+    }
+
+    if (account.conversionDirection === 'direct') {
+      return { color: 'bg-blue-100 text-blue-800', text: 'Direct Rate' };
+    }
+
+    if (account.conversionDirection === 'inverse') {
+      return { color: 'bg-purple-100 text-purple-800', text: 'Inverse Rate' };
+    }
+
+    return { color: 'bg-gray-100 text-gray-800', text: 'Same Currency' };
   };
 
   return (
@@ -333,7 +338,7 @@ const Deposit = () => {
                                 {accountSummary.customer.name}
                               </h4>
                               <p className="text-sm text-gray-500">
-                                {t('Customer')}
+                                {t('Customer ID')}: {accountSummary.customer.id}
                               </p>
                             </div>
                           </div>
@@ -353,6 +358,7 @@ const Deposit = () => {
                                 <th className="px-3 py-2 text-center text-white font-semibold text-sm">
                                   {t('Converted')}
                                 </th>
+
                                 <th className="px-3 py-2 text-center text-white font-semibold text-sm">
                                   {t('Status')}
                                 </th>
@@ -360,26 +366,37 @@ const Deposit = () => {
                             </thead>
                             <tbody>
                               {accountSummary.accounts.map((account, index) => {
-                                const status = getStatus(
-                                  account.originalBalance
-                                );
+                                const isCurrentAccount =
+                                  account.accountId ===
+                                  accountSummary.requestedAccount.id;
+                                const status = getAccountStatus(account);
+
                                 return (
                                   <tr
-                                    key={index}
-                                    className="border-b border-gray-100 hover:bg-gray-50/80 transition-colors last:border-b-0"
+                                    key={account.accountId}
+                                    className={`border-b border-gray-100 hover:bg-gray-50/80 transition-colors last:border-b-0 ${
+                                      isCurrentAccount ? 'bg-blue-50' : ''
+                                    }`}
                                   >
                                     <td className="px-3 py-2">
-                                      <div className="flex items-center gap-1">
+                                      <div className="flex items-center gap-2">
                                         <span className="font-medium text-gray-700">
                                           {account.currencyName}
                                         </span>
+                                        {account.isBaseCurrency && (
+                                          <span className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                                            {t('Base')}
+                                          </span>
+                                        )}
                                       </div>
                                     </td>
                                     <td
                                       dir="ltr"
-                                      className={`px-3 py-2 font-bold ${getBalanceColor(
-                                        account.originalBalance
-                                      )}`}
+                                      className={`px-3 py-2 font-bold ${
+                                        isCurrentAccount
+                                          ? 'text-blue-700'
+                                          : 'text-gray-700'
+                                      }`}
                                     >
                                       {formatNumber(account.originalBalance)}{' '}
                                       {account.currencyName}
@@ -389,7 +406,7 @@ const Deposit = () => {
                                       className="px-3 py-2 font-medium text-gray-600"
                                     >
                                       {formatNumber(account.convertedBalance)}{' '}
-                                      {accountSummary.mainCurrency.name}
+                                      {accountSummary.summary.baseCurrency}
                                     </td>
                                     <td className="px-3 py-2">
                                       <span
@@ -414,8 +431,15 @@ const Deposit = () => {
                                   {t('Total Balance')}
                                 </p>
                                 <p dir="ltr" className="text-xl font-bold mt-1">
-                                  {formatNumber(accountSummary.total.value)}{' '}
-                                  {accountSummary.total.currency}
+                                  {formatNumber(
+                                    accountSummary.summary.totalInBaseCurrency
+                                  )}{' '}
+                                  {accountSummary.summary.baseCurrency}
+                                </p>
+                                <p className="text-blue-100 flex-row text-xs mt-1">
+                                  {t('Converted')}
+                                  {': '}
+                                  {formatDisplay(accountSummary.conversionDate)}
                                 </p>
                               </div>
                               <BsCurrencyDollar className="text-2xl text-blue-200" />
@@ -425,19 +449,26 @@ const Deposit = () => {
                           <div className="grid grid-cols-2 gap-4">
                             <div className="bg-white rounded-xl p-3 shadow-lg border border-green-100">
                               <div className="text-sm text-gray-500 font-bold">
-                                {t('Main Currency')}
+                                {t('Base Currency')}
                               </div>
                               <div className="text-lg font-bold text-green-600 mt-1">
-                                {accountSummary.mainCurrency.name}
+                                {accountSummary.summary.baseCurrency}
                               </div>
                             </div>
+
                             <div className="bg-white rounded-xl p-3 shadow-lg border border-purple-100">
                               <div className="text-sm text-gray-500 font-bold">
                                 {t('Total Accounts')}
                               </div>
                               <div className="text-lg font-bold text-purple-600 mt-1">
-                                {accountSummary.accounts.length}
+                                {accountSummary.summary.totalAccounts}
                               </div>
+                              {accountSummary.summary.missingRates > 0 && (
+                                <div className="text-xs text-red-500 mt-1">
+                                  {accountSummary.summary.missingRates}{' '}
+                                  {t('missing rates')}
+                                </div>
+                              )}
                             </div>
                           </div>
                         </div>
