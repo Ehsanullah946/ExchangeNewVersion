@@ -14,6 +14,7 @@ import {
   BsPrinter,
   BsSearch,
   BsTrash,
+  BsX,
 } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 import { BsSend } from 'react-icons/bs';
