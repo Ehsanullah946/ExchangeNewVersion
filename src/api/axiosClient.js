@@ -1,10 +1,9 @@
 // api/client.js
 import axios from 'axios';
 
-const API_BASE_URL =
-  process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
+const API_BASE_URL = 'http://localhost:3000/api/v1';
 
-const apiClient = axios.create({
+const axiosClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
@@ -12,7 +11,7 @@ const apiClient = axios.create({
 });
 
 // Add token to requests automatically
-apiClient.interceptors.request.use(
+axiosClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -26,7 +25,7 @@ apiClient.interceptors.request.use(
 );
 
 // Handle auth errors
-apiClient.interceptors.response.use(
+axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
@@ -39,4 +38,4 @@ apiClient.interceptors.response.use(
   }
 );
 
-export default apiClient;
+export default axiosClient;

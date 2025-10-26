@@ -112,12 +112,16 @@ export const TransferToAccount = lazy(() =>
 export const TransferToAccountEdit = lazy(() =>
   import('./main/transferToAccount/TransferToAccountEdit')
 );
+
 export const TransferToAccountList = lazy(() =>
   import('./main/transferToAccount/TransferToAccountList')
 );
 
 // Settings
 export const Languages = lazy(() => import('./settings/Languages'));
+export const UserManagement = lazy(() =>
+  import('./settings/users/UserManagement')
+);
 
 // Daily
 export const DailyTransaction = lazy(() => import('./daily/DailyTransaction'));

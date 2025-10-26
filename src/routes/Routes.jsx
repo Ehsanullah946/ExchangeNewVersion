@@ -193,6 +193,11 @@ export const routes = [
         nameKey: 'Languages',
         icon: <FaUser />,
       },
+      {
+        path: '/settings/userManagement',
+        nameKey: 'Users',
+        icon: <FaUser />,
+      },
     ],
   },
 ];

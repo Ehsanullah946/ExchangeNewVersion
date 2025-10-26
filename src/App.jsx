@@ -1,5 +1,5 @@
+// App.jsx
 import React from 'react';
-import SideBar from './components/layout/SideBar';
 import {
   Navigate,
   BrowserRouter as Router,
@@ -68,6 +68,7 @@ import {
   SalaryDashboard,
   Employee,
   Till,
+  UserManagement,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -80,15 +81,23 @@ const App = () => {
     <ContextProvider>
       <Router>
         <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={<Login />} />
+
+          {/* Protected routes with layout */}
           <Route
+            path="/"
             element={
               <PrivateRoute>
                 <ProtectedLayout />
               </PrivateRoute>
             }
           >
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/management" element={<Management />}>
+            {/* Dashboard - accessible to all authenticated users */}
+            <Route index element={<Dashboard />} />
+
+            {/* Management routes - restrict to specific roles if needed */}
+            <Route path="management" element={<Management />}>
               <Route index element={<Navigate replace to="customer" />} />
               <Route path="customer" element={<Customers />} />
               <Route path="customer/:id/edit" element={<CustomerEdit />} />
@@ -118,7 +127,9 @@ const App = () => {
                 element={<SenderReceiverEdit />}
               />
             </Route>
-            <Route path="/main" element={<Main />}>
+
+            {/* Main routes */}
+            <Route path="main" element={<Main />}>
               <Route path="receive" element={<Receive />} />
               <Route path="receive/:id/edit" element={<ReceiveEdit />} />
               <Route path="receiveList" element={<ReceiveList />} />
@@ -147,7 +158,9 @@ const App = () => {
                 element={<TransferToAccountList />}
               />
             </Route>
-            <Route path="/accounts" element={<Accounts />}>
+
+            {/* Accounts routes */}
+            <Route path="accounts" element={<Accounts />}>
               <Route path="accountAdd" element={<Account />} />
               <Route path="account/:id/edit" element={<AccountEdit />} />
               <Route path="accountList" element={<AccountList />} />
@@ -156,29 +169,55 @@ const App = () => {
                 element={<AccountTransaction />}
               />
             </Route>
-            <Route path="/daily" element={<Daily />}>
+
+            {/* Daily routes */}
+            <Route path="daily" element={<Daily />}>
               <Route path="dailyTransaction" element={<DailyTransaction />} />
               <Route
                 path="dailyTransactionList"
                 element={<DailyTransactionList />}
               />
             </Route>
-            <Route path="/rates" element={<Rates />}>
+
+            {/* Rates routes */}
+            <Route path="rates" element={<Rates />}>
               <Route path="exchange" element={<Exchange />} />
               <Route path="exchangeList" element={<ExchangeList />} />
               <Route path="exchange/:id/edit" element={<ExchangeEdit />} />
               <Route path="rate" element={<Rate />} />
             </Route>
-            <Route path="/settings" element={<Settings />}>
+
+            {/* Settings routes - restrict UserManagement to admin only */}
+            <Route path="settings" element={<Settings />}>
               <Route path="languages" element={<Languages />} />
+              <Route
+                path="userManagement"
+                element={
+                  <PrivateRoute roles={[2]}>
+                    {' '}
+                    {/* Only organization admin (role 2) */}
+                    <UserManagement />
+                  </PrivateRoute>
+                }
+              />
             </Route>
 
-            <Route path="/till" element={<Till />}>
+            {/* Till routes */}
+            <Route path="till" element={<Till />}>
               <Route path="tillDashboard" element={<TillDashboard />} />
               <Route path="tillHistory" element={<TillHistory />} />
             </Route>
 
-            <Route path="/employees" element={<Employee />}>
+            {/* Employee routes - restrict to admin only */}
+            <Route
+              path="employees"
+              element={
+                <PrivateRoute roles={[2]}>
+                  <Employee />
+                </PrivateRoute>
+              }
+            >
+              <Route index element={<Navigate replace to="employeeList" />} />
               <Route path="SalaryDashboard" element={<SalaryDashboard />} />
               <Route path="employeeAdd" element={<EmployeeAdd />} />
               <Route path="employee/:id/edit" element={<EmployeeEdit />} />
@@ -186,8 +225,7 @@ const App = () => {
             </Route>
           </Route>
 
-          {/* Public routes */}
-          <Route path="/login" element={<Login />} />
+          {/* 404 route */}
           <Route path="*" element={<PageNotF />} />
         </Routes>
       </Router>
