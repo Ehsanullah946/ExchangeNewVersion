@@ -1,19 +1,12 @@
+// features/auth/authSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
-let parsedUser = null;
-try {
-  const storedUser = localStorage.getItem('user');
-  parsedUser = storedUser ? JSON.parse(storedUser) : null;
-} catch (err) {
-  parsedUser = null;
-}
-
-const token = localStorage.getItem('token');
-
 const initialState = {
-  user: parsedUser,
-  token: token || null,
-  isAuthenticated: !!token,
+  user: null,
+  token: null,
+  isAuthenticated: false,
+  organizationId: null,
+  role: null,
 };
 
 const authSlice = createSlice({
@@ -21,23 +14,50 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state, action) => {
-      state.user = action.payload.user;
-      state.token = action.payload.token;
+      const { user, token } = action.payload;
+      state.user = user;
+      state.token = token;
       state.isAuthenticated = true;
+      state.organizationId = user.organizationId;
+      state.role = user.role;
 
-      localStorage.setItem('user', JSON.stringify(action.payload.user));
-      localStorage.setItem('token', action.payload.token);
+      // Store token in localStorage for persistence
+      if (token) {
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(user));
+      }
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
-
-      localStorage.removeItem('user');
+      state.organizationId = null;
+      state.role = null;
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    },
+    // Add this to initialize auth state from localStorage
+    initializeAuth: (state) => {
+      const token = localStorage.getItem('token');
+      const userStr = localStorage.getItem('user');
+
+      if (token && userStr) {
+        try {
+          const user = JSON.parse(userStr);
+          state.user = user;
+          state.token = token;
+          state.isAuthenticated = true;
+          state.organizationId = user.organizationId;
+          state.role = user.role;
+        } catch (error) {
+          // Clear invalid stored data
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
+      }
     },
   },
 });
 
-export const { setCredentials, logout } = authSlice.actions;
+export const { setCredentials, logout, initializeAuth } = authSlice.actions;
 export default authSlice.reducer;

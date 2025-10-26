@@ -16,9 +16,11 @@ import {
   useLiquidateCustomer,
 } from '../../../hooks/useCustomers';
 import { formatNumber } from '../../../utils/formatNumber';
+import { useDateFormatter } from '../../../hooks/useDateFormatter';
 
 const CustomerTransactions = () => {
   const { customerId } = useParams();
+  const { formatDisplay } = useDateFormatter();
   const { t } = useTranslation();
 
   const { open, limit, page } = useSelector((state) => state.filters);
@@ -432,9 +434,6 @@ const CustomerTransactions = () => {
                       <th className="px-4 py-3 text-center text-white font-semibold text-xs uppercase tracking-wider">
                         {t('Type')}
                       </th>
-                      <th className="px-4 py-3 text-center text-white font-semibold text-xs uppercase tracking-wider">
-                        {t('Actions')}
-                      </th>
                     </tr>
                   </thead>
 
@@ -528,14 +527,9 @@ const CustomerTransactions = () => {
                           <td className="px-4 py-3">
                             <div className="flex flex-col">
                               <span className="font-semibold text-gray-800 text-sm">
-                                {new Date(transaction.date).toLocaleDateString(
-                                  'en-GB'
-                                )}
-                              </span>
-                              <span className="text-xs text-gray-500">
-                                {new Date(
-                                  transaction.date
-                                ).toLocaleTimeString()}
+                                {formatDisplay(transaction.date, {
+                                  showTime: true,
+                                })}
                               </span>
                             </div>
                           </td>
@@ -641,55 +635,6 @@ const CustomerTransactions = () => {
                                   : transaction.type
                               )}
                             </span>
-                          </td>
-
-                          {/* Actions - same as before */}
-                          <td className="px-4 py-3">
-                            <div className="flex items-center justify-center gap-1">
-                              {/* Print */}
-                              <button className="p-1.5 bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-lg transition-all duration-200 shadow hover:shadow-lg hover:scale-110 active:scale-95 group relative">
-                                <BsPrinter className="text-xs" />
-                                <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg whitespace-nowrap z-10">
-                                  {t('Print')}
-                                </div>
-                              </button>
-
-                              {/* Details */}
-                              <button className="p-1.5 bg-gradient-to-br from-purple-500 to-indigo-500 text-white rounded-lg transition-all duration-200 shadow hover:shadow-lg hover:scale-110 active:scale-95 group relative">
-                                <BiSolidDetail className="text-xs" />
-                                <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg whitespace-nowrap z-10">
-                                  {t('Details')}
-                                </div>
-                              </button>
-
-                              {/* Edit */}
-                              <button className="p-1.5 bg-gradient-to-br from-blue-500 to-cyan-500 text-white rounded-lg transition-all duration-200 shadow hover:shadow-lg hover:scale-110 active:scale-95 group relative">
-                                <BiSolidEdit className="text-xs" />
-                                <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg whitespace-nowrap z-10">
-                                  {t('Edit')}
-                                </div>
-                              </button>
-
-                              {/* Delete */}
-                              <button className="p-1.5 bg-gradient-to-br from-red-500 to-pink-500 text-white rounded-lg transition-all duration-200 shadow hover:shadow-lg hover:scale-110 active:scale-95 group relative">
-                                <svg
-                                  className="w-3 h-3"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                  />
-                                </svg>
-                                <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg whitespace-nowrap z-10">
-                                  {t('Delete')}
-                                </div>
-                              </button>
-                            </div>
                           </td>
                         </tr>
                       ))
@@ -897,7 +842,6 @@ const CustomerTransactions = () => {
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
                   <div className="flex gap-3 mt-6">
                     <button
                       onClick={() => setShowLiquidateModal(false)}
