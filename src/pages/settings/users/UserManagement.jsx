@@ -143,12 +143,12 @@ const UserManagement = () => {
             {showForm ? (
               <>
                 <FiX className="text-lg" />
-                Cancel
+                {t('Cancel')}
               </>
             ) : (
               <>
                 <FiUserPlus className="text-lg" />
-                Add New User
+                {t('Add New User')}
               </>
             )}
           </button>
@@ -163,10 +163,10 @@ const UserManagement = () => {
               </div>
               <div>
                 <h2 className="text-xl font-bold text-gray-900">
-                  Add New User
+                  {t('Add New User')}
                 </h2>
                 <p className="text-gray-600 text-sm">
-                  Create a new user account for your organization
+                  {t('Create a new user account for your organization')}
                 </p>
               </div>
             </div>
@@ -177,7 +177,7 @@ const UserManagement = () => {
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     <FiUser className="inline mr-2 text-gray-500" />
-                    Username *
+                    {t('Username')} *
                   </label>
                   <input
                     type="text"
@@ -194,7 +194,7 @@ const UserManagement = () => {
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     <FiMail className="inline mr-2 text-gray-500" />
-                    Email *
+                    {t('Email')} *
                   </label>
                   <input
                     type="email"
@@ -229,7 +229,7 @@ const UserManagement = () => {
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
                     <FiPhone className="inline mr-2 text-gray-500" />
-                    WhatsApp Number
+                    {t('WhatsApp')}
                   </label>
                   <input
                     type="text"
@@ -244,7 +244,7 @@ const UserManagement = () => {
                 {/* User Type */}
                 <div className="lg:col-span-2 space-y-4">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    User Type *
+                    {t('User Type')} *
                   </label>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {[3, 4].map((typeId) => (
@@ -293,8 +293,9 @@ const UserManagement = () => {
                     ))}
                   </div>
                   <p className="text-xs text-gray-500 mt-2">
-                    Note: You can only create Employees and Viewers. Admin roles
-                    are restricted.
+                    {t(
+                      'Note: You can only create Employees and Viewers. Admin rolesare restricted.'
+                    )}
                   </p>
                 </div>
               </div>
@@ -309,12 +310,12 @@ const UserManagement = () => {
                   {addUserMutation.isLoading ? (
                     <>
                       <FiLoader className="animate-spin" />
-                      Adding User...
+                      {t('Adding User')}...
                     </>
                   ) : (
                     <>
                       <FiUserPlus />
-                      Add User
+                      {t('Add User')}
                     </>
                   )}
                 </button>
@@ -323,7 +324,7 @@ const UserManagement = () => {
                   onClick={() => setShowForm(false)}
                   className="px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200 font-medium"
                 >
-                  Cancel
+                  {t('Cancel')}
                 </button>
               </div>
             </form>
@@ -361,16 +362,16 @@ const UserManagement = () => {
                 <thead className="bg-gray-50/80">
                   <tr>
                     <th className="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      User
+                      {'User'}
                     </th>
                     <th className="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Contact
+                      {t('Contact')}
                     </th>
                     <th className="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Role
+                      {t('Role')}
                     </th>
                     <th className="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      WhatsApp
+                      {t('WhatsApp')}
                     </th>
                   </tr>
                 </thead>
@@ -423,7 +424,9 @@ const UserManagement = () => {
                               {user.whatsApp}
                             </>
                           ) : (
-                            <span className="text-gray-400">Not provided</span>
+                            <span className="text-gray-400">
+                              {t('Not provided')}
+                            </span>
                           )}
                         </div>
                       </td>
@@ -438,7 +441,7 @@ const UserManagement = () => {
                 <FiUsers className="text-3xl text-gray-400" />
               </div>
               <h3 className="text-lg font-semibold text-gray-600 mb-2">
-                No Users Found
+                {'No Users Found'}
               </h3>
               <p className="text-gray-500 mb-6">
                 Get started by adding your first user to the organization.
