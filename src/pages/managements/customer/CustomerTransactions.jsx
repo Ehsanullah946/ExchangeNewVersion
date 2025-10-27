@@ -1,6 +1,6 @@
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import { BiSolidDetail, BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
+import { BiSolidUserAccount } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ImMinus } from 'react-icons/im';
@@ -17,6 +17,8 @@ import {
 } from '../../../hooks/useCustomers';
 import { formatNumber } from '../../../utils/formatNumber';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
+import { useSimplePrint } from '../../../hooks/useSimplePrint';
+import { generateTransactionPrintHTML } from '../../../utils/printUtils';
 
 const CustomerTransactions = () => {
   const { customerId } = useParams();
@@ -65,6 +67,23 @@ const CustomerTransactions = () => {
         },
       }
     );
+  };
+
+  const { printContent } = useSimplePrint();
+
+  const handlePrint = () => {
+    const printHTML = generateTransactionPrintHTML(
+      customerTransaction,
+      {
+        name: customerName,
+        id: customerId,
+      },
+      data?.accountSummary || [],
+      t,
+      formatDisplay
+    );
+
+    printContent(printHTML, `Transactions_${customerName}`);
   };
 
   const {
@@ -162,9 +181,6 @@ const CustomerTransactions = () => {
                 </span>
               </p>
               <p className="text-sm text-gray-500">ID: {customerId}</p>
-              {/* {customerData?.phone && (
-                <p className="text-sm text-gray-500">📞 {customerData.phone}</p>
-              )} */}
             </div>
             <p className="text-gray-600">
               {t('View and manage all financial transactions')}
@@ -245,7 +261,12 @@ const CustomerTransactions = () => {
                 </span>
               )}
             </button>
-            <button className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gray-600 to-slate-700 hover:from-gray-700 hover:to-slate-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm">
+
+            {/* Fixed Print Button */}
+            <button
+              onClick={handlePrint}
+              className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gray-600 to-slate-700 hover:from-gray-700 hover:to-slate-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm"
+            >
               <BsPrinter className="text-base" />
               <span>{t('Print')}</span>
             </button>
@@ -267,15 +288,10 @@ const CustomerTransactions = () => {
               placeholder={t(
                 'Search by transaction ID, description, or amount...'
               )}
-              // value={search}
-              // onChange={(e) => dispatch(setSearch(e.target.value))}
               className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-400 font-medium tracking-wide text-sm"
             />
             {open && (
-              <button
-                // onClick={() => dispatch(setSearch(''))}
-                className="ml-2 text-gray-400 hover:text-gray-600 transition-colors p-1"
-              >
+              <button className="ml-2 text-gray-400 hover:text-gray-600 transition-colors p-1">
                 <svg
                   className="w-4 h-4"
                   fill="none"
@@ -297,20 +313,6 @@ const CustomerTransactions = () => {
         {/* Summary Cards */}
         {!isLoading && customerTransaction.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            {/* <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-4 text-white shadow-lg">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm opacity-90">{t('Current Balance')}</p>
-                  <p className="text-2xl font-bold">
-                    {data?.accountSummary[0].balance.toLocaleString()}
-                  </p>
-                </div>
-                <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                  <RiAddBoxFill className="text-xl" />
-                </div>
-              </div>
-            </div> */}
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               {data?.accountSummary?.map((account, index) => (
                 <div
@@ -767,6 +769,7 @@ const CustomerTransactions = () => {
             </>
           )}
 
+          {/* Modals remain the same */}
           {showLiquidateModal && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
               <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
@@ -1064,6 +1067,19 @@ const CustomerTransactions = () => {
           )}
         </div>
       </div>
+
+      {/* Hidden Printable Content - MUST be at the root level */}
+      {/* <div style={{ display: 'none' }}>
+        <PrintableContent
+          ref={componentRef}
+          transactions={customerTransaction}
+          customerInfo={{
+            name: customerName,
+            id: customerId,
+          }}
+          accountSummary={data?.accountSummary || []}
+        />
+      </div> */}
     </div>
   );
 };
