@@ -31,6 +31,8 @@ import {
 } from '../../../hooks/useDeposit';
 import { formatNumber } from '../../../utils/formatNumber';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
+import { generateCompactDepositPrintHTML } from '../../../utils/printUtils';
+import { useFlexiblePrint } from '../../../hooks/useFlexiblePrint';
 const DepositList = () => {
   const { t } = useTranslation();
 
@@ -80,6 +82,23 @@ const DepositList = () => {
       deleteMutation.mutate(id);
     }
   };
+
+  const { printContent } = useFlexiblePrint();
+
+  const handleprint = (DepositData) => {
+    const printHTML = generateCompactDepositPrintHTML(
+      DepositData,
+      t,
+      formatDisplay
+    );
+    const title = `Deposit_Receipt_${DepositData.No}`;
+    printContent(printHTML, {
+      title: title,
+      paperSize: '80mm',
+      orientation: 'portrait',
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 py-3 px-2">
       <div className="max-w-7xl mx-auto">
@@ -277,7 +296,10 @@ const DepositList = () => {
                             <td className="px-2 py-1">
                               <div className="flex items-center justify-center gap-3">
                                 {/* Print Button */}
-                                <button className="p-2 bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 group">
+                                <button
+                                  onClick={() => handleprint(c)}
+                                  className="p-2 bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 group"
+                                >
                                   <BsPrinter className="text-md" />
                                   <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
                                     {t('Print')}

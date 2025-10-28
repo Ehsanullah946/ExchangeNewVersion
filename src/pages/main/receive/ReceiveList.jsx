@@ -32,6 +32,9 @@ import {
 } from '../../../hooks/useReceive';
 import { showToast } from '../../../features/toast/toastSlice';
 import { formatNumber } from '../../../utils/formatNumber';
+import { generateReceivePrintHTML } from '../../../utils/printUtils';
+import { useDateFormatter } from '../../../hooks/useDateFormatter';
+import { useFlexiblePrint } from '../../../hooks/useFlexiblePrint';
 
 const ReceiveList = () => {
   const { t } = useTranslation();
@@ -41,6 +44,7 @@ const ReceiveList = () => {
     (state) => state.filters
   );
 
+  const { formatDisplay } = useDateFormatter();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -188,6 +192,18 @@ const ReceiveList = () => {
         {t('Uncomplete')}
       </span>
     );
+  };
+
+  const { printContent } = useFlexiblePrint();
+
+  const handleprint = (transferData) => {
+    const printHTML = generateReceivePrintHTML(transferData, t, formatDisplay);
+    const title = `Receive_Receipt_${transferData.transferNo}`;
+    printContent(printHTML, {
+      title: title,
+      paperSize: '80mm',
+      orientation: 'portrait',
+    });
   };
 
   return (
@@ -503,7 +519,10 @@ const ReceiveList = () => {
                             <td className="px-2 py-1">
                               <div className="flex items-center justify-center gap-3">
                                 {/* Print Button */}
-                                <button className="p-2 bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 group">
+                                <button
+                                  onClick={() => handleprint(c)}
+                                  className="p-2 bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 group"
+                                >
                                   <BsPrinter className="text-md" />
                                   <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
                                     {t('Print')}

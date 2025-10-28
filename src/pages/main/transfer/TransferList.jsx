@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { BiSolidEdit, BiSolidUserAccount } from 'react-icons/bi';
+import React, { useEffect } from 'react';
+import { BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
-import Button from '../../../components/layout/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   BsChevronLeft,
@@ -28,6 +27,8 @@ import {
 import { useDeleteTransfer, useTransfer } from '../../../hooks/useTransfer';
 import { formatNumber } from '../../../utils/formatNumber';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
+import { generateTransferPrintHTML } from '../../../utils/printUtils';
+import { useFlexiblePrint } from '../../../hooks/useFlexiblePrint';
 const TransferList = () => {
   const { t } = useTranslation();
   const { formatDisplay } = useDateFormatter();
@@ -71,6 +72,18 @@ const TransferList = () => {
 
   const handleEdit = (id) => {
     navigate(`/main/transfer/${id}/edit`);
+  };
+
+  const { printContent } = useFlexiblePrint();
+
+  const handleprint = (transferData) => {
+    const printHTML = generateTransferPrintHTML(transferData, t, formatDisplay);
+    const title = `Transfer_Receipt_${transferData.transferNo}`;
+    printContent(printHTML, {
+      title: title,
+      paperSize: '80mm',
+      orientation: 'portrait',
+    });
   };
 
   const handleDelete = (id) => {
@@ -308,7 +321,10 @@ const TransferList = () => {
                             <td className="px-2 py-1">
                               <div className="flex items-center justify-center gap-3">
                                 {/* Print Button */}
-                                <button className="p-2 bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 group">
+                                <button
+                                  onClick={() => handleprint(c)}
+                                  className="p-2 bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 group"
+                                >
                                   <BsPrinter className="text-md" />
                                   <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
                                     {t('Print')}

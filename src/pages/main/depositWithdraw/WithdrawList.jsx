@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
-import Button from '../../../components/layout/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   BsCalendar,
@@ -30,6 +29,8 @@ import { useDeleteDepositWithdraw } from '../../../hooks/useDeposit';
 import { FaMoneyBillWave } from 'react-icons/fa';
 import { formatNumber } from '../../../utils/formatNumber';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
+import { generateCompactWithdrawPrintHTML } from '../../../utils/printUtils';
+import { useFlexiblePrint } from '../../../hooks/useFlexiblePrint';
 const WithdrawList = () => {
   const { t } = useTranslation();
   const { formatDisplay } = useDateFormatter();
@@ -75,6 +76,22 @@ const WithdrawList = () => {
     if (window.confirm('Are you sure you want to delete this deposit?')) {
       deleteMutation.mutate(id);
     }
+  };
+
+  const { printContent } = useFlexiblePrint();
+
+  const handleprint = (withdrawData) => {
+    const printHTML = generateCompactWithdrawPrintHTML(
+      withdrawData,
+      t,
+      formatDisplay
+    );
+    const title = `Withdraw_Receipt_${withdrawData.No}`;
+    printContent(printHTML, {
+      title: title,
+      paperSize: '80mm',
+      orientation: 'portrait',
+    });
   };
 
   return (
@@ -274,7 +291,10 @@ const WithdrawList = () => {
                             <td className="px-2 py-1">
                               <div className="flex items-center justify-center gap-3">
                                 {/* Print Button */}
-                                <button className="p-2 bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 group">
+                                <button
+                                  onClick={() => handleprint(c)}
+                                  className="p-2 bg-gradient-to-br from-amber-500 to-orange-500 text-white rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-110 active:scale-95 group"
+                                >
                                   <BsPrinter className="text-md" />
                                   <div className="absolute bottom-full mb-2 hidden group-hover:block bg-gray-800 text-white text-xs py-1 px-2 rounded-lg">
                                     {t('Print')}

@@ -17,8 +17,8 @@ import {
 } from '../../../hooks/useCustomers';
 import { formatNumber } from '../../../utils/formatNumber';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
-import { useSimplePrint } from '../../../hooks/useSimplePrint';
 import { generateTransactionPrintHTML } from '../../../utils/printUtils';
+import { useFlexiblePrint } from '../../../hooks/useFlexiblePrint';
 
 const CustomerTransactions = () => {
   const { customerId } = useParams();
@@ -69,7 +69,7 @@ const CustomerTransactions = () => {
     );
   };
 
-  const { printContent } = useSimplePrint();
+  const { printContent } = useFlexiblePrint();
 
   const handlePrint = () => {
     const printHTML = generateTransactionPrintHTML(
@@ -83,7 +83,11 @@ const CustomerTransactions = () => {
       formatDisplay
     );
 
-    printContent(printHTML, `Transactions_${customerName}`);
+    printContent(printHTML, {
+      title: `Transactions_${customerName}`,
+      paperSize: 'A4-landscape',
+      orientation: 'landscape',
+    });
   };
 
   const {
