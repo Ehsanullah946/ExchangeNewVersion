@@ -137,3 +137,4 @@ export const Exchange = lazy(() => import('./rates/Exchange'));
 export const ExchangeList = lazy(() => import('./rates/ExchangeList'));
 export const ExchangeEdit = lazy(() => import('./rates/ExchangeEdit'));
 export const Rate = lazy(() => import('./rates/Rate'));
+export const BackupManager = lazy(() => import('./BackupManager'));

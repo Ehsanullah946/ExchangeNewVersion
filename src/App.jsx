@@ -69,6 +69,7 @@ import {
   Employee,
   Till,
   UserManagement,
+  BackupManager,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -83,8 +84,6 @@ const App = () => {
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<Login />} />
-
-          {/* Protected routes with layout */}
           <Route
             path="/"
             element={
@@ -223,6 +222,7 @@ const App = () => {
               <Route path="employee/:id/edit" element={<EmployeeEdit />} />
               <Route path="employeeList" element={<EmployeeList />} />
             </Route>
+            <Route path="/backupManager" element={<BackupManager />} />
           </Route>
 
           {/* 404 route */}

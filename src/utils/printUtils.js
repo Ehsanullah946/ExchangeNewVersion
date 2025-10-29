@@ -1,5 +1,4 @@
 import { formatNumber } from './formatNumber';
-import { useDateFormatter } from '../hooks/useDateFormatter';
 
 export const generateTransactionPrintHTML = (
   transactions,

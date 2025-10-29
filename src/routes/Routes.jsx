@@ -23,7 +23,13 @@ import {
 } from 'react-icons/ri';
 import { FiUser, FiUsers } from 'react-icons/fi';
 import { GiPayMoney } from 'react-icons/gi';
-import { BsCash, BsGraphUp, BsListCheck, BsViewList } from 'react-icons/bs';
+import {
+  BsCash,
+  BsDatabase,
+  BsGraphUp,
+  BsListCheck,
+  BsViewList,
+} from 'react-icons/bs';
 
 export const routes = [
   {
@@ -140,7 +146,6 @@ export const routes = [
     nameKey: 'Account',
     icon: <FiUser />,
   },
-
   {
     path: '/employees',
     nameKey: 'Employees',
@@ -181,6 +186,11 @@ export const routes = [
         icon: <BiHistory />,
       },
     ],
+  },
+  {
+    path: '/backupManager',
+    nameKey: 'Backups',
+    icon: <BsDatabase />,
   },
   {
     path: '/settings',

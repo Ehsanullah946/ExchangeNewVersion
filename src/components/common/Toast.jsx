@@ -172,7 +172,7 @@ const Toast = () => {
             {/* Main Content */}
             <div className="flex items-start p-4">
               {/* Icon with background */}
-              <div className="flex-shrink-0 mr-3">
+              <div className="flex-shrink-0 mr-3 ml-3">
                 <div
                   className={`p-2 rounded-xl bg-white/80 shadow-lg border ${styles.border} backdrop-blur-sm`}
                 >
