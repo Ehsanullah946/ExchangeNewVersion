@@ -52,12 +52,11 @@ const WithdrawList = () => {
 
   const dispatch = useDispatch();
 
-  // Mock currency types - replace with your actual data
   const currencyTypes = [
     { value: '', label: t('All Currencies') },
     { value: 'USA', label: 'USD' },
     { value: 'EUR', label: 'EUR' },
-    { value: 'AFN', label: 'AFN' },
+    { value: 'AFG', label: 'AFG' },
     { value: 'GBP', label: 'GBP' },
   ];
 
@@ -70,13 +69,13 @@ const WithdrawList = () => {
     dispatch(setPage(1));
   }, [debouncedSearch, moneyType, fromDate, toDate, dispatch]);
 
-  const { data, isLoading, error } = useWithdraw(
+  const { data, isLoading } = useWithdraw(
     debouncedSearch,
-    limit,
-    page,
     moneyType,
     fromDate,
-    toDate
+    toDate,
+    limit,
+    page
   );
 
   const withdraw = data?.data || [];
@@ -184,11 +183,9 @@ const WithdrawList = () => {
             </div>
           </div>
         </div>
-        {/* Enhanced Filter Panel */}
         {open && (
           <div className="mb-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6 transition-all duration-300">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {/* Currency Filter */}
               <div className="space-y-2">
                 <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                   <BsCashCoin className="text-blue-500" />

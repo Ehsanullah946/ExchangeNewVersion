@@ -8,10 +8,18 @@ import {
 } from '../api/DepositWithdrowApi';
 import { Navigate } from 'react-router-dom';
 
-export const useDeposit = (search = '', limit = 10, page = 1) => {
+export const useDeposit = (
+  search = '',
+  moneyType = '',
+  fromDate = '',
+  toDate = '',
+  limit = 10,
+  page = 1
+) => {
   return useQuery({
-    queryKey: ['deposit', search, limit, page],
-    queryFn: () => getDeposit({ search, limit, page }),
+    queryKey: ['deposit', search, moneyType, fromDate, toDate, limit, page],
+    queryFn: () =>
+      getDeposit({ search, moneyType, fromDate, toDate, limit, page }),
     staleTime: 0,
     refetchOnMount: 'always',
     keepPreviousData: true,

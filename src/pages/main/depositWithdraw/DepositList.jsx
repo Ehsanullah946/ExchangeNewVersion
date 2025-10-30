@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   BsCalendar,
+  BsCashCoin,
   BsChevronLeft,
   BsChevronRight,
   BsCurrencyDollar,
@@ -23,6 +24,9 @@ import {
   setSearch,
   setPage,
   toggleOpen,
+  setMoneyType,
+  setFromDate,
+  setToDate,
 } from '../../../features/ui/filterSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -33,16 +37,30 @@ import { formatNumber } from '../../../utils/formatNumber';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
 import { generateCompactDepositPrintHTML } from '../../../utils/printUtils';
 import { useFlexiblePrint } from '../../../hooks/useFlexiblePrint';
+import AfghanDatePicker from '../../../components/common/AfghanDatePicker';
 const DepositList = () => {
   const { t } = useTranslation();
-
-  const { formatDisplay } = useDateFormatter();
-
-  const { open, search, limit, page, debouncedSearch } = useSelector(
-    (state) => state.filters
-  );
+  const { formatDisplay, currentCalendar } = useDateFormatter();
+  const {
+    open,
+    search,
+    limit,
+    page,
+    debouncedSearch,
+    moneyType,
+    fromDate,
+    toDate,
+  } = useSelector((state) => state.filters);
 
   const dispatch = useDispatch();
+
+  const currencyTypes = [
+    { value: '', label: t('All Currencies') },
+    { value: 'USA', label: 'USD' },
+    { value: 'EUR', label: 'EUR' },
+    { value: 'AFG', label: 'AFG' },
+    { value: 'GBP', label: 'GBP' },
+  ];
 
   useEffect(() => {
     const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
@@ -51,13 +69,19 @@ const DepositList = () => {
 
   useEffect(() => {
     dispatch(setPage(1));
-  }, [debouncedSearch, dispatch]);
+  }, [debouncedSearch, moneyType, fromDate, toDate, dispatch]);
 
-  const { data, isLoading, error } = useDeposit(debouncedSearch, limit, page);
+  const { data, isLoading } = useDeposit(
+    debouncedSearch,
+    moneyType,
+    fromDate,
+    toDate,
+    limit,
+    page
+  );
 
   const deposit = data?.data || [];
   const total = data?.total || 0;
-
   const totalPages = Math.max(1, Math.ceil(total / limit));
 
   useEffect(() => {
@@ -70,8 +94,8 @@ const DepositList = () => {
   }, [total, totalPages, page, dispatch]);
 
   const navigate = useNavigate();
-
   const deleteMutation = useDeleteDepositWithdraw();
+  const { printContent } = useFlexiblePrint();
 
   const handleEdit = (id) => {
     navigate(`/main/deposit/${id}/edit`);
@@ -83,21 +107,28 @@ const DepositList = () => {
     }
   };
 
-  const { printContent } = useFlexiblePrint();
-
-  const handleprint = (DepositData) => {
+  const handleprint = (depositData) => {
     const printHTML = generateCompactDepositPrintHTML(
-      DepositData,
+      depositData,
       t,
       formatDisplay
     );
-    const title = `Deposit_Receipt_${DepositData.No}`;
+    const title = `Deposit_Receipt_${depositData.No}`;
     printContent(printHTML, {
       title: title,
       paperSize: '80mm',
       orientation: 'portrait',
     });
   };
+
+  const clearFilters = () => {
+    dispatch(setSearch(''));
+    dispatch(setMoneyType(''));
+    dispatch(setFromDate(''));
+    dispatch(setToDate(''));
+  };
+
+  const hasActiveFilters = search || moneyType || fromDate || toDate;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 py-3 px-2">
@@ -106,23 +137,33 @@ const DepositList = () => {
         <div className="flex flex-wrap items-center justify-between gap-4 mb-2 p-1 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20">
           <div className="flex flex-wrap items-center gap-3">
             <Link to="/main/deposit">
-              <button className="flex items-center gap-2  px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
+              <button className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-110">
                 <FaMoneyBillWave className="mt-1" />
-                <span>{t('Deposit')}</span>
+                <span>{t('deposit')}</span>
               </button>
             </Link>
 
             <button
               onClick={() => dispatch(toggleOpen(!open))}
-              className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+              className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-110"
             >
               <BsFilter className="mt-1" />
-              <span>{t('Limit Search')}</span>
+              <span>{t('Filters')}</span>
             </button>
+
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-110"
+              >
+                <BsX className="mt-1" />
+                <span>{t('Clear Filters')}</span>
+              </button>
+            )}
           </div>
 
           {/* Search Bar */}
-          <div className="relative group">
+          <div className="relative group z-40000">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
             <div className="relative flex items-center bg-white rounded-xl shadow-lg border border-gray-100 pl-4 pr-2 py-2 min-w-80">
               <BsSearch className="text-gray-400 mr-3 flex-shrink-0" />
@@ -144,6 +185,112 @@ const DepositList = () => {
             </div>
           </div>
         </div>
+        {open && (
+          <div className="mb-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6 transition-all duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsCashCoin className="text-blue-500" />
+                  {t('Currency')}
+                </label>
+                <select
+                  value={moneyType}
+                  onChange={(e) => dispatch(setMoneyType(e.target.value))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm transition-all duration-200"
+                >
+                  {currencyTypes.map((currency) => (
+                    <option key={currency.value} value={currency.value}>
+                      {currency.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* From Date Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsCalendar className="text-green-500" />
+                  {t('From Date')}
+                </label>
+                <AfghanDatePicker
+                  type="date"
+                  value={fromDate}
+                  onChange={(e) => dispatch(setFromDate(e.target.value))}
+                  className="w-full px-3 py-2 border z-3000 border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white shadow-sm transition-all duration-200"
+                />
+              </div>
+
+              {/* To Date Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsCalendar className="text-red-500" />
+                  {t('To Date')}
+                </label>
+                <AfghanDatePicker
+                  type="date"
+                  value={toDate}
+                  onChange={(e) => dispatch(setToDate(e.target.value))}
+                  className="w-full px-3 py-2 border z-3000 border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white shadow-sm transition-all duration-200"
+                />
+              </div>
+            </div>
+            {/* Quick Date Presets */}
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('Quick Date Filters')}
+              </label>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => {
+                    const today = new Date().toISOString().split('T')[0];
+                    dispatch(setFromDate(today));
+                    dispatch(setToDate(today));
+                  }}
+                  className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-lg hover:bg-blue-200 transition-colors duration-200"
+                >
+                  {t('Today')}
+                </button>
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const weekAgo = new Date(today);
+                    weekAgo.setDate(today.getDate() - 7);
+                    dispatch(setFromDate(weekAgo.toISOString().split('T')[0]));
+                    dispatch(setToDate(today.toISOString().split('T')[0]));
+                  }}
+                  className="px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-lg hover:bg-green-200 transition-colors duration-200"
+                >
+                  {t('Last 7 Days')}
+                </button>
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const monthAgo = new Date(today);
+                    monthAgo.setDate(today.getDate() - 30);
+                    dispatch(setFromDate(monthAgo.toISOString().split('T')[0]));
+                    dispatch(setToDate(today.toISOString().split('T')[0]));
+                  }}
+                  className="px-3 py-1 bg-purple-100 text-purple-700 text-sm font-medium rounded-lg hover:bg-purple-200 transition-colors duration-200"
+                >
+                  {t('Last 30 Days')}
+                </button>
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const yearStart = new Date(today.getFullYear(), 0, 1);
+                    dispatch(
+                      setFromDate(yearStart.toISOString().split('T')[0])
+                    );
+                    dispatch(setToDate(today.toISOString().split('T')[0]));
+                  }}
+                  className="px-3 py-1 bg-orange-100 text-orange-700 text-sm font-medium rounded-lg hover:bg-orange-200 transition-colors duration-200"
+                >
+                  {t('This Year')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Main Content */}
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
@@ -220,13 +367,27 @@ const DepositList = () => {
                                 <BsInbox className="text-4xl text-gray-400" />
                               </div>
                               <h3 className="text-xl font-bold text-gray-600 mb-2">
-                                {t('No Transaction found for your search')}
+                                {hasActiveFilters
+                                  ? t('No transactions found for your filters')
+                                  : t('No transactions found')}
                               </h3>
                               <p className="text-gray-500 max-w-md">
-                                {t(
-                                  'No deposit records match your search criteria. Try adjusting your search or create a new deposit.'
-                                )}
+                                {hasActiveFilters
+                                  ? t(
+                                      'No deposit records match your filter criteria. Try adjusting your filters.'
+                                    )
+                                  : t(
+                                      'No deposit records found. Create a new deposit transaction to get started.'
+                                    )}
                               </p>
+                              {hasActiveFilters && (
+                                <button
+                                  onClick={clearFilters}
+                                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                >
+                                  {t('Clear Filters')}
+                                </button>
+                              )}
                             </div>
                           </td>
                         </tr>
@@ -236,9 +397,9 @@ const DepositList = () => {
                             key={c.No}
                             className="group hover:bg-gradient-to-r hover:from-blue-50/50 hover:to-indigo-50/30 transition-all duration-200 border-b border-gray-100 last:border-b-0"
                           >
-                            <td className="px-2 py-2">
-                              <div className="flex items-center gap-3">
-                                <div className="w-6 h-7 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                            <td className="px-2 py-1">
+                              <div className="flex items-center gap-2">
+                                <div className="w-7 h-7 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
                                   {index + 1}
                                 </div>
                                 <span className="font-semibold text-gray-700">
@@ -268,7 +429,7 @@ const DepositList = () => {
 
                             <td className="px-2 py-2">
                               <div className="flex items-center gap-2">
-                                <span className="font-bold text-md text-green-600">
+                                <span className="font-bold text-md">
                                   {formatNumber(c.deposit)}
                                 </span>
                               </div>

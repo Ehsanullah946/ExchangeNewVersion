@@ -6,10 +6,18 @@ import {
   updateDepositWithdraw,
 } from '../api/DepositWithdrowApi';
 
-export const useWithdraw = (search = '', limit = 10, page = 1) => {
+export const useWithdraw = (
+  search = '',
+  moneyType = '',
+  fromDate = '',
+  toDate = '',
+  limit = 10,
+  page = 1
+) => {
   return useQuery({
-    queryKey: ['withdraw', search, limit, page],
-    queryFn: () => getWithdraw({ search, limit, page }),
+    queryKey: ['withdraw', search, moneyType, fromDate, toDate, limit, page],
+    queryFn: () =>
+      getWithdraw({ search, moneyType, fromDate, toDate, limit, page }),
     staleTime: 0,
     refetchOnMount: 'always',
     keepPreviousData: true,
