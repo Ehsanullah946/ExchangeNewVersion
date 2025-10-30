@@ -8,6 +8,9 @@ const initialState = {
   limit: 10,
   debouncedSearch: '',
   debouncedPhone: '',
+  moneyType: '',
+  fromDate: '',
+  toDate: '',
 };
 
 const filterSlice = createSlice({
@@ -19,6 +22,15 @@ const filterSlice = createSlice({
     },
     setPhone: (state, action) => {
       state.phone = action.payload;
+    },
+    setMoneyType: (state, action) => {
+      state.moneyType = action.payload;
+    },
+    setFromDate: (state, action) => {
+      state.fromDate = action.payload;
+    },
+    setToDate: (state, action) => {
+      state.toDate = action.payload;
     },
     toggleOpen: (state, action) => {
       state.open = action.payload;
@@ -43,6 +55,9 @@ export const {
   toggleOpen,
   setSearch,
   setPage,
+  setMoneyType,
+  setFromDate,
+  setToDate,
   resetFilter,
 } = filterSlice.actions;
 export default filterSlice.reducer;

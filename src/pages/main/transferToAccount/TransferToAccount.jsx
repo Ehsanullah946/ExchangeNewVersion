@@ -42,7 +42,7 @@ const TransferToAccount = () => {
     e.preventDefault();
 
     if (!form.fromAccount || !form.toAccount || !form.amount) {
-      toast.error(t('Please Enter the base account  and  distanation account'));
+      toast.error(t('Please Enter the base account and distanation account'));
       return;
     }
 

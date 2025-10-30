@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,6 +15,7 @@ import {
   BsSearch,
   BsTrash,
   BsX,
+  BsCashCoin,
 } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
 import { useWithdraw } from '../../../hooks/useWithdraw';
@@ -24,6 +25,9 @@ import {
   setSearch,
   setPage,
   toggleOpen,
+  setMoneyType,
+  setFromDate,
+  setToDate,
 } from '../../../features/ui/filterSlice';
 import { useDeleteDepositWithdraw } from '../../../hooks/useDeposit';
 import { FaMoneyBillWave } from 'react-icons/fa';
@@ -31,13 +35,31 @@ import { formatNumber } from '../../../utils/formatNumber';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
 import { generateCompactWithdrawPrintHTML } from '../../../utils/printUtils';
 import { useFlexiblePrint } from '../../../hooks/useFlexiblePrint';
+
 const WithdrawList = () => {
   const { t } = useTranslation();
   const { formatDisplay } = useDateFormatter();
-  const { open, search, limit, page, debouncedPhone, debouncedSearch } =
-    useSelector((state) => state.filters);
+  const {
+    open,
+    search,
+    limit,
+    page,
+    debouncedSearch,
+    moneyType,
+    fromDate,
+    toDate,
+  } = useSelector((state) => state.filters);
 
   const dispatch = useDispatch();
+
+  // Mock currency types - replace with your actual data
+  const currencyTypes = [
+    { value: '', label: t('All Currencies') },
+    { value: 'USA', label: 'USD' },
+    { value: 'EUR', label: 'EUR' },
+    { value: 'AFN', label: 'AFN' },
+    { value: 'GBP', label: 'GBP' },
+  ];
 
   useEffect(() => {
     const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
@@ -46,13 +68,19 @@ const WithdrawList = () => {
 
   useEffect(() => {
     dispatch(setPage(1));
-  }, [debouncedSearch, debouncedPhone, dispatch]);
+  }, [debouncedSearch, moneyType, fromDate, toDate, dispatch]);
 
-  const { data, isLoading, error } = useWithdraw(debouncedSearch, limit, page);
+  const { data, isLoading, error } = useWithdraw(
+    debouncedSearch,
+    limit,
+    page,
+    moneyType,
+    fromDate,
+    toDate
+  );
 
   const withdraw = data?.data || [];
   const total = data?.total || 0;
-
   const totalPages = Math.max(1, Math.ceil(total / limit));
 
   useEffect(() => {
@@ -65,8 +93,8 @@ const WithdrawList = () => {
   }, [total, totalPages, page, dispatch]);
 
   const navigate = useNavigate();
-
   const deleteMutation = useDeleteDepositWithdraw();
+  const { printContent } = useFlexiblePrint();
 
   const handleEdit = (id) => {
     navigate(`/main/withdraw/${id}/edit`);
@@ -77,8 +105,6 @@ const WithdrawList = () => {
       deleteMutation.mutate(id);
     }
   };
-
-  const { printContent } = useFlexiblePrint();
 
   const handleprint = (withdrawData) => {
     const printHTML = generateCompactWithdrawPrintHTML(
@@ -94,6 +120,15 @@ const WithdrawList = () => {
     });
   };
 
+  const clearFilters = () => {
+    dispatch(setSearch(''));
+    dispatch(setMoneyType(''));
+    dispatch(setFromDate(''));
+    dispatch(setToDate(''));
+  };
+
+  const hasActiveFilters = search || moneyType || fromDate || toDate;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 py-3 px-2">
       <div className="max-w-7xl mx-auto">
@@ -101,7 +136,7 @@ const WithdrawList = () => {
         <div className="flex flex-wrap items-center justify-between gap-4 mb-2 p-1 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20">
           <div className="flex flex-wrap items-center gap-3">
             <Link to="/main/withdraw">
-              <button className="flex items-center gap-2  px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-110">
+              <button className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-110">
                 <FaMoneyBillWave className="mt-1" />
                 <span>{t('Withdraw')}</span>
               </button>
@@ -112,8 +147,18 @@ const WithdrawList = () => {
               className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-110"
             >
               <BsFilter className="mt-1" />
-              <span>{t('Limit Search')}</span>
+              <span>{t('Filters')}</span>
             </button>
+
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-110"
+              >
+                <BsX className="mt-1" />
+                <span>{t('Clear Filters')}</span>
+              </button>
+            )}
           </div>
 
           {/* Search Bar */}
@@ -139,6 +184,114 @@ const WithdrawList = () => {
             </div>
           </div>
         </div>
+        {/* Enhanced Filter Panel */}
+        {open && (
+          <div className="mb-4 bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 p-6 transition-all duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Currency Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsCashCoin className="text-blue-500" />
+                  {t('Currency')}
+                </label>
+                <select
+                  value={moneyType}
+                  onChange={(e) => dispatch(setMoneyType(e.target.value))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm transition-all duration-200"
+                >
+                  {currencyTypes.map((currency) => (
+                    <option key={currency.value} value={currency.value}>
+                      {currency.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* From Date Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsCalendar className="text-green-500" />
+                  {t('From Date')}
+                </label>
+                <input
+                  type="date"
+                  value={fromDate}
+                  onChange={(e) => dispatch(setFromDate(e.target.value))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white shadow-sm transition-all duration-200"
+                />
+              </div>
+
+              {/* To Date Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsCalendar className="text-red-500" />
+                  {t('To Date')}
+                </label>
+                <input
+                  type="date"
+                  value={toDate}
+                  onChange={(e) => dispatch(setToDate(e.target.value))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white shadow-sm transition-all duration-200"
+                />
+              </div>
+            </div>
+            {/* Quick Date Presets */}
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                {t('Quick Date Filters')}
+              </label>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => {
+                    const today = new Date().toISOString().split('T')[0];
+                    dispatch(setFromDate(today));
+                    dispatch(setToDate(today));
+                  }}
+                  className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-lg hover:bg-blue-200 transition-colors duration-200"
+                >
+                  {t('Today')}
+                </button>
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const weekAgo = new Date(today);
+                    weekAgo.setDate(today.getDate() - 7);
+                    dispatch(setFromDate(weekAgo.toISOString().split('T')[0]));
+                    dispatch(setToDate(today.toISOString().split('T')[0]));
+                  }}
+                  className="px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-lg hover:bg-green-200 transition-colors duration-200"
+                >
+                  {t('Last 7 Days')}
+                </button>
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const monthAgo = new Date(today);
+                    monthAgo.setDate(today.getDate() - 30);
+                    dispatch(setFromDate(monthAgo.toISOString().split('T')[0]));
+                    dispatch(setToDate(today.toISOString().split('T')[0]));
+                  }}
+                  className="px-3 py-1 bg-purple-100 text-purple-700 text-sm font-medium rounded-lg hover:bg-purple-200 transition-colors duration-200"
+                >
+                  {t('Last 30 Days')}
+                </button>
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const yearStart = new Date(today.getFullYear(), 0, 1);
+                    dispatch(
+                      setFromDate(yearStart.toISOString().split('T')[0])
+                    );
+                    dispatch(setToDate(today.toISOString().split('T')[0]));
+                  }}
+                  className="px-3 py-1 bg-orange-100 text-orange-700 text-sm font-medium rounded-lg hover:bg-orange-200 transition-colors duration-200"
+                >
+                  {t('This Year')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Main Content */}
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">
@@ -215,13 +368,27 @@ const WithdrawList = () => {
                                 <BsInbox className="text-4xl text-gray-400" />
                               </div>
                               <h3 className="text-xl font-bold text-gray-600 mb-2">
-                                {t('No Transaction found for your search')}
+                                {hasActiveFilters
+                                  ? t('No transactions found for your filters')
+                                  : t('No transactions found')}
                               </h3>
                               <p className="text-gray-500 max-w-md">
-                                {t(
-                                  'No deposit records match your search criteria. Try adjusting your search or create a new deposit.'
-                                )}
+                                {hasActiveFilters
+                                  ? t(
+                                      'No withdraw records match your filter criteria. Try adjusting your filters.'
+                                    )
+                                  : t(
+                                      'No withdraw records found. Create a new withdraw transaction to get started.'
+                                    )}
                               </p>
+                              {hasActiveFilters && (
+                                <button
+                                  onClick={clearFilters}
+                                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                >
+                                  {t('Clear Filters')}
+                                </button>
+                              )}
                             </div>
                           </td>
                         </tr>

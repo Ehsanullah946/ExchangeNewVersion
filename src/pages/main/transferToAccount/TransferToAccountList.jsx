@@ -29,6 +29,8 @@ import {
   useDeleteTransferToAccount,
   useTransferToAccount,
 } from '../../../hooks/useTransferToAccount';
+import { useDateFormatter } from '../../../hooks/useDateFormatter';
+import { formatNumber } from '../../../utils/formatNumber';
 const TransferToAccountList = () => {
   const { t } = useTranslation();
   const { open, search, limit, page, debouncedSearch } = useSelector(
@@ -36,6 +38,7 @@ const TransferToAccountList = () => {
   );
 
   const dispatch = useDispatch();
+  const { formatDisplay } = useDateFormatter();
 
   useEffect(() => {
     const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
@@ -270,7 +273,7 @@ const TransferToAccountList = () => {
                             <td className="px-2 py-2">
                               <div className="flex items-center gap-2">
                                 <span className="font-bold text-md text-green-600">
-                                  {c.amount?.toLocaleString()}
+                                  {formatNumber(c.amount)}
                                 </span>
                               </div>
                             </td>
@@ -282,10 +285,7 @@ const TransferToAccountList = () => {
                             <td className="px-2 py-1">
                               <div className="flex flex-col">
                                 <span className="font-semibold text-gray-800">
-                                  {new Date(c.tDate).toLocaleDateString()}
-                                </span>
-                                <span className="text-sm text-gray-500">
-                                  {new Date(c.tDate).toLocaleTimeString()}
+                                  {formatDisplay(c.tDate, { showTime: true })}
                                 </span>
                               </div>
                             </td>
