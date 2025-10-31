@@ -2,10 +2,11 @@ import axiosClient from './axiosClient';
 
 export const getReceive = async (filters = {}) => {
   console.log('API call with filters:', filters);
+
   const params = new URLSearchParams();
 
   Object.entries(filters).forEach(([key, value]) => {
-    if (value) {
+    if (value !== undefined && value !== null && value !== '') {
       params.append(key, value);
     }
   });
@@ -15,9 +16,10 @@ export const getReceive = async (filters = {}) => {
 
   try {
     const { data } = await axiosClient.get(
-      `/receive${queryString ? `?${queryString}` : ''}`
+      `receive${queryString ? `?${queryString}` : ''}`
     );
 
+    console.log('qurey String', queryString);
     console.log('API response for receive:', data);
     return data;
   } catch (error) {

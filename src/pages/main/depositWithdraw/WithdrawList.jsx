@@ -35,6 +35,7 @@ import { formatNumber } from '../../../utils/formatNumber';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
 import { generateCompactWithdrawPrintHTML } from '../../../utils/printUtils';
 import { useFlexiblePrint } from '../../../hooks/useFlexiblePrint';
+import { useMoneyType } from '../../../hooks/useMoneyType';
 
 const WithdrawList = () => {
   const { t } = useTranslation();
@@ -52,13 +53,18 @@ const WithdrawList = () => {
 
   const dispatch = useDispatch();
 
-  const currencyTypes = [
-    { value: '', label: t('All Currencies') },
-    { value: 'USA', label: 'USD' },
-    { value: 'EUR', label: 'EUR' },
-    { value: 'AFG', label: 'AFG' },
-    { value: 'GBP', label: 'GBP' },
-  ];
+  const formatDateForAPI = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const { data: moneyTypeResponse } = useMoneyType();
+  const moneyTypeOptions = (moneyTypeResponse?.data || []).map((c) => ({
+    value: c.typeName,
+    label: c.typeName,
+  }));
 
   useEffect(() => {
     const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
@@ -196,9 +202,10 @@ const WithdrawList = () => {
                   onChange={(e) => dispatch(setMoneyType(e.target.value))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm transition-all duration-200"
                 >
-                  {currencyTypes.map((currency) => (
-                    <option key={currency.value} value={currency.value}>
-                      {currency.label}
+                  <option value="">{t('All Currency')}</option>
+                  {moneyTypeOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
                     </option>
                   ))}
                 </select>
@@ -240,9 +247,10 @@ const WithdrawList = () => {
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => {
-                    const today = new Date().toISOString().split('T')[0];
-                    dispatch(setFromDate(today));
-                    dispatch(setToDate(today));
+                    const today = new Date();
+                    const formattedToday = formatDateForAPI(today);
+                    dispatch(setFromDate(formattedToday));
+                    dispatch(setToDate(formattedToday));
                   }}
                   className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-lg hover:bg-blue-200 transition-colors duration-200"
                 >
@@ -253,8 +261,8 @@ const WithdrawList = () => {
                     const today = new Date();
                     const weekAgo = new Date(today);
                     weekAgo.setDate(today.getDate() - 7);
-                    dispatch(setFromDate(weekAgo.toISOString().split('T')[0]));
-                    dispatch(setToDate(today.toISOString().split('T')[0]));
+                    dispatch(setFromDate(formatDateForAPI(weekAgo)));
+                    dispatch(setToDate(formatDateForAPI(today)));
                   }}
                   className="px-3 py-1 bg-green-100 text-green-700 text-sm font-medium rounded-lg hover:bg-green-200 transition-colors duration-200"
                 >
@@ -265,8 +273,8 @@ const WithdrawList = () => {
                     const today = new Date();
                     const monthAgo = new Date(today);
                     monthAgo.setDate(today.getDate() - 30);
-                    dispatch(setFromDate(monthAgo.toISOString().split('T')[0]));
-                    dispatch(setToDate(today.toISOString().split('T')[0]));
+                    dispatch(setFromDate(formatDateForAPI(monthAgo)));
+                    dispatch(setToDate(formatDateForAPI(today)));
                   }}
                   className="px-3 py-1 bg-purple-100 text-purple-700 text-sm font-medium rounded-lg hover:bg-purple-200 transition-colors duration-200"
                 >
@@ -276,10 +284,8 @@ const WithdrawList = () => {
                   onClick={() => {
                     const today = new Date();
                     const yearStart = new Date(today.getFullYear(), 0, 1);
-                    dispatch(
-                      setFromDate(yearStart.toISOString().split('T')[0])
-                    );
-                    dispatch(setToDate(today.toISOString().split('T')[0]));
+                    dispatch(setFromDate(formatDateForAPI(yearStart)));
+                    dispatch(setToDate(formatDateForAPI(today)));
                   }}
                   className="px-3 py-1 bg-orange-100 text-orange-700 text-sm font-medium rounded-lg hover:bg-orange-200 transition-colors duration-200"
                 >

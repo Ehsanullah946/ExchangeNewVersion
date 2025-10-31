@@ -11,6 +11,7 @@ const initialState = {
   moneyType: '',
   fromDate: '',
   toDate: '',
+  number: '',
 };
 
 const filterSlice = createSlice({
@@ -22,6 +23,9 @@ const filterSlice = createSlice({
     },
     setPhone: (state, action) => {
       state.phone = action.payload;
+    },
+    setNumber: (state, action) => {
+      state.number = action.payload;
     },
     setMoneyType: (state, action) => {
       state.moneyType = action.payload;
@@ -58,6 +62,7 @@ export const {
   setMoneyType,
   setFromDate,
   setToDate,
+  setNumber,
   resetFilter,
 } = filterSlice.actions;
 export default filterSlice.reducer;

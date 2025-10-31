@@ -38,6 +38,7 @@ import { useDateFormatter } from '../../../hooks/useDateFormatter';
 import { generateCompactDepositPrintHTML } from '../../../utils/printUtils';
 import { useFlexiblePrint } from '../../../hooks/useFlexiblePrint';
 import AfghanDatePicker from '../../../components/common/AfghanDatePicker';
+import { useMoneyType } from '../../../hooks/useMoneyType';
 const DepositList = () => {
   const { t } = useTranslation();
   const { formatDisplay, currentCalendar } = useDateFormatter();
@@ -54,13 +55,11 @@ const DepositList = () => {
 
   const dispatch = useDispatch();
 
-  const currencyTypes = [
-    { value: '', label: t('All Currencies') },
-    { value: 'USA', label: 'USD' },
-    { value: 'EUR', label: 'EUR' },
-    { value: 'AFG', label: 'AFG' },
-    { value: 'GBP', label: 'GBP' },
-  ];
+  const { data: moneyTypeResponse } = useMoneyType();
+  const moneyTypeOptions = (moneyTypeResponse?.data || []).map((c) => ({
+    value: c.typeName,
+    label: c.typeName,
+  }));
 
   useEffect(() => {
     const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
@@ -198,9 +197,10 @@ const DepositList = () => {
                   onChange={(e) => dispatch(setMoneyType(e.target.value))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm transition-all duration-200"
                 >
-                  {currencyTypes.map((currency) => (
-                    <option key={currency.value} value={currency.value}>
-                      {currency.label}
+                  <option value="">{t('All Currency')}</option>
+                  {moneyTypeOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
                     </option>
                   ))}
                 </select>
@@ -368,7 +368,7 @@ const DepositList = () => {
                               </div>
                               <h3 className="text-xl font-bold text-gray-600 mb-2">
                                 {hasActiveFilters
-                                  ? t('No transactions found for your filters')
+                                  ? t('No Transaction found for your search')
                                   : t('No transactions found')}
                               </h3>
                               <p className="text-gray-500 max-w-md">

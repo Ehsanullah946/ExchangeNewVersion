@@ -10,10 +10,39 @@ import {
   UpdateReceiveSender,
 } from '../api/receiveApi';
 
-export const useReceive = (search = '', limit = 10, page = 1) => {
+export const useReceive = (
+  search = '',
+  number = '',
+  moneyType = '',
+  branch = '',
+  fromDate = '',
+  toDate = '',
+  limit = 10,
+  page = 1
+) => {
   return useQuery({
-    queryKey: ['receive', search, limit, page],
-    queryFn: () => getReceive({ search, limit, page }),
+    queryKey: [
+      'receive',
+      search,
+      number,
+      moneyType,
+      branch,
+      fromDate,
+      toDate,
+      limit,
+      page,
+    ],
+    queryFn: () =>
+      getReceive({
+        search,
+        number,
+        moneyType,
+        branch,
+        fromDate,
+        toDate,
+        limit,
+        page,
+      }),
     staleTime: 0,
     refetchOnMount: 'always',
     keepPreviousData: true,
