@@ -7,10 +7,39 @@ import {
   updateTransfer,
 } from '../api/transferApi';
 
-export const useTransfer = (search = '', limit = 10, page = 1) => {
+export const useTransfer = (
+  search = '',
+  number = '',
+  moneyType = '',
+  branch = '',
+  fromDate = '',
+  toDate = '',
+  limit = 10,
+  page = 1
+) => {
   return useQuery({
-    queryKey: ['transfer', search, limit, page],
-    queryFn: () => getTransfer({ search, limit, page }),
+    queryKey: [
+      'transfer',
+      search,
+      number,
+      moneyType,
+      branch,
+      fromDate,
+      toDate,
+      limit,
+      page,
+    ],
+    queryFn: () =>
+      getTransfer({
+        search,
+        number,
+        moneyType,
+        branch,
+        fromDate,
+        toDate,
+        limit,
+        page,
+      }),
     staleTime: 0,
     refetchOnMount: 'always',
     keepPreviousData: true,

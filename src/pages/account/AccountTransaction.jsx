@@ -13,6 +13,11 @@ import { PulseLoader } from 'react-spinners';
 import { setPage } from '../../features/ui/filterSlice';
 import { formatNumber } from '../../utils/formatNumber';
 import { useDateFormatter } from '../../hooks/useDateFormatter';
+import {
+  generateAccount2PrintHTML,
+  generateAccountTransactionPrintHTML,
+} from '../../utils/printUtils';
+import { useFlexiblePrint } from '../../hooks/useFlexiblePrint';
 
 const AccountTransaction = () => {
   const { accountId } = useParams();
@@ -22,11 +27,8 @@ const AccountTransaction = () => {
   const { open, limit, page } = useSelector((state) => state.filters);
   const dispatch = useDispatch();
 
-  const { data, isLoading, error } = useAllAccountTransaction(
-    accountId,
-    limit,
-    page
-  );
+  const { printContent } = useFlexiblePrint();
+  const { data, isLoading } = useAllAccountTransaction(accountId, limit, page);
 
   const accountTransaction = data?.data || [];
   const total = data?.total || 0;
@@ -75,6 +77,25 @@ const AccountTransaction = () => {
       default:
         return t('Transaction');
     }
+  };
+
+  const handlePrintTransactions = () => {
+    const printHTML = generateAccount2PrintHTML(
+      accountTransaction,
+      accountInfo,
+      currentBalance,
+      total,
+      t,
+      formatDisplay
+    );
+
+    const title = `Account_Statement_${accountInfo.accountNo}`;
+
+    printContent(printHTML, {
+      title: title,
+      paperSize: 'A4-landscape',
+      orientation: 'landscape',
+    });
   };
 
   return (
@@ -150,7 +171,10 @@ const AccountTransaction = () => {
               <span>{t('Liquidate')}</span>
             </button>
 
-            <button className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gray-600 to-slate-700 hover:from-gray-700 hover:to-slate-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm">
+            <button
+              onClick={handlePrintTransactions}
+              className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gray-600 to-slate-700 hover:from-gray-700 hover:to-slate-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm"
+            >
               <BsPrinter className="text-base" />
               <span>{t('Print')}</span>
             </button>

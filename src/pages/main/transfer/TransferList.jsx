@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BiSolidEdit } from 'react-icons/bi';
 import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router-dom';
 import {
+  BsBuilding,
+  BsCalendar,
+  BsCashCoin,
   BsChevronLeft,
   BsChevronRight,
   BsCurrencyDollar,
@@ -22,6 +25,10 @@ import {
   setDebouncedSearch,
   setSearch,
   setPage,
+  setFromDate,
+  setToDate,
+  setNumber,
+  setMoneyType,
   toggleOpen,
 } from '../../../features/ui/filterSlice';
 import { useDeleteTransfer, useTransfer } from '../../../hooks/useTransfer';
@@ -29,13 +36,25 @@ import { formatNumber } from '../../../utils/formatNumber';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
 import { generateTransferPrintHTML } from '../../../utils/printUtils';
 import { useFlexiblePrint } from '../../../hooks/useFlexiblePrint';
+import { useBranch } from '../../../hooks/useBranch';
+import { useMoneyType } from '../../../hooks/useMoneyType';
+import Select from '../../../components/common/LazySelect';
 const TransferList = () => {
   const { t } = useTranslation();
   const { formatDisplay } = useDateFormatter();
 
-  const { open, search, limit, page, debouncedSearch } = useSelector(
-    (state) => state.filters
-  );
+  const {
+    open,
+    search,
+    number,
+    moneyType,
+    fromDate,
+    toDate,
+    limit,
+    page,
+    debouncedSearch,
+  } = useSelector((state) => state.filters);
+  const [branch, setBranch] = useState('');
 
   const dispatch = useDispatch();
 
@@ -46,9 +65,30 @@ const TransferList = () => {
 
   useEffect(() => {
     dispatch(setPage(1));
-  }, [debouncedSearch, dispatch]);
+  }, [debouncedSearch, number, moneyType, branch, fromDate, toDate, dispatch]);
 
-  const { data, isLoading } = useTransfer(debouncedSearch, limit, page);
+  const { data, isLoading } = useTransfer(
+    debouncedSearch,
+    number,
+    moneyType,
+    branch,
+    fromDate,
+    toDate,
+    limit,
+    page
+  );
+
+  const { data: branchResponse } = useBranch();
+  const branchOptions = (branchResponse?.data || []).map((b) => ({
+    value: b.Customer?.Stakeholder?.Person?.firstName,
+    label: `${b.Customer?.Stakeholder?.Person?.firstName} ${b.Customer?.Stakeholder?.Person?.lastName}`,
+  }));
+
+  const { data: moneyTypeResponse } = useMoneyType();
+  const moneyTypeOptions = (moneyTypeResponse?.data || []).map((c) => ({
+    value: c.typeName,
+    label: c.typeName,
+  }));
 
   const transfer = data?.data || [];
   const total = data?.total || 0;
@@ -92,51 +132,249 @@ const TransferList = () => {
     }
   };
 
+  const clearFilters = () => {
+    dispatch(setSearch(''));
+    dispatch(setMoneyType(''));
+    dispatch(setNumber(''));
+    dispatch(setFromDate(''));
+    dispatch(setToDate(''));
+    dispatch(setNumber(''));
+    dispatch(setBranch(''));
+  };
+
+  const formatDateForAPI = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const hasActiveFilters =
+    search || moneyType || fromDate || toDate || number || branch;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 py-3 px-2">
       <div className="max-w-7xl mx-auto">
         {/* Header Actions */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-2 p-1 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20">
-          <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col lg:flex-row gap-4 mb-2 p-4 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20">
+          {/* Left Section - Action Buttons */}
+          <div className="flex flex-wrap items-center gap-3 flex-1">
             <Link to="/main/transfer">
-              <button className="flex items-center gap-2  px-2 py-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
-                <BsSend className="mt-1" />
+              <button className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95">
+                <BsSend className="text-lg" />
                 <span>{t('Send')}</span>
               </button>
             </Link>
 
             <button
               onClick={() => dispatch(toggleOpen(!open))}
-              className="flex items-center gap-2 px-2 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
             >
-              <BsFilter className="mt-1" />
-              <span>{t('Limit Search')}</span>
+              <BsFilter className="text-lg" />
+              <span>{t('Filters')}</span>
             </button>
+
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+              >
+                <BsX className="text-lg" />
+                <span>{t('Clear Filters')}</span>
+              </button>
+            )}
           </div>
 
-          {/* Search Bar */}
-          <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
-            <div className="relative flex items-center bg-white rounded-xl shadow-lg border border-gray-100 pl-4 pr-2 py-2 min-w-80">
-              <BsSearch className="text-gray-400 mr-3 flex-shrink-0" />
-              <input
-                type="text"
-                placeholder={t('Search By Name')}
-                value={search}
-                onChange={(e) => dispatch(setSearch(e.target.value))}
-                className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-400 font-medium tracking-wide"
-              />
-              {search && (
-                <button
-                  onClick={() => dispatch(setSearch(''))}
-                  className="ml-2 text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <BsX className="text-xl" />
-                </button>
-              )}
+          {/* Right Section - Search Bar */}
+          <div className="flex-1 max-w-md">
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-300"></div>
+              <div className="relative flex items-center bg-white rounded-xl shadow-lg border border-gray-100 pl-4 pr-3 py-2.5">
+                <BsSearch className="text-gray-400 text-lg mr-3 flex-shrink-0" />
+                <input
+                  type="text"
+                  placeholder={t('Search By Name')}
+                  value={search}
+                  onChange={(e) => dispatch(setSearch(e.target.value))}
+                  className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-500 font-medium text-sm"
+                />
+                {search && (
+                  <button
+                    onClick={() => dispatch(setSearch(''))}
+                    className="ml-2 p-1 text-gray-400 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100"
+                  >
+                    <BsX className="text-xl" />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Enhanced Filter Panel */}
+        {open && (
+          <div className="mb-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6 transition-all duration-300">
+            {/* Filter Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Currency Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsCashCoin className="text-blue-500 text-lg" />
+                  {t('Currency')}
+                </label>
+                <select
+                  value={moneyType}
+                  onChange={(e) => dispatch(setMoneyType(e.target.value))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm transition-all duration-200 text-sm"
+                >
+                  <option value="">{t('All Currency')}</option>
+                  {moneyTypeOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Branch Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsBuilding className="text-purple-500 text-lg" />
+                  {t('Branch')}
+                </label>
+                <Select
+                  className="w-full text-sm"
+                  isSearchable
+                  options={branchOptions}
+                  value={
+                    branchOptions.find((opt) => opt.value === branch) || null
+                  }
+                  onChange={(selected) =>
+                    setBranch(selected ? selected.value : '')
+                  }
+                  styles={{
+                    control: (base) => ({
+                      ...base,
+                      padding: '2px 10px',
+                      border: '1px solid #e5e7eb',
+                      borderRadius: '12px',
+                      boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+                      '&:hover': {
+                        borderColor: '#e5e7eb',
+                      },
+                    }),
+                    option: (base) => ({
+                      ...base,
+                      fontSize: '14px',
+                    }),
+                  }}
+                />
+              </div>
+
+              {/* Number Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsHash className="text-green-500 text-lg" />
+                  {t('Number')}
+                </label>
+                <input
+                  type="text"
+                  value={number}
+                  onChange={(e) => dispatch(setNumber(e.target.value))}
+                  placeholder={t('Transaction Number')}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white shadow-sm transition-all duration-200 text-sm"
+                />
+              </div>
+
+              {/* From Date Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsCalendar className="text-orange-500 text-lg" />
+                  {t('From Date')}
+                </label>
+                <input
+                  type="date"
+                  value={fromDate}
+                  onChange={(e) => dispatch(setFromDate(e.target.value))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white shadow-sm transition-all duration-200 text-sm"
+                />
+              </div>
+
+              {/* To Date Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsCalendar className="text-red-500 text-lg" />
+                  {t('To Date')}
+                </label>
+                <input
+                  type="date"
+                  value={toDate}
+                  onChange={(e) => dispatch(setToDate(e.target.value))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white shadow-sm transition-all duration-200 text-sm"
+                />
+              </div>
+            </div>
+
+            {/* Quick Date Presets */}
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                {t('Quick Date Filters')}
+              </label>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const formattedToday = formatDateForAPI(today);
+                    dispatch(setFromDate(formattedToday));
+                    dispatch(setToDate(formattedToday));
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200 text-sm font-medium rounded-lg hover:bg-blue-100 hover:border-blue-300 transition-all duration-200"
+                >
+                  <BsCalendar className="text-sm" />
+                  {t('Today')}
+                </button>
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const weekAgo = new Date(today);
+                    weekAgo.setDate(today.getDate() - 7);
+                    dispatch(setFromDate(formatDateForAPI(weekAgo)));
+                    dispatch(setToDate(formatDateForAPI(today)));
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 border border-green-200 text-sm font-medium rounded-lg hover:bg-green-100 hover:border-green-300 transition-all duration-200"
+                >
+                  <BsCalendar className="text-sm" />
+                  {t('Last 7 Days')}
+                </button>
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const monthAgo = new Date(today);
+                    monthAgo.setDate(today.getDate() - 30);
+                    dispatch(setFromDate(formatDateForAPI(monthAgo)));
+                    dispatch(setToDate(formatDateForAPI(today)));
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-purple-50 text-purple-700 border border-purple-200 text-sm font-medium rounded-lg hover:bg-purple-100 hover:border-purple-300 transition-all duration-200"
+                >
+                  <BsCalendar className="text-sm" />
+                  {t('Last 30 Days')}
+                </button>
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const yearStart = new Date(today.getFullYear(), 0, 1);
+                    dispatch(setFromDate(formatDateForAPI(yearStart)));
+                    dispatch(setToDate(formatDateForAPI(today)));
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-700 border border-orange-200 text-sm font-medium rounded-lg hover:bg-orange-100 hover:border-orange-300 transition-all duration-200"
+                >
+                  <BsCalendar className="text-sm" />
+                  {t('This Year')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Main Content */}
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100">

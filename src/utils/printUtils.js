@@ -421,6 +421,7 @@ export const generateCompactDepositPrintHTML = (deposit, t, formatDisplay) => {
     </div>
   `;
 };
+
 export const generateCompactWithdrawPrintHTML = (
   withdraw,
   t,
@@ -495,6 +496,415 @@ export const generateCompactWithdrawPrintHTML = (
       <div style="text-align: center; margin-top: 5px; font-size: 8px;">
         - - - - - CUT HERE - - - - -
       </div>
+    </div>
+  `;
+};
+
+export const generateAccountTransactionPrintHTML = (
+  transactions = [],
+  accountInfo = {},
+  currentBalance = 0,
+  total = 0,
+  t,
+  formatDisplay
+) => {
+  if (!transactions || transactions.length === 0) {
+    return `
+      <div style="font-family: 'Courier New', monospace; font-size: 10px; width: 80mm; padding: 5px; line-height: 1.2;">
+        <div style="text-align: center; margin-bottom: 8px; border-bottom: 1px dashed #000; padding-bottom: 5px;">
+          <strong style="font-size: 12px;">${t(
+            'ACCOUNT STATEMENT'
+          )}</strong><br>
+          <span>${t('NO TRANSACTIONS FOUND')}</span>
+        </div>
+        <div style="text-align: center; margin: 20px 0;">
+          <p>${t('No transactions available for this account')}</p>
+        </div>
+      </div>
+    `;
+  }
+
+  const getTransactionDescription = (transaction) => {
+    if (transaction.description) {
+      return transaction.description;
+    }
+
+    switch (transaction.type) {
+      case 'deposit':
+        return t('Deposit');
+      case 'withdraw':
+        return t('Withdrawal');
+      case 'transfer':
+        return `${transaction.senderName || t('Sender')}→${
+          transaction.receiverName || t('Receiver')
+        }`;
+      case 'receive':
+        return `${transaction.senderName || t('Sender')}→${
+          transaction.receiverName || t('Receiver')
+        }`;
+      case 'exchange_sale':
+        return t('Currency Sale');
+      case 'exchange_purchase':
+        return t('Currency Purchase');
+      default:
+        return t('Transaction');
+    }
+  };
+
+  const getTransactionSymbol = (type) => {
+    switch (type) {
+      case 'deposit':
+      case 'exchange_purchase':
+      case 'receive':
+        return '+';
+      case 'withdraw':
+      case 'exchange_sale':
+      case 'transfer':
+        return '-';
+      default:
+        return '';
+    }
+  };
+
+  return `
+    <div style="font-family: 'Courier New', monospace; font-size: 10px; width: 80mm; padding: 5px; line-height: 1.2;">
+      <!-- Header -->
+      <div style="text-align: center; margin-bottom: 8px; border-bottom: 1px dashed #000; padding-bottom: 5px;">
+        <strong style="font-size: 12px;">${t('ACCOUNT STATEMENT')}</strong><br>
+        <span>${t('TRANSACTION HISTORY')}</span>
+      </div>
+
+      <!-- Account Information -->
+      <div style="margin-bottom: 8px;">
+        <strong>${t('Account')}:</strong> ${accountInfo.accountNo || 'N/A'}<br>
+        <strong>${t('Currency')}:</strong> ${
+    accountInfo.moneyTypeName || 'N/A'
+  }<br>
+        <strong>${t('Customer')}:</strong> ${
+    accountInfo.customerId || 'N/A'
+  }<br>
+        <strong>${t('Date')}:</strong> ${new Date().toLocaleDateString()}<br>
+        <strong>${t('Time')}:</strong> ${new Date().toLocaleTimeString()}
+      </div>
+
+      <!-- Balance Summary -->
+      <div style="border-top: 1px dashed #000; margin: 5px 0; padding-top: 5px;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td><strong>${t('Current Balance')}:</strong></td>
+            <td style="text-align: right; font-weight: bold; ${
+              currentBalance < 0 ? 'color: #dc3545;' : 'color: #28a745;'
+            }">
+              ${formatNumber(currentBalance)}
+            </td>
+          </tr>
+          <tr>
+            <td><strong>${t('Total Transactions')}:</strong></td>
+            <td style="text-align: right;">${total}</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Transactions Header -->
+      <div style="border-top: 1px dashed #000; border-bottom: 1px solid #000; margin: 8px 0; padding: 3px 0;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td style="width: 15%;"><strong>${t('Date')}</strong></td>
+            <td style="width: 45%;"><strong>${t('Description')}</strong></td>
+            <td style="width: 20%; text-align: right;"><strong>${t(
+              'Amount'
+            )}</strong></td>
+            <td style="width: 20%; text-align: right;"><strong>${t(
+              'Balance'
+            )}</strong></td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Transactions List -->
+      <div style="max-height: 300px; overflow-y: auto;">
+        ${transactions
+          .map((transaction, index) => {
+            const amount =
+              transaction.credit > 0 ? transaction.credit : transaction.debit;
+            const symbol = getTransactionSymbol(transaction.type);
+            const isCredit = transaction.credit > 0;
+
+            return `
+            <div style="border-bottom: 1px dotted #ccc; padding: 3px 0; ${
+              index === transactions.length - 1 ? 'border-bottom: none;' : ''
+            }">
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="width: 15%; vertical-align: top;">
+                    ${formatDisplay(transaction.date, {
+                      showTime: false,
+                      compact: true,
+                    })}
+                  </td>
+                  <td style="width: 45%; vertical-align: top;">
+                    ${getTransactionDescription(transaction).substring(0, 25)}
+                    ${
+                      transaction.description &&
+                      transaction.description.length > 25
+                        ? '...'
+                        : ''
+                    }
+                  </td>
+                  <td style="width: 20%; text-align: right; vertical-align: top; ${
+                    isCredit ? 'color: #28a745;' : 'color: #dc3545;'
+                  }">
+                    ${symbol}${formatNumber(amount)}
+                  </td>
+                  <td style="width: 20%; text-align: right; vertical-align: top; ${
+                    transaction.runningBalance < 0
+                      ? 'color: #dc3545;'
+                      : 'color: #000;'
+                  }">
+                    ${formatNumber(transaction.runningBalance)}
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="4" style="font-size: 9px; color: #666; padding-left: 15px;">
+                    ${
+                      transaction.No ||
+                      transaction.transferNo ||
+                      transaction.receiveNo ||
+                      'N/A'
+                    } • ${t(transaction.type)}
+                  </td>
+                </tr>
+              </table>
+            </div>
+          `;
+          })
+          .join('')}
+      </div>
+
+      <!-- Summary -->
+      <div style="border-top: 1px solid #000; margin-top: 8px; padding-top: 5px;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td><strong>${t('Total Credits')}:</strong></td>
+            <td style="text-align: right; color: #28a745;">
+              ${formatNumber(
+                transactions.reduce((sum, t) => sum + (t.credit || 0), 0)
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td><strong>${t('Total Debits')}:</strong></td>
+            <td style="text-align: right; color: #dc3545;">
+              ${formatNumber(
+                transactions.reduce((sum, t) => sum + (t.debit || 0), 0)
+              )}
+            </td>
+          </tr>
+          <tr style="border-top: 1px dashed #000;">
+            <td><strong>${t('Net Movement')}:</strong></td>
+            <td style="text-align: right; font-weight: bold;">
+              ${formatNumber(
+                transactions.reduce((sum, t) => sum + (t.credit || 0), 0) -
+                  transactions.reduce((sum, t) => sum + (t.debit || 0), 0)
+              )}
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Footer -->
+      <div style="border-top: 1px dashed #000; margin-top: 8px; padding-top: 5px; text-align: center; font-size: 9px;">
+        <div>${t('Generated by Banking System')}</div>
+        <div>${new Date().toLocaleDateString()} • ${t('ACCOUNT COPY')}</div>
+        <div style="font-size: 8px; margin-top: 3px;">
+          ID: ACC-${accountInfo.accountNo}-${Date.now().toString().slice(-6)}
+        </div>
+      </div>
+
+      <!-- Cut here line -->
+      <div style="text-align: center; margin-top: 10px; border-top: 1px dashed #000; padding-top: 5px;">
+        ✄ - - - - - - - - - - - - - - - - ✄
+      </div>
+    </div>
+  `;
+};
+
+export const generateAccount2PrintHTML = (
+  transactions = [],
+  accountInfo = {},
+  currentBalance = 0,
+  total = 0,
+  t,
+  formatDisplay
+) => {
+  const getTransactionDescription = (transaction) => {
+    if (transaction.description) {
+      return transaction.description;
+    }
+
+    switch (transaction.type) {
+      case 'deposit':
+        return t('Deposit to account');
+      case 'withdraw':
+        return t('Withdrawal from account');
+      case 'transfer':
+        return `${transaction.senderName || t('Sender')} → ${
+          transaction.receiverName || t('Receiver')
+        }`;
+      case 'receive':
+        return `${transaction.senderName || t('Sender')} → ${
+          transaction.receiverName || t('Receiver')
+        }`;
+      case 'exchange_sale':
+        return t('Currency Sale');
+      case 'exchange_purchase':
+        return t('Currency Purchase');
+      default:
+        return t('Transaction');
+    }
+  };
+
+  return `
+    <div class="print-header">
+      <h1>${t('Transaction History Report')}</h1>
+    </div>
+
+    <div class="print-meta">
+        <!-- Account Information -->
+      <div style="margin-bottom: 8px;">
+        <strong>${t('Account')}:</strong> ${accountInfo.accountNo || 'N/A'}<br>
+        <strong>${t('Currency')}:</strong> ${
+    accountInfo.moneyTypeName || 'N/A'
+  }<br>
+        <strong>${t('Customer')}:</strong> ${
+    accountInfo.customerId || 'N/A'
+  }<br>
+        <strong>${t('Date')}:</strong> ${new Date().toLocaleDateString()}<br>
+        <strong>${t('Time')}:</strong> ${new Date().toLocaleTimeString()}
+      </div>
+    </div>
+
+    ${
+      transactions.length > 0
+        ? `
+         <div style="border-top: 1px dashed #000; margin: 5px 0; padding-top: 5px;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td><strong>${t('Current Balance')}:</strong></td>
+            <td style="text-align: right; font-weight: bold; ${
+              currentBalance < 0 ? 'color: #dc3545;' : 'color: #28a745;'
+            }">
+              ${formatNumber(currentBalance)}
+            </td>
+          </tr>
+          <tr>
+            <td><strong>${t('Total Transactions')}:</strong></td>
+            <td style="text-align: right;">${total}</td>
+          </tr>
+        </table>
+      </div>
+    `
+        : ''
+    }
+
+    ${
+      transactions.length > 0
+        ? `
+      <table>
+        <thead>
+          <tr>
+            <th>${t('Transaction ID')}</th>
+            <th>${t('Date & Time')}</th>
+            <th>${t('Description')}</th>
+            <th class="text-right">${t('Debit')}</th>
+            <th class="text-right">${t('Credit')}</th>
+            <th class="text-center">${t('Currency')}</th>
+            <th class="text-right">${t('Balance')}</th>
+            <th class="text-center">${t('Type')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${transactions
+            .map(
+              (transaction) => `
+            <tr>
+              <td>${
+                transaction.No ||
+                transaction.transferNo ||
+                transaction.receiveNo ||
+                'N/A'
+              }</td>
+              <td>${formatDisplay(transaction.date, { showTime: true })}</td>
+              <td>${getTransactionDescription(transaction)}</td>
+              <td class="text-right">${
+                transaction.debit > 0 ? formatNumber(transaction.debit) : '-'
+              }</td>
+              <td class="text-right">${
+                transaction.credit > 0 ? formatNumber(transaction.credit) : '-'
+              }</td>
+              <td class="text-center">${transaction.moneyType || 'N/A'}</td>
+              <td class="text-right ${
+                transaction.runningBalance < 0 ? 'negative' : 'positive'
+              }">
+                ${formatNumber(transaction.runningBalance)}
+              </td>
+              <td class="text-center">
+                ${t(
+                  transaction.type === 'exchange_sale'
+                    ? 'Exchange Sale'
+                    : transaction.type === 'exchange_purchase'
+                    ? 'Exchange Purchase'
+                    : transaction.type
+                )}
+              </td>
+            </tr>
+          `
+            )
+            .join('')}
+        </tbody>
+      </table>
+            <div style="border-top: 1px solid #000; margin-top: 8px; padding-top: 5px;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <tr>
+            <td><strong>${t('Total Credits')}:</strong></td>
+            <td style="text-align: right; color: #28a745;">
+              ${formatNumber(
+                transactions.reduce((sum, t) => sum + (t.credit || 0), 0)
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td><strong>${t('Total Debits')}:</strong></td>
+            <td style="text-align: right; color: #dc3545;">
+              ${formatNumber(
+                transactions.reduce((sum, t) => sum + (t.debit || 0), 0)
+              )}
+            </td>
+          </tr>
+          <tr style="border-top: 1px dashed #000;">
+            <td><strong>${t('Net Movement')}:</strong></td>
+            <td style="text-align: right; font-weight: bold;">
+              ${formatNumber(
+                transactions.reduce((sum, t) => sum + (t.credit || 0), 0) -
+                  transactions.reduce((sum, t) => sum + (t.debit || 0), 0)
+              )}
+            </td>
+          </tr>
+        </table>
+      </div>
+    `
+        : `
+      <div style="text-align: center; padding: 40px; color: #6c757d;">
+        <h3>${t('No transactions found')}</h3>
+        <p>${t('No transaction records available for printing.')}</p>
+      </div>
+    `
+    }
+
+    <div class="print-footer">
+      ${t('Generated by Banking System')} • ${
+    window.location.hostname
+  } • ${new Date().toLocaleString()}
     </div>
   `;
 };

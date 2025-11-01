@@ -5,8 +5,15 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { ImMinus } from 'react-icons/im';
 import { RiAddBoxFill } from 'react-icons/ri';
-import { BsPrinter, BsSearch, BsShare } from 'react-icons/bs';
-import { setPage } from '../../../features/ui/filterSlice';
+import {
+  BsCalendar,
+  BsCashCoin,
+  BsFilter,
+  BsHash,
+  BsPrinter,
+  BsSearch,
+  BsShare,
+} from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   useAllTransaction,
@@ -15,20 +22,62 @@ import {
   useDeleteLiquidation,
   useLiquidateCustomer,
 } from '../../../hooks/useCustomers';
+import {
+  setDebouncedSearch,
+  setSearch,
+  setPage,
+  setFromDate,
+  setToDate,
+  setNumber,
+  setMoneyType,
+  toggleOpen,
+} from '../../../features/ui/filterSlice';
 import { formatNumber } from '../../../utils/formatNumber';
 import { useDateFormatter } from '../../../hooks/useDateFormatter';
 import { generateTransactionPrintHTML } from '../../../utils/printUtils';
 import { useFlexiblePrint } from '../../../hooks/useFlexiblePrint';
+import { useMoneyType } from '../../../hooks/useMoneyType';
 
 const CustomerTransactions = () => {
   const { customerId } = useParams();
   const { formatDisplay } = useDateFormatter();
   const { t } = useTranslation();
 
-  const { open, limit, page } = useSelector((state) => state.filters);
+  const {
+    open,
+    limit,
+    page,
+    toDate,
+    fromDate,
+    search,
+    moneyType,
+    number,
+    debouncedSearch,
+  } = useSelector((state) => state.filters);
   const dispatch = useDispatch();
 
-  const { data, isLoading } = useAllTransaction(customerId, limit, page);
+  const [TransactionType, setTransactionType] = useState('');
+
+  const { data, isLoading } = useAllTransaction(
+    customerId,
+    limit,
+    page,
+    search,
+    moneyType,
+    fromDate,
+    toDate,
+    TransactionType
+  );
+
+  const transactionType = [
+    { value: '', label: t('All Transaction') },
+    { value: 'deposit', label: t('deposit') },
+    { value: 'withdraw', label: t('withdraw') },
+    { value: 'receive', label: t('receive') },
+    { value: 'transfer', label: t('transfer') },
+    { value: 'exchange_sale', label: t('Exchange Sale') },
+    { value: 'exchange_purchase', label: t('Exchange Purchase') },
+  ];
 
   const { data: customerData } = useCustomerDetails(customerId);
   const customer = customerData?.data || {};
@@ -49,8 +98,23 @@ const CustomerTransactions = () => {
     description: '',
   });
 
+  const { data: moneyTypeResponse } = useMoneyType();
+  const moneyTypeOptions = (moneyTypeResponse?.data || []).map((c) => ({
+    value: c.typeName,
+    label: c.typeName,
+  }));
+
   const { mutate: liquidateCustomer, isLoading: isLiquidating } =
     useLiquidateCustomer();
+
+  useEffect(() => {
+    const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
+    return () => clearTimeout(handler);
+  }, [search, dispatch]);
+
+  useEffect(() => {
+    dispatch(setPage(1));
+  }, [debouncedSearch, number, moneyType, fromDate, toDate, dispatch]);
 
   const handleLiquidate = () => {
     liquidateCustomer(
@@ -168,6 +232,23 @@ const CustomerTransactions = () => {
     }
   };
 
+  const clearFilters = () => {
+    dispatch(setSearch(''));
+    dispatch(setMoneyType(''));
+    dispatch(setNumber(''));
+    dispatch(setFromDate(''));
+    dispatch(setToDate(''));
+    dispatch(setNumber(''));
+  };
+
+  const formatDateForAPI = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const hasActiveFilters = search || moneyType || fromDate || toDate || number;
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30 p-6">
       <div className="max-w-7xl mx-auto">
@@ -214,9 +295,12 @@ const CustomerTransactions = () => {
               </button>
             </Link>
 
-            <button className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm">
-              <BsSearch className="text-base" />
-              <span>{t('Filter')}</span>
+            <button
+              onClick={() => dispatch(toggleOpen(!open))}
+              className="flex items-center gap-2 px-4 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+            >
+              <BsFilter className="text-lg" />
+              <span>{t('Filters')}</span>
             </button>
 
             <button
@@ -288,10 +372,10 @@ const CustomerTransactions = () => {
           <div className="relative flex items-center bg-white rounded-xl shadow-lg border border-gray-100 pl-4 pr-4 py-3">
             <BsSearch className="text-gray-400 mr-3 flex-shrink-0" />
             <input
+              onChange={(e) => dispatch(setSearch(e.target.value))}
+              placeholder={t('Search By Name')}
+              value={search}
               type="text"
-              placeholder={t(
-                'Search by transaction ID, description, or amount...'
-              )}
               className="w-full bg-transparent border-none outline-none text-gray-700 placeholder-gray-400 font-medium tracking-wide text-sm"
             />
             {open && (
@@ -313,6 +397,139 @@ const CustomerTransactions = () => {
             )}
           </div>
         </div>
+
+        {open && (
+          <div className="mb-6 bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-6 transition-all duration-300">
+            {/* Filter Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {/* Currency Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsCashCoin className="text-blue-500 text-lg" />
+                  {t('Currency')}
+                </label>
+                <select
+                  value={moneyType}
+                  onChange={(e) => dispatch(setMoneyType(e.target.value))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm transition-all duration-200 text-sm"
+                >
+                  <option value="">{t('All Currency')}</option>
+                  {moneyTypeOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Number Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsCashCoin className="text-blue-500" />
+                  {t('Transaction Type')}
+                </label>
+                <select
+                  value={TransactionType}
+                  onChange={(e) => dispatch(setTransactionType(e.target.value))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm transition-all duration-200"
+                >
+                  {transactionType.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* From Date Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsCalendar className="text-orange-500 text-lg" />
+                  {t('From Date')}
+                </label>
+                <input
+                  type="date"
+                  value={fromDate}
+                  onChange={(e) => dispatch(setFromDate(e.target.value))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 bg-white shadow-sm transition-all duration-200 text-sm"
+                />
+              </div>
+
+              {/* To Date Filter */}
+              <div className="space-y-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
+                  <BsCalendar className="text-red-500 text-lg" />
+                  {t('To Date')}
+                </label>
+                <input
+                  type="date"
+                  value={toDate}
+                  onChange={(e) => dispatch(setToDate(e.target.value))}
+                  className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white shadow-sm transition-all duration-200 text-sm"
+                />
+              </div>
+            </div>
+
+            {/* Quick Date Presets */}
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">
+                {t('Quick Date Filters')}
+              </label>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const formattedToday = formatDateForAPI(today);
+                    dispatch(setFromDate(formattedToday));
+                    dispatch(setToDate(formattedToday));
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-700 border border-blue-200 text-sm font-medium rounded-lg hover:bg-blue-100 hover:border-blue-300 transition-all duration-200"
+                >
+                  <BsCalendar className="text-sm" />
+                  {t('Today')}
+                </button>
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const weekAgo = new Date(today);
+                    weekAgo.setDate(today.getDate() - 7);
+                    dispatch(setFromDate(formatDateForAPI(weekAgo)));
+                    dispatch(setToDate(formatDateForAPI(today)));
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-green-50 text-green-700 border border-green-200 text-sm font-medium rounded-lg hover:bg-green-100 hover:border-green-300 transition-all duration-200"
+                >
+                  <BsCalendar className="text-sm" />
+                  {t('Last 7 Days')}
+                </button>
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const monthAgo = new Date(today);
+                    monthAgo.setDate(today.getDate() - 30);
+                    dispatch(setFromDate(formatDateForAPI(monthAgo)));
+                    dispatch(setToDate(formatDateForAPI(today)));
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-purple-50 text-purple-700 border border-purple-200 text-sm font-medium rounded-lg hover:bg-purple-100 hover:border-purple-300 transition-all duration-200"
+                >
+                  <BsCalendar className="text-sm" />
+                  {t('Last 30 Days')}
+                </button>
+                <button
+                  onClick={() => {
+                    const today = new Date();
+                    const yearStart = new Date(today.getFullYear(), 0, 1);
+                    dispatch(setFromDate(formatDateForAPI(yearStart)));
+                    dispatch(setToDate(formatDateForAPI(today)));
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-700 border border-orange-200 text-sm font-medium rounded-lg hover:bg-orange-100 hover:border-orange-300 transition-all duration-200"
+                >
+                  <BsCalendar className="text-sm" />
+                  {t('This Year')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Summary Cards */}
         {!isLoading && customerTransaction.length > 0 && (

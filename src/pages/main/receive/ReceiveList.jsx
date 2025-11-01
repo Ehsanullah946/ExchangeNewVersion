@@ -20,7 +20,6 @@ import {
   BsX,
 } from 'react-icons/bs';
 import { PulseLoader } from 'react-spinners';
-import { RiDownload2Line } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   setDebouncedSearch,
@@ -66,7 +65,6 @@ const ReceiveList = () => {
   const { formatDisplay } = useDateFormatter();
   const dispatch = useDispatch();
 
-  // const [number, setNumber] = useState('');
   const [branch, setBranch] = useState('');
 
   useEffect(() => {
@@ -255,6 +253,7 @@ const ReceiveList = () => {
     dispatch(setFromDate(''));
     dispatch(setToDate(''));
     dispatch(setNumber(''));
+    dispatch(setBranch(''));
   };
 
   const formatDateForAPI = (date) => {
@@ -292,7 +291,7 @@ const ReceiveList = () => {
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
               >
                 <BsX className="text-lg" />
                 <span>{t('Clear Filters')}</span>
@@ -396,7 +395,7 @@ const ReceiveList = () => {
                   type="text"
                   value={number}
                   onChange={(e) => dispatch(setNumber(e.target.value))}
-                  placeholder={t('Enter receipt number')}
+                  placeholder={t('Transaction Number')}
                   className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 bg-white shadow-sm transition-all duration-200 text-sm"
                 />
               </div>

@@ -122,25 +122,49 @@ export const useCustomerDetails = (customerId) => {
   });
 };
 
-export const useAllTransaction = (customerId, limit = 10, page = 1) => {
+export const useAllTransaction = (
+  customerId,
+  limit = 10,
+  page = 1,
+  search,
+  moneyType,
+  fromDate,
+  toDate,
+  TransactionType
+) => {
   return useQuery({
-    queryKey: ['customers', customerId, 'transactions', limit, page],
+    queryKey: [
+      'customer-transactions',
+      customerId,
+      limit,
+      page,
+      search,
+      moneyType,
+      fromDate,
+      toDate,
+      TransactionType,
+    ],
     queryFn: () => {
       if (!customerId) {
-        console.error('No customerId provided to useAllTransaction');
-        return Promise.resolve({ data: [], total: 0 });
+        console.error('❌ No customerId provided to useAllTransaction');
+        throw new Error('Customer ID is required');
       }
-      return getAllTransaction(customerId, { limit, page });
+
+      return getAllTransaction(customerId, {
+        limit,
+        page,
+        search: search || '',
+        moneyType: moneyType || '',
+        fromDate: fromDate || '',
+        toDate: toDate || '',
+        TransactionType: TransactionType || '',
+      });
     },
-    enabled: !!customerId && !isNaN(customerId),
-    staleTime: 0,
-    refetchOnMount: 'always',
+    enabled: !!customerId,
+    staleTime: 1000 * 60 * 5, // 5 minutes
     keepPreviousData: true,
     onError: (error) => {
-      console.error('Error fetching all transaction customer:', error);
-    },
-    onSuccess: (data) => {
-      console.log('Query successful - data received:', data);
+      console.error('Error fetching customer transactions:', error);
     },
   });
 };

@@ -28,7 +28,6 @@ export const getCustomer = async (filters = {}) => {
 
 export const getSingleCustomer = async (id) => {
   const { data } = await axiosClient.get(`/customer/${id}`);
-
   return data;
 };
 
@@ -67,19 +66,44 @@ export const getCustomerDetails = async (customerId) => {
 };
 
 // Update your getAllTransaction function
+
 export const getAllTransaction = async (
   customerId,
-  { limit = 10, page = 1 } = {}
+  {
+    limit = 10,
+    page = 1,
+    search = '',
+    moneyType = '',
+    fromDate = '',
+    toDate = '',
+    TransactionType = '',
+  } = {}
 ) => {
   try {
     console.log('🔍 API Call Debug:');
     console.log('customerId:', customerId, 'type:', typeof customerId);
-    console.log('params:', { limit, page });
+    console.log('params:', {
+      limit,
+      page,
+      search,
+      moneyType,
+      fromDate,
+      toDate,
+      TransactionType,
+    });
 
     const response = await axiosClient.get(
       `/customer/${customerId}/transactions`,
       {
-        params: { limit, page },
+        params: {
+          limit,
+          page,
+          search,
+          moneyType,
+          fromDate,
+          toDate,
+          TransactionType,
+        },
       }
     );
 
@@ -88,6 +112,7 @@ export const getAllTransaction = async (
       status: response.data?.status,
       total: response.data?.total,
       dataLength: response.data?.data?.length,
+      filters: response.data?.filters,
       fullData: response.data,
     });
 
