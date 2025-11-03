@@ -526,6 +526,14 @@ const CustomerTransactions = () => {
                   <BsCalendar className="text-sm" />
                   {t('This Year')}
                 </button>
+                {hasActiveFilters && (
+                  <button
+                    onClick={clearFilters}
+                    className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-gray-600 to-slate-700 hover:from-gray-700 hover:to-slate-800 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm"
+                  >
+                    {t('Clear Filters')}
+                  </button>
+                )}
               </div>
             </div>
           </div>
