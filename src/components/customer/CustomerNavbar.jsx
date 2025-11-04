@@ -1,46 +1,202 @@
 // components/customer/CustomerNavbar.jsx
+import React, { useState, useRef, useEffect } from 'react';
+import {
+  BsPersonCircle,
+  BsGear,
+  BsBoxArrowRight,
+  BsBell,
+  BsClockHistory,
+} from 'react-icons/bs';
+import { MdKeyboardArrowDown } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logoutCustomer } from '../../features/customer/customerAuthSlice';
+
+const NavButton = ({ title, customeFunc, icon, color, dotColor, count }) => {
+  return (
+    <button
+      onClick={customeFunc}
+      className="relative p-2.5 rounded-xl transition-all duration-300 group hover:bg-white/80 hover:shadow-lg backdrop-blur-sm"
+    >
+      <div className="relative">
+        <div
+          className={`text-xl transition-transform duration-300 group-hover:scale-110 ${
+            color === 'blue'
+              ? 'text-blue-600'
+              : color === 'green'
+              ? 'text-green-600'
+              : 'text-gray-600'
+          }`}
+        >
+          {icon}
+        </div>
+
+        {/* Notification dot or count */}
+        {(dotColor || count > 0) && (
+          <div
+            className={`absolute -top-1 -right-1 min-w-4 h-4 flex items-center justify-center text-xs font-bold text-white rounded-full ${
+              count > 0 ? 'px-1' : 'w-2 h-2'
+            }`}
+            style={{
+              background: count > 0 ? '#ef4444' : dotColor,
+              boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)',
+            }}
+          >
+            {count > 0 && count}
+          </div>
+        )}
+      </div>
+
+      {/* Tooltip */}
+      <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
+        {title}
+        <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
+      </div>
+    </button>
+  );
+};
 
 const CustomerNavbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { customer } = useSelector((state) => state.customerAuth);
+  const [showQuickMenu, setShowQuickMenu] = useState(false);
+  const menuRef = useRef(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowQuickMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogout = () => {
     dispatch(logoutCustomer());
     navigate('/customer/login');
   };
 
-  return (
-    <header className="bg-white shadow-sm border-b">
-      <div className="flex justify-between items-center px-6 py-4">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-800">
-            Customer Dashboard
-          </h2>
-          <p className="text-sm text-gray-600">
-            Welcome to your banking portal
-          </p>
-        </div>
+  const handleProfileClick = () => {
+    navigate('/customer/profile');
+    setShowQuickMenu(false);
+  };
 
-        <div className="flex items-center space-x-4">
-          <div className="text-right">
-            <p className="text-sm font-medium text-gray-800">
-              Customer ID: {customer?.id}
-            </p>
-            <p className="text-xs text-gray-500">Customer Portal</p>
-          </div>
+  const handleSettingsClick = () => {
+    navigate('/customer/settings');
+    setShowQuickMenu(false);
+  };
+
+  // Sample data - replace with actual data
+  const notificationCount = 2;
+
+  return (
+    <div className="flex items-center justify-between p-2 md:px-6 bg-gradient-to-r from-white to-gray-50/80 backdrop-blur-lg border-b border-gray-200/60 shadow-sm relative z-50">
+      {/* Page Title */}
+      <div className="flex items-center">
+        <h1 className="text-xl font-bold text-gray-800">Customer Dashboard</h1>
+      </div>
+
+      {/* Right Section */}
+      <div className="flex items-center gap-2">
+        {/* Recent Activity */}
+        <NavButton
+          title="Recent Activity"
+          customeFunc={() => navigate('/customer/transactions')}
+          color="blue"
+          icon={<BsClockHistory />}
+        />
+
+        {/* Notifications */}
+        <NavButton
+          title="Notifications"
+          customeFunc={() => navigate('/customer/notifications')}
+          color="green"
+          icon={<BsBell />}
+          count={notificationCount}
+        />
+
+        {/* User Profile */}
+        <div className="relative" ref={menuRef}>
           <button
-            onClick={handleLogout}
-            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition text-sm"
+            onClick={() => setShowQuickMenu(!showQuickMenu)}
+            className="flex items-center gap-3 p-2 rounded-xl transition-all duration-300 hover:bg-white/80 hover:shadow-lg group"
           >
-            Logout
+            <div className="relative">
+              <div className="rounded-2xl h-10 w-10 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold border-2 border-white shadow-md transition-transform duration-300 group-hover:scale-105">
+                {customer?.id ? `C${customer.id.toString().slice(-2)}` : 'CU'}
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+            </div>
+
+            <div className="hidden md:block text-left">
+              <p className="text-sm font-semibold text-gray-900 leading-none">
+                Customer #{customer?.id}
+              </p>
+              <p className="text-xs text-gray-500 mt-1">Active</p>
+            </div>
+
+            <MdKeyboardArrowDown
+              className={`text-gray-600 transition-transform duration-300 ${
+                showQuickMenu ? 'rotate-180' : ''
+              }`}
+            />
           </button>
+
+          {/* Quick User Menu */}
+          {showQuickMenu && (
+            <div className="absolute top-full right-0 mt-2 w-64 bg-white/95 backdrop-blur-lg rounded-2xl shadow-xl border border-gray-200/60 py-2 z-50 animate-in fade-in-0 zoom-in-95">
+              {/* User Info */}
+              <div className="px-4 py-3 border-b border-gray-200/60">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-xl h-12 w-12 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-semibold border-2 border-white shadow-sm">
+                    {customer?.id
+                      ? `C${customer.id.toString().slice(-2)}`
+                      : 'CU'}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">
+                      Customer #{customer?.id}
+                    </p>
+                    <p className="text-sm text-gray-500">Personal Account</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Menu Items */}
+              <button
+                onClick={handleProfileClick}
+                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50/80 transition-colors duration-200"
+              >
+                <BsPersonCircle className="text-gray-600 text-lg" />
+                <span className="text-gray-700">My Profile</span>
+              </button>
+
+              <button
+                onClick={handleSettingsClick}
+                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50/80 transition-colors duration-200"
+              >
+                <BsGear className="text-gray-600 text-lg" />
+                <span className="text-gray-700">Account Settings</span>
+              </button>
+
+              <div className="border-t border-gray-200/60 my-1"></div>
+
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-red-50/80 text-red-600 transition-colors duration-200 rounded-b-2xl"
+              >
+                <BsBoxArrowRight className="text-lg" />
+                <span className="font-medium">Sign Out</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
-    </header>
+    </div>
   );
 };
 

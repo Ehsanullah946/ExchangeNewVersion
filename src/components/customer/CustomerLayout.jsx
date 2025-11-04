@@ -2,18 +2,19 @@
 import CustomerSidebar from './CustomerSidebar';
 import CustomerNavbar from './CustomerNavbar';
 import { Outlet } from 'react-router-dom';
+import Toast from '../common/Toast';
 
 const CustomerLayout = () => {
   return (
-    <div className="flex h-screen bg-gray-50">
-      <CustomerSidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
+    <CustomerSidebar>
+      <div className="flex-1 flex flex-col min-h-screen">
         <CustomerNavbar />
-        <main className="flex-1 overflow-y-auto p-6">
+        <div className="flex-1 overflow-auto bg-gray-50/50">
+          <Toast />
           <Outlet />
-        </main>
+        </div>
       </div>
-    </div>
+    </CustomerSidebar>
   );
 };
 

@@ -12,7 +12,6 @@ import {
   MdOutlineLightMode,
   MdOutlineDarkMode,
 } from 'react-icons/md';
-// import avatar from '../../data/admin.jpg';
 import { useLogout } from '../../hooks/useAuth.js';
 import { useSelector } from 'react-redux';
 import NotificationPanel from './NotificationPanel.jsx';

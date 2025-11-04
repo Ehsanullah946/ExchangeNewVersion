@@ -12,6 +12,7 @@ import {
   setLoading,
   logoutCustomer,
 } from '../features/customer/customerAuthSlice';
+import { useNavigate } from 'react-router-dom';
 
 export const useInitiateVerification = () => {
   const dispatch = useDispatch();
@@ -42,25 +43,56 @@ export const useInitiateVerification = () => {
 
 export const useVerifyCode = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: ({ email, code, organizationId }) =>
       verifyCode(email, code, organizationId),
     onMutate: () => {
+      console.log('🔄 Starting verification...');
       dispatch(setLoading(true));
     },
-    onSuccess: (data) => {
-      dispatch(setCustomerCredentials(data));
+    onSuccess: (data, variables) => {
+      console.log('✅ Verification SUCCESS - Full response:', data);
+
+      // Check if we have the required data
+      if (data.token && data.customerId) {
+        console.log('🔐 Token and customerId found, setting credentials...');
+
+        dispatch(
+          setCustomerCredentials({
+            token: data.token,
+            customerId: data.customerId,
+            personId: data.personId,
+          })
+        );
+
+        console.log('🏠 Navigating to customer dashboard...');
+        // Use setTimeout to ensure Redux state is updated before navigation
+        setTimeout(() => {
+          navigate('/customer');
+        }, 100);
+      } else {
+        console.error('❌ Missing required data in response:', {
+          hasToken: !!data.token,
+          hasCustomerId: !!data.customerId,
+          fullData: data,
+        });
+      }
     },
     onError: (error) => {
-      console.error('Verification error:', error);
+      console.error('❌ Verification ERROR:', {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+      });
     },
     onSettled: () => {
+      console.log('🏁 Verification process completed');
       dispatch(setLoading(false));
     },
   });
 };
-
 export const useCustomerAccounts = () => {
   return useQuery({
     queryKey: ['customers'],

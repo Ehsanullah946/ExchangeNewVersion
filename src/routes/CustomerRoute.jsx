@@ -1,4 +1,4 @@
-// routes/CustomerRoute.jsx - Updated with better debugging
+// routes/CustomerRoute.jsx
 import { Navigate } from 'react-router-dom';
 import CustomerLayout from '../components/customer/CustomerLayout';
 import { useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ export default function CustomerRoute({ children }) {
   );
 
   useEffect(() => {
-    console.log('🔐 CustomerRoute auth state:', {
+    console.log('🔐 CustomerRoute - Current auth state:', {
       isAuthenticated,
       loading,
       hasToken: !!token,
@@ -20,19 +20,16 @@ export default function CustomerRoute({ children }) {
   }, [isAuthenticated, loading, token, customer]);
 
   if (loading) {
-    console.log('⏳ CustomerRoute: Loading...');
     return (
-      <div className="flex justify-center items-center h-screen">
-        Loading...
+      <div className="flex justify-center items-center h-screen bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
   if (!isAuthenticated) {
-    console.log('🚫 CustomerRoute: Not authenticated, redirecting to login');
     return <Navigate to="/customer/login" replace />;
   }
 
-  console.log('✅ CustomerRoute: Authenticated, rendering children');
   return <CustomerLayout>{children}</CustomerLayout>;
 }

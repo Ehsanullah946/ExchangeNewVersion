@@ -79,32 +79,32 @@ const CustomerLogin = () => {
   };
 
   // Show info message if auto-login message exists
-  if (info) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <div className="flex">
-              <div className="flex-shrink-0">
-                <span className="text-green-400 text-xl">✅</span>
-              </div>
-              <div className="ml-3">
-                <h3 className="text-sm font-medium text-green-800">
-                  Automatic Login
-                </h3>
-                <div className="mt-2 text-sm text-green-700">
-                  <p>{info}</p>
-                  <p className="mt-1 text-green-600">
-                    Redirecting you to your dashboard...
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // if (info) {
+  //   return (
+  //     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  //       <div className="sm:mx-auto sm:w-full sm:max-w-md">
+  //         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+  //           <div className="flex">
+  //             <div className="flex-shrink-0">
+  //               <span className="text-green-400 text-xl">✅</span>
+  //             </div>
+  //             <div className="ml-3">
+  //               <h3 className="text-sm font-medium text-green-800">
+  //                 Automatic Login
+  //               </h3>
+  //               <div className="mt-2 text-sm text-green-700">
+  //                 <p>{info}</p>
+  //                 <p className="mt-1 text-green-600">
+  //                   Redirecting you to your dashboard...
+  //                 </p>
+  //               </div>
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   if (verificationStep === 'code') {
     return (
