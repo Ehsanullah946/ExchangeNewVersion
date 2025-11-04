@@ -47,7 +47,7 @@ const SalarySummary = ({ summary }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold text-blue-600 uppercase tracking-wide">
-                Total Gross
+                {t('Total Gross')}
               </p>
               <p className="text-2xl font-bold text-blue-800 mt-1">
                 ${formatNumber(summary.totalGross || 0)}
@@ -63,7 +63,7 @@ const SalarySummary = ({ summary }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold text-green-600 uppercase tracking-wide">
-                Total Net
+                {t('Total Net')}
               </p>
               <p className="text-2xl font-bold text-green-800 mt-1">
                 ${formatNumber(summary.totalNet || 0)}
@@ -79,7 +79,7 @@ const SalarySummary = ({ summary }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold text-red-600 uppercase tracking-wide">
-                Total Tax
+                {t('Total Tax')}
               </p>
               <p className="text-2xl font-bold text-red-800 mt-1">
                 ${formatNumber(summary.totalTax || 0)}
@@ -95,7 +95,7 @@ const SalarySummary = ({ summary }) => {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-semibold text-purple-600 uppercase tracking-wide">
-                Total Bonus
+                {t('Total Bonus')}
               </p>
               <p className="text-2xl font-bold text-purple-800 mt-1">
                 ${formatNumber(summary.totalBonus || 0)}

@@ -44,6 +44,16 @@ export const BranchTransaction = lazy(() =>
   import('./managements/branch/BranchTransaction')
 );
 
+export const CustomerDashboard = lazy(() =>
+  import('./customer/CustomerDashboard')
+);
+export const CustomerAccounts = lazy(() =>
+  import('./customer/CustomerAccounts')
+);
+export const CustomerLogin = lazy(() =>
+  import('../components/customer/CustomerLogin')
+);
+
 export const ExchangerList = lazy(() =>
   import('./managements/exchanger/ExchangerList')
 );

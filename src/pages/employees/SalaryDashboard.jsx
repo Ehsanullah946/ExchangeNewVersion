@@ -33,7 +33,7 @@ const SalaryDashboard = () => {
 
   const stats = [
     {
-      title: 'Total Employees',
+      title: t('Total Employees'),
       value: employees.length,
       icon: <BsPeople className="text-2xl text-blue-600" />,
       color: 'bg-blue-50 border-blue-200',
@@ -41,7 +41,7 @@ const SalaryDashboard = () => {
       changeType: 'positive',
     },
     {
-      title: 'Monthly Salary Cost',
+      title: t('Monthly Salary Cost'),
       value: `$${formatNumber(summary.totalNet || 0)}`,
       icon: <BsCashCoin className="text-2xl text-green-600" />,
       color: 'bg-green-50 border-green-200',
@@ -49,7 +49,7 @@ const SalaryDashboard = () => {
       changeType: 'positive',
     },
     {
-      title: 'Pending Payments',
+      title: t('Pending Payments'),
       value: summary.byStatus?.pending || 0,
       icon: <BsGraphUp className="text-2xl text-orange-600" />,
       color: 'bg-orange-50 border-orange-200',
@@ -57,7 +57,7 @@ const SalaryDashboard = () => {
       changeType: 'negative',
     },
     {
-      title: 'Currency Types',
+      title: t('Currency Types'),
       value: Object.keys(summary.byMoneyType || {}).length,
       icon: <BsCurrencyExchange className="text-2xl text-purple-600" />,
       color: 'bg-purple-50 border-purple-200',
@@ -111,14 +111,15 @@ const SalaryDashboard = () => {
                     {stat.value}
                   </p>
                   <div
-                    className={`flex items-center gap-1 mt-2 text-sm ${
+                    dir="ltr"
+                    className={`flex items-center  gap-1 mt-2 text-sm ${
                       stat.changeType === 'positive'
                         ? 'text-green-600'
                         : 'text-red-600'
                     }`}
                   >
                     <span>{stat.change}</span>
-                    <span>from last month</span>
+                    <span>{t('from last month')}</span>
                   </div>
                 </div>
                 <div className="p-3 rounded-2xl bg-white shadow-lg">
@@ -166,10 +167,12 @@ const SalaryDashboard = () => {
                   <BsGraphUp className="text-3xl text-gray-400" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-600 mb-2">
-                  Reports Coming Soon
+                  {t('Reports Coming Soon')}
                 </h3>
                 <p className="text-gray-500">
-                  Detailed salary reports and analytics will be available here.
+                  {t(
+                    'Detailed salary reports and analytics will be available here.'
+                  )}
                 </p>
               </div>
             )}

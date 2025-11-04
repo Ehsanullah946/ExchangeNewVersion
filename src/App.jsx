@@ -1,5 +1,5 @@
 // App.jsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Navigate,
   BrowserRouter as Router,
@@ -70,18 +70,48 @@ import {
   Till,
   UserManagement,
   BackupManager,
+  CustomerDashboard,
+  CustomerAccounts,
+  CustomerLogin,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
 import { ContextProvider } from './context/contextProvider.jsx';
 import PrivateRoute from './routes/PrivateRoute.jsx';
 import ProtectedLayout from './components/layout/ProtectedLayout.jsx';
+import CustomerRoute from './routes/CustomerRoute.jsx';
+import { useDispatch } from 'react-redux';
+import { initializeCustomerAuth } from './features/customer/customerAuthSlice.js';
+import { initializeAuth } from './features/auth/authSlice.js';
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log('🚀 App mounted - initializing auth');
+    dispatch(initializeAuth());
+    dispatch(initializeCustomerAuth());
+  }, [dispatch]);
+
   return (
     <ContextProvider>
       <Router>
         <Routes>
+          <Route path="/customer/login" element={<CustomerLogin />} />
+          <Route
+            path="/customer/*"
+            element={
+              <CustomerRoute>
+                <CustomerRoute />
+              </CustomerRoute>
+            }
+          >
+            <Route index element={<CustomerDashboard />} />
+            <Route path="accounts" element={<CustomerAccounts />} />
+            {/* <Route path="transactions" element={<CustomerTransactions />} />
+            <Route path="profile" element={<CustomerProfile />} /> */}
+          </Route>
+
           {/* Public routes */}
           <Route path="/login" element={<Login />} />
           <Route

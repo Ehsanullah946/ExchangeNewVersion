@@ -114,6 +114,17 @@
   "Remain": "باقی مانده",
   "Loan Limit": "اندازه قرض",
   "charge": "کمیشن",
+  "Total Bonus": "مجموع انعام",
+  "Create Salary Record": "ایجاد معاش برای کارمند",
+  "Total Tax": "مجموع مالیات",
+  "Total Gross": "مجموعه معاش خالص",
+  "Total Net": "مجموعه معاش ناخالص",
+  "Add salary information for employee": "اضافه کردن معلومات معاش برای کارمند",
+  "from last month": "از آخرین ماه",
+  "Currency Types": "نوع ارز",
+  "Pending Payments": "پرداخت در حال انتظار",
+  "Monthly Salary Cost": "هزینه معاش ماهانه",
+  "Total Employees": "همه ای کارمندان",
   "exchange": "تبادله",
   "Withdrawal transaction": "معامله برداشت",
   "Deposit transaction": "معامله جمع",
@@ -358,6 +369,7 @@
   "No Employee found for your search": "کارمند یافت نشد🙃",
   "No Exchanger found for your search": "تبادله کننده یافت نشد🙃",
   "No Transaction found for your search": "تراکنش یافت نشد🙃",
+  "No transactions found": "تراکنش یافت نشد🙃",
   "No SenderReceiver found for your search": "ارسال و یا دریافت کننده یافت نشد🙃",
   "dateRequired": "تاریخ الزامی است",
   "dateConversionError": "خطا در تبدیل تاریخ",

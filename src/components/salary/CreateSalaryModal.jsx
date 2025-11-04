@@ -98,7 +98,7 @@ const CreateSalaryModal = ({ isOpen, onClose, employees, moneyTypes }) => {
                 {t('Create Salary Record')}
               </h2>
               <p className="text-gray-600 text-sm">
-                Add salary information for employee
+                {t('Add salary information for employee')}
               </p>
             </div>
           </div>
@@ -116,7 +116,7 @@ const CreateSalaryModal = ({ isOpen, onClose, employees, moneyTypes }) => {
             {/* Employee Selection */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Employee *
+                {t('Employee')} *
               </label>
               <select
                 required
@@ -126,7 +126,7 @@ const CreateSalaryModal = ({ isOpen, onClose, employees, moneyTypes }) => {
                 }
                 className="w-full border-2 border-gray-200 rounded-2xl px-4 py-2 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300"
               >
-                <option value="">Select Employee</option>
+                <option value="">{t('Select Employee')}</option>
                 {employees.map((employee) => (
                   <option key={employee.id} value={employee.id}>
                     {employee?.Stakeholder?.Person.firstName}{' '}
@@ -160,7 +160,7 @@ const CreateSalaryModal = ({ isOpen, onClose, employees, moneyTypes }) => {
               {/* Gross Salary */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Gross Salary *
+                  {t('Gross Salary')} *
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-bold">
@@ -183,7 +183,7 @@ const CreateSalaryModal = ({ isOpen, onClose, employees, moneyTypes }) => {
               {/* Currency */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Currency *
+                  {t('Currency')} *
                 </label>
                 <select
                   required
@@ -207,7 +207,7 @@ const CreateSalaryModal = ({ isOpen, onClose, employees, moneyTypes }) => {
               {/* Tax */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Tax
+                  {t('Tax')}
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-bold">
@@ -227,7 +227,7 @@ const CreateSalaryModal = ({ isOpen, onClose, employees, moneyTypes }) => {
               {/* Bonus */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Bonus
+                  {t('Bonus')}
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-bold">
@@ -247,7 +247,7 @@ const CreateSalaryModal = ({ isOpen, onClose, employees, moneyTypes }) => {
               {/* Deductions */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Deductions
+                  {t('Deductions')}
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 font-bold">
@@ -272,14 +272,14 @@ const CreateSalaryModal = ({ isOpen, onClose, employees, moneyTypes }) => {
               <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-2 border border-green-200">
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-green-800 text-lg">
-                    Net Salary:
+                    {t('Net Salary')}:
                   </span>
                   <span className="font-bold text-2xl text-green-800">
                     ${formatNumber(calculatedNet)}
                   </span>
                 </div>
                 <p className="text-sm text-green-600 mt-2">
-                  Calculated: Gross + Bonus - Tax - Deductions
+                  {t('Calculated: Gross + Bonus - Tax - Deductions')}
                 </p>
               </div>
             )}
@@ -287,7 +287,7 @@ const CreateSalaryModal = ({ isOpen, onClose, employees, moneyTypes }) => {
             {/* Salary Date */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">
-                Salary Date
+                {t('Salary Date')}
               </label>
               <input
                 type="date"
@@ -302,7 +302,7 @@ const CreateSalaryModal = ({ isOpen, onClose, employees, moneyTypes }) => {
             {/* Notes */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Notes
+                {t('Notes')}
               </label>
               <textarea
                 value={formData.notes}
@@ -324,7 +324,7 @@ const CreateSalaryModal = ({ isOpen, onClose, employees, moneyTypes }) => {
               disabled={createSalaryMutation.isPending}
               className="flex-1 px-6 py-2 border-2 border-gray-300 text-gray-700 rounded-2xl hover:bg-gray-50 transition-all duration-300 hover:shadow-lg disabled:opacity-50 font-semibold"
             >
-              Cancel
+              {t('Cancel')}
             </button>
             <button
               type="submit"

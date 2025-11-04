@@ -15,6 +15,7 @@ import consumptionReducer from './features/consumption/consumptionSlice';
 import transferToAccountReducer from './features/transferToAccount/transferToAccountSlice';
 import trasferReducer from './features/transfer/transferSlice';
 import receiveReducer from './features/receive/receiveSlice';
+import customerAuthReducer from './features/customer/customerAuthSlice';
 const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -33,6 +34,7 @@ const store = configureStore({
     transferToAccount: transferToAccountReducer,
     transfer: trasferReducer,
     receive: receiveReducer,
+    customerAuth: customerAuthReducer,
   },
 });
 
