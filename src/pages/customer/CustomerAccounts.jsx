@@ -1,12 +1,9 @@
-// pages/customer/CustomerAccounts.jsx
-import { useQuery } from '@tanstack/react-query';
-import { getCustomerAccounts } from '../../api/customerAuth';
+import { useCustomerAccounts } from '../../hooks/useCustomerAuth';
 
 const CustomerAccounts = () => {
-  const { data: accounts, isLoading } = useQuery({
-    queryKey: ['customerAccounts'],
-    queryFn: getCustomerAccounts,
-  });
+  const { data, isLoading } = useCustomerAccounts();
+
+  const accounts = data?.accounts || [];
 
   if (isLoading) return <div>Loading accounts...</div>;
 

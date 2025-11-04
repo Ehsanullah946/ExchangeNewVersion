@@ -1,4 +1,3 @@
-// components/customer/CustomerLogin.jsx
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -12,6 +11,7 @@ const CustomerLogin = () => {
   const [code, setCode] = useState('');
   const [organizationId, setOrganizationId] = useState('');
   const [error, setError] = useState('');
+  const [info, setInfo] = useState('');
 
   const dispatch = useDispatch();
   const { verificationStep, verificationEmail, loading } = useSelector(
@@ -22,13 +22,13 @@ const CustomerLogin = () => {
   const verifyCodeMutation = useVerifyCode();
 
   useEffect(() => {
-    // Reset verification state when component mounts
     dispatch(resetVerification());
   }, [dispatch]);
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setInfo('');
 
     if (!email || !organizationId) {
       setError('Email and organization ID are required');
@@ -36,7 +36,14 @@ const CustomerLogin = () => {
     }
 
     try {
-      await initiateVerification.mutateAsync({ email, organizationId });
+      const result = await initiateVerification.mutateAsync({
+        email,
+        organizationId,
+      });
+
+      if (result.message) {
+        setInfo(result.message);
+      }
     } catch (err) {
       setError(
         err.response?.data?.message || 'Failed to send verification code'
@@ -68,7 +75,36 @@ const CustomerLogin = () => {
     dispatch(resetVerification());
     setCode('');
     setError('');
+    setInfo('');
   };
+
+  // Show info message if auto-login message exists
+  if (info) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <span className="text-green-400 text-xl">✅</span>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-green-800">
+                  Automatic Login
+                </h3>
+                <div className="mt-2 text-sm text-green-700">
+                  <p>{info}</p>
+                  <p className="mt-1 text-green-600">
+                    Redirecting you to your dashboard...
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (verificationStep === 'code') {
     return (
@@ -79,6 +115,9 @@ const CustomerLogin = () => {
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             We sent a code to {verificationEmail}
+          </p>
+          <p className="mt-1 text-center text-xs text-gray-500">
+            After verification, you'll stay logged in for 30 days
           </p>
         </div>
 
@@ -143,7 +182,10 @@ const CustomerLogin = () => {
           Customer Login
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Enter your email to receive a verification code
+          Enter your email to access your account
+        </p>
+        <p className="mt-1 text-center text-xs text-gray-500">
+          Returning customers will be automatically logged in for 30 days
         </p>
       </div>
 
@@ -205,7 +247,7 @@ const CustomerLogin = () => {
                 disabled={loading}
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
               >
-                {loading ? 'Sending Code...' : 'Send Verification Code'}
+                {loading ? 'Checking...' : 'Continue to Login'}
               </button>
             </div>
           </form>

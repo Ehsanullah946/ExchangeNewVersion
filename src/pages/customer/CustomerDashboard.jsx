@@ -1,9 +1,11 @@
 import { useCustomerAccounts } from '../../hooks/useCustomerAuth';
 
 const CustomerDashboard = () => {
-  const { data: accounts, isLoading, error } = useCustomerAccounts();
+  const { data, isLoading, error } = useCustomerAccounts();
 
-  console.log('customer acccounts', accounts);
+  const accounts = data?.accounts || [];
+
+  console.log('customer account', accounts);
   if (isLoading) return <div>Loading accounts...</div>;
   if (error) return <div>Error loading accounts: {error.message}</div>;
 
@@ -25,7 +27,7 @@ const CustomerDashboard = () => {
               {account.accountType}
             </h3>
             <p className="text-2xl font-bold text-green-600">
-              ${account.balance?.toLocaleString()}
+              ${account.originalBalance?.toLocaleString()}
             </p>
             <p className="text-sm text-gray-500 mt-1">
               Account: {account.accountNumber}

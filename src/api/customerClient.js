@@ -1,8 +1,9 @@
 // api/customerClient.js
 import axios from 'axios';
 
+const API_BASE_URL = 'http://localhost:3000/api/v1';
 const customerClient = axios.create({
-  baseURL: 'http://localhost:3000/api/v1', // Your specific customer base URL
+  baseURL: API_BASE_URL, // Your specific customer base URL
   headers: {
     'Content-Type': 'application/json',
   },

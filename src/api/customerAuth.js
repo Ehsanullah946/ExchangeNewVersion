@@ -19,6 +19,6 @@ export const verifyCode = async (email, code, organizationId) => {
 };
 
 export const getCustomerAccounts = async () => {
-  const data = await customerClient.get('auth/customer/accounts');
-  return data;
+  const response = await customerClient.get('auth/customer/accounts');
+  return response.data;
 };
