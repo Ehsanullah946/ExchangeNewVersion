@@ -78,92 +78,73 @@ const CustomerLogin = () => {
     setInfo('');
   };
 
-  // Show info message if auto-login message exists
-  // if (info) {
-  //   return (
-  //     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-  //       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-  //         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-  //           <div className="flex">
-  //             <div className="flex-shrink-0">
-  //               <span className="text-green-400 text-xl">✅</span>
-  //             </div>
-  //             <div className="ml-3">
-  //               <h3 className="text-sm font-medium text-green-800">
-  //                 Automatic Login
-  //               </h3>
-  //               <div className="mt-2 text-sm text-green-700">
-  //                 <p>{info}</p>
-  //                 <p className="mt-1 text-green-600">
-  //                   Redirecting you to your dashboard...
-  //                 </p>
-  //               </div>
-  //             </div>
-  //           </div>
-  //         </div>
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   if (verificationStep === 'code') {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-        <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Enter Verification Code
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            We sent a code to {verificationEmail}
-          </p>
-          <p className="mt-1 text-center text-xs text-gray-500">
-            After verification, you'll stay logged in for 30 days
-          </p>
-        </div>
+      <div
+        className="min-h-screen flex flex-col justify-center items-center py-12 sm:px-6 lg:px-8"
+        style={{
+          background:
+            'url(https://cdn.magdeleine.co/wp-content/uploads/2014/05/3jPYgeVCTWCMqjtb7Dqi_IMG_8251-1400x933.jpg) no-repeat center center fixed',
+          backgroundSize: 'cover',
+        }}
+      >
+        <div
+          className="w-full max-w-md bg-black bg-opacity-25 rounded-lg shadow-xl backdrop-blur-sm border border-white border-opacity-20"
+          style={{ boxShadow: '1px 1px 50px #000' }}
+        >
+          <div className="py-8 px-8">
+            <h1 className="text-center text-4xl font-bold text-white mb-2 font-sans text-shadow-lg">
+              Enter Verification Code
+            </h1>
+            <p className="text-center text-sm text-gray-200 mb-4">
+              We sent a code to {verificationEmail}
+            </p>
+            <p className="text-center text-xs text-gray-300 mb-6">
+              After verification, you'll stay logged in for 30 days
+            </p>
 
-        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-          <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
             {error && (
-              <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+              <div className="mb-6 bg-red-900 bg-opacity-50 border border-red-700 text-red-200 px-4 py-3 rounded">
                 {error}
               </div>
             )}
 
             <form className="space-y-6" onSubmit={handleCodeSubmit}>
               <div>
-                <label
-                  htmlFor="code"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Verification Code
-                </label>
-                <div className="mt-1">
-                  <input
-                    id="code"
-                    name="code"
-                    type="text"
-                    required
-                    value={code}
-                    onChange={(e) => setCode(e.target.value)}
-                    className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Enter 6-digit code"
-                    maxLength={6}
-                  />
-                </div>
+                <input
+                  id="code"
+                  name="code"
+                  type="text"
+                  required
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
+                  className="w-full px-4 py-3 bg-black bg-opacity-40 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                  placeholder="Enter 6-digit code"
+                  maxLength={6}
+                  style={{
+                    boxShadow: '3px 3px 10px rgba(0,0,0,0.3)',
+                  }}
+                />
               </div>
 
               <div className="flex space-x-3">
                 <button
                   type="button"
                   onClick={handleBackToEmail}
-                  className="flex-1 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="flex-1 py-3 px-4 border border-gray-600 rounded-lg text-sm font-medium text-white bg-black bg-opacity-40 hover:bg-opacity-60 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                  style={{
+                    boxShadow: '3px 3px 10px rgba(0,0,0,0.3)',
+                  }}
                 >
                   Back
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                  className="flex-1 py-3 px-4 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 bg-opacity-70 hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-all duration-200"
+                  style={{
+                    boxShadow: '3px 3px 10px rgba(0,0,0,0.3)',
+                  }}
                 >
                   {loading ? 'Verifying...' : 'Verify Code'}
                 </button>
@@ -176,76 +157,76 @@ const CustomerLogin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Customer Login
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600">
-          Enter your email to access your account
-        </p>
-        <p className="mt-1 text-center text-xs text-gray-500">
-          Returning customers will be automatically logged in for 30 days
-        </p>
-      </div>
+    <div
+      className="min-h-screen flex flex-col justify-center items-center py-12 sm:px-6 lg:px-8"
+      style={{
+        backgroundImage: '',
+        backgroundSize: 'cover',
+      }}
+    >
+      <div
+        className="w-full max-w-md bg-black bg-opacity-25 rounded-lg shadow-xl backdrop-blur-sm border border-white border-opacity-20"
+        style={{ boxShadow: '1px 1px 50px #000' }}
+      >
+        <div className="py-8 px-8">
+          <h1 className="text-center text-4xl font-bold text-white mb-2 font-sans text-shadow-lg">
+            Customer Login
+          </h1>
+          <p className="text-center text-sm text-gray-200 mb-4">
+            Enter your email to access your account
+          </p>
+          <p className="text-center text-xs text-gray-300 mb-6">
+            Returning customers will be automatically logged in for 30 days
+          </p>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           {error && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
+            <div className="mb-6 bg-red-900 bg-opacity-50 border border-red-700 text-red-200 px-4 py-3 rounded">
               {error}
             </div>
           )}
 
           <form className="space-y-6" onSubmit={handleEmailSubmit}>
             <div>
-              <label
-                htmlFor="organizationId"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Organization ID
-              </label>
-              <div className="mt-1">
-                <input
-                  id="organizationId"
-                  name="organizationId"
-                  type="text"
-                  required
-                  value={organizationId}
-                  onChange={(e) => setOrganizationId(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter your organization ID"
-                />
-              </div>
+              <input
+                id="organizationId"
+                name="organizationId"
+                type="text"
+                required
+                value={organizationId}
+                onChange={(e) => setOrganizationId(e.target.value)}
+                className="w-full px-4 py-3 bg-black bg-opacity-40 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                placeholder="Enter your organization ID"
+                style={{
+                  boxShadow: '3px 3px 10px rgba(0,0,0,0.3)',
+                }}
+              />
             </div>
 
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email Address
-              </label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Enter your email address"
-                />
-              </div>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 bg-black bg-opacity-40 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                placeholder="Enter your email address"
+                style={{
+                  boxShadow: '3px 3px 10px rgba(0,0,0,0.3)',
+                }}
+              />
             </div>
 
             <div>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                className="w-full py-3 px-4 border border-transparent rounded-lg text-sm font-medium text-white bg-blue-600 bg-opacity-70 hover:bg-opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-all duration-200"
+                style={{
+                  boxShadow: '3px 3px 10px rgba(0,0,0,0.3)',
+                }}
               >
                 {loading ? 'Checking...' : 'Continue to Login'}
               </button>

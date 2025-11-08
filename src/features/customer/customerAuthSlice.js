@@ -1,10 +1,11 @@
+// features/customer/customerAuthSlice.js - Fixed initialization
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   customer: null,
   token: null,
   isAuthenticated: false,
-  loading: false,
+  loading: true, // Start with loading true
   verificationEmail: null,
   verificationStep: 'email',
 };
@@ -14,13 +15,13 @@ const customerAuthSlice = createSlice({
   initialState,
   reducers: {
     setVerificationEmail: (state, action) => {
+      console.log('📧 Setting verification email:', action.payload);
       state.verificationEmail = action.payload;
       state.verificationStep = 'code';
-      state.error = null;
     },
     setCustomerCredentials: (state, action) => {
       const { token, customerId, personId } = action.payload;
-      console.log('🔄 Setting customer credentials:', {
+      console.log('🔐 Setting customer credentials:', {
         token,
         customerId,
         personId,
@@ -31,9 +32,7 @@ const customerAuthSlice = createSlice({
       state.isAuthenticated = true;
       state.verificationStep = 'success';
       state.loading = false;
-      state.error = null;
 
-      // Store in localStorage
       localStorage.setItem('customerToken', token);
       localStorage.setItem(
         'customer',
@@ -41,7 +40,7 @@ const customerAuthSlice = createSlice({
       );
 
       console.log(
-        '✅ Customer credentials set, isAuthenticated:',
+        '✅ Customer credentials set - isAuthenticated:',
         state.isAuthenticated
       );
     },
@@ -52,33 +51,49 @@ const customerAuthSlice = createSlice({
       state.isAuthenticated = false;
       state.verificationEmail = null;
       state.verificationStep = 'email';
+      state.loading = false;
       localStorage.removeItem('customerToken');
       localStorage.removeItem('customer');
     },
     initializeCustomerAuth: (state) => {
+      console.log('🔄 initializeCustomerAuth called');
+
       const token = localStorage.getItem('customerToken');
       const customerStr = localStorage.getItem('customer');
 
-      console.log('🔄 Initializing customer auth from storage:', {
+      console.log('📦 Storage check:', {
         hasToken: !!token,
         hasCustomerStr: !!customerStr,
+        token: token ? `${token.substring(0, 20)}...` : 'none',
+        customerStr: customerStr || 'none',
       });
 
       if (token && customerStr) {
         try {
           const customer = JSON.parse(customerStr);
+          console.log('✅ Parsed customer data:', customer);
+
           state.customer = customer;
           state.token = token;
           state.isAuthenticated = true;
           state.verificationStep = 'success';
-          console.log('✅ Customer auth initialized from storage');
+          state.loading = false;
+
+          console.log('🎯 Customer auth initialized successfully:', {
+            isAuthenticated: state.isAuthenticated,
+            customerId: state.customer?.id,
+            hasToken: !!state.token,
+          });
         } catch (error) {
           console.error('❌ Error parsing stored customer data:', error);
+          // Clear invalid data
           localStorage.removeItem('customerToken');
           localStorage.removeItem('customer');
+          state.loading = false;
         }
       } else {
         console.log('ℹ️ No stored customer auth data found');
+        state.loading = false;
       }
     },
     setLoading: (state, action) => {
@@ -87,10 +102,13 @@ const customerAuthSlice = createSlice({
     resetVerification: (state) => {
       state.verificationEmail = null;
       state.verificationStep = 'email';
-      state.error = null;
     },
-    setError: (state, action) => {
-      state.error = action.payload;
+    // Add a clear action for debugging
+    clearCustomerAuth: (state) => {
+      state.customer = null;
+      state.token = null;
+      state.isAuthenticated = false;
+      state.loading = false;
     },
   },
 });
@@ -102,6 +120,6 @@ export const {
   initializeCustomerAuth,
   setLoading,
   resetVerification,
-  setError,
+  clearCustomerAuth,
 } = customerAuthSlice.actions;
 export default customerAuthSlice.reducer;

@@ -19,6 +19,7 @@ export const verifyCode = async (email, code, organizationId) => {
 };
 
 export const getCustomerAccounts = async () => {
-  const response = await customerClient.get('auth/customer/accounts');
-  return response.data;
+  const { data } = await customerClient.get('auth/customer/accounts');
+  console.log('account data for in api', data);
+  return data;
 };

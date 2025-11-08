@@ -69,6 +69,8 @@ const CustomerTransactions = () => {
     TransactionType
   );
 
+  console.log('customer transaction data', data);
+
   const transactionType = [
     { value: '', label: t('All Transaction') },
     { value: 'deposit', label: t('deposit') },
