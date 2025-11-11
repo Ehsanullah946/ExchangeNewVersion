@@ -9,19 +9,12 @@ import {
   BsCalendar,
   BsCashCoin,
   BsFilter,
-  BsHash,
   BsPrinter,
   BsSearch,
   BsShare,
 } from 'react-icons/bs';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  useAllTransaction,
-  useCustomerDetails,
-  useCustomerLiquidations,
-  useDeleteLiquidation,
-  useLiquidateCustomer,
-} from '../../../hooks/useCustomers';
+
 import {
   setDebouncedSearch,
   setSearch,
@@ -31,15 +24,16 @@ import {
   setNumber,
   setMoneyType,
   toggleOpen,
-} from '../../../features/ui/filterSlice';
-import { formatNumber } from '../../../utils/formatNumber';
-import { useDateFormatter } from '../../../hooks/useDateFormatter';
-import { generateTransactionPrintHTML } from '../../../utils/printUtils';
-import { useFlexiblePrint } from '../../../hooks/useFlexiblePrint';
-import { useMoneyType } from '../../../hooks/useMoneyType';
+} from '../../features/ui/filterSlice';
 
-const CustomerTransactions = () => {
-  const { customerId } = useParams();
+import { formatNumber } from '../../utils/formatNumber';
+import { useDateFormatter } from '../../hooks/useDateFormatter';
+import { generateTransactionPrintHTML } from '../../utils/printUtils';
+import { useFlexiblePrint } from '../../hooks/useFlexiblePrint';
+import { useMoneyType } from '../../hooks/useMoneyType';
+import { useCustomerTransactions } from '../../hooks/useCustomerAuth';
+
+const AllCustomerTransactions = () => {
   const { formatDisplay } = useDateFormatter();
   const { t } = useTranslation();
 
@@ -58,8 +52,7 @@ const CustomerTransactions = () => {
 
   const [TransactionType, setTransactionType] = useState('');
 
-  const { data, isLoading } = useAllTransaction(
-    customerId,
+  const { data, isLoading } = useCustomerTransactions(
     limit,
     page,
     search,
@@ -81,35 +74,20 @@ const CustomerTransactions = () => {
     { value: 'exchange_purchase', label: t('Exchange Purchase') },
   ];
 
-  const { data: customerData } = useCustomerDetails(customerId);
-  const customer = customerData?.data || {};
-  const customerName = customer?.Stakeholder?.Person
-    ? `${customer.Stakeholder.Person.firstName} ${customer.Stakeholder.Person.lastName}`
-    : 'Customer';
-
-  console.log('this is customer details', customerData);
+  //   const { data: customerData } = useCustomerDetails(customerId);
+  //   const customer = customerData?.data || {};
+  //   const customerName = customer?.Stakeholder?.Person
+  //     ? `${customer.Stakeholder.Person.firstName} ${customer.Stakeholder.Person.lastName}`
+  //     : 'Customer';
 
   const customerTransaction = data?.data || [];
   const total = data?.total || 0;
-
-  const [showLiquidateModal, setShowLiquidateModal] = useState(false);
-  const [showLiquidations, setShowLiquidations] = useState(false);
-
-  const [liquidateData, setLiquidateData] = useState({
-    startDate: '',
-    endDate: new Date().toISOString().split('T')[0], // Today as default end date
-    closeAccounts: false,
-    description: '',
-  });
 
   const { data: moneyTypeResponse } = useMoneyType();
   const moneyTypeOptions = (moneyTypeResponse?.data || []).map((c) => ({
     value: c.typeName,
     label: c.typeName,
   }));
-
-  const { mutate: liquidateCustomer, isLoading: isLiquidating } =
-    useLiquidateCustomer();
 
   useEffect(() => {
     const handler = setTimeout(() => dispatch(setDebouncedSearch(search)), 500);
@@ -120,31 +98,14 @@ const CustomerTransactions = () => {
     dispatch(setPage(1));
   }, [debouncedSearch, number, moneyType, fromDate, toDate, dispatch]);
 
-  const handleLiquidate = () => {
-    liquidateCustomer(
-      { customerId, ...liquidateData },
-      {
-        onSuccess: (data) => {
-          setShowLiquidateModal(false);
-          // Show success message or download report
-          console.log('Liquidation successful:', data);
-          // You can trigger download or show report here
-        },
-        onError: (error) => {
-          console.error('Liquidation failed:', error);
-        },
-      }
-    );
-  };
-
   const { printContent } = useFlexiblePrint();
 
   const handlePrint = () => {
     const printHTML = generateTransactionPrintHTML(
       customerTransaction,
       {
-        name: customerName,
-        id: customerId,
+        // name: customerName,
+        // id: customerId,
       },
       data?.accountSummary || [],
       t,
@@ -152,51 +113,16 @@ const CustomerTransactions = () => {
     );
 
     printContent(printHTML, {
-      title: `Transactions_${customerName}`,
+      title: `Transactions_`,
       paperSize: 'A4-landscape',
       orientation: 'landscape',
     });
   };
-
-  const {
-    data: liquidationsData,
-    isLoading: liquidationsLoading,
-    refetch: refetchLiquidations,
-  } = useCustomerLiquidations(customerId);
-
-  const liquidations = liquidationsData?.data || [];
-
-  const handleDateChange = (field, value) => {
-    setLiquidateData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  // delete liquidation
-  const { mutate: deleteLiquidation } = useDeleteLiquidation();
-
-  const handleDeleteLiquidation = (liquidationId) => {
-    if (
-      window.confirm(
-        t(
-          'Are you sure you want to delete this liquidation? Transactions will be restored.'
-        )
-      )
-    ) {
-      deleteLiquidation(liquidationId, {
-        onSuccess: () => {
-          refetchLiquidations();
-        },
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (!customerId) {
-      console.error('No customerId found in URL parameters');
-    }
-  }, [customerId]);
+  //   useEffect(() => {
+  //     if (!customerId) {
+  //       console.error('No customerId found in URL parameters');
+  //     }
+  //   }, [customerId]);
 
   const totalPages = Math.max(1, Math.ceil(total / limit));
 
@@ -266,10 +192,10 @@ const CustomerTransactions = () => {
               <p className="text-gray-600">
                 {t('Customer')}:{' '}
                 <span className="font-semibold text-blue-600">
-                  {customerName}
+                  {/* {customerName} */}
                 </span>
               </p>
-              <p className="text-sm text-gray-500">ID: {customerId}</p>
+              <p className="text-sm text-gray-500">ID: </p>
             </div>
             <p className="text-gray-600">
               {t('View and manage all financial transactions')}
@@ -278,27 +204,6 @@ const CustomerTransactions = () => {
 
           {/* Action Buttons */}
           <div className="flex flex-wrap items-center gap-2">
-            <Link to="/accounts/accountAdd">
-              <button className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm">
-                <BiSolidUserAccount className="text-base" />
-                <span>{t('Add New Account')}</span>
-              </button>
-            </Link>
-
-            <Link to="/main/withdraw">
-              <button className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm">
-                <ImMinus className="text-base" />
-                <span>{t('Withdraw')}</span>
-              </button>
-            </Link>
-
-            <Link to="/main/deposit">
-              <button className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm">
-                <RiAddBoxFill className="text-base" />
-                <span>{t('Deposit')}</span>
-              </button>
-            </Link>
-
             <button
               onClick={() => dispatch(toggleOpen(!open))}
               className="flex items-center gap-2 px-4 py-1 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95"
@@ -306,54 +211,6 @@ const CustomerTransactions = () => {
               <BsFilter className="text-lg" />
               <span>{t('Filters')}</span>
             </button>
-
-            <button
-              onClick={() => setShowLiquidateModal(true)}
-              className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-              <span>{t('Liquidate')}</span>
-            </button>
-            <button
-              onClick={() => {
-                setShowLiquidations(true);
-                refetchLiquidations(); // Refresh data when opening
-              }}
-              className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 text-sm"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                />
-              </svg>
-              <span>{t('View Liquidations')}</span>
-              {liquidations.length > 0 && (
-                <span className="bg-white text-indigo-600 text-xs px-2 py-1 rounded-full font-bold">
-                  {liquidations.length}
-                </span>
-              )}
-            </button>
-
             {/* Fixed Print Button */}
             <button
               onClick={handlePrint}
@@ -1001,320 +858,10 @@ const CustomerTransactions = () => {
               )}
             </>
           )}
-
-          {/* Modals remain the same */}
-          {showLiquidateModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">
-                    {t('Liquidate Customer Accounts')}
-                  </h3>
-
-                  <div className="space-y-4">
-                    {/* Date Range */}
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('Start Date')}
-                        </label>
-                        <input
-                          type="date"
-                          value={liquidateData.startDate}
-                          onChange={(e) =>
-                            handleDateChange('startDate', e.target.value)
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {t('End Date')}
-                        </label>
-                        <input
-                          type="date"
-                          value={liquidateData.endDate}
-                          onChange={(e) =>
-                            handleDateChange('endDate', e.target.value)
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Close Accounts Toggle */}
-                    <div className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        id="closeAccounts"
-                        checked={liquidateData.closeAccounts}
-                        onChange={(e) =>
-                          handleDateChange('closeAccounts', e.target.checked)
-                        }
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                      <label
-                        htmlFor="closeAccounts"
-                        className="text-sm text-gray-700"
-                      >
-                        {t('Close all accounts after liquidation')}
-                      </label>
-                    </div>
-
-                    {/* Description */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        {t('Description (Optional)')}
-                      </label>
-                      <textarea
-                        value={liquidateData.description}
-                        onChange={(e) =>
-                          handleDateChange('description', e.target.value)
-                        }
-                        placeholder={t('Add notes about this liquidation...')}
-                        rows="3"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex gap-3 mt-6">
-                    <button
-                      onClick={() => setShowLiquidateModal(false)}
-                      className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors"
-                    >
-                      {t('Cancel')}
-                    </button>
-                    <button
-                      onClick={handleLiquidate}
-                      disabled={
-                        !liquidateData.startDate ||
-                        !liquidateData.endDate ||
-                        isLiquidating
-                      }
-                      className="flex-1 px-4 py-2 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isLiquidating
-                        ? t('Processing...')
-                        : t('Generate Report')}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {showLiquidations && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-500000 p-3">
-              <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
-                <div className="p-4 border-b border-gray-200">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900">
-                        {t('Liquidation History')}
-                      </h3>
-                      <p className="text-gray-600 mt-1">
-                        {t('Liquidated periods for')}
-                        {' :'}
-                        <span className="font-semibold text-blue-600">
-                          {customerName} 🙋
-                        </span>
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setShowLiquidations(false)}
-                      className="text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="p-4 overflow-y-auto max-h-[60vh]">
-                  {liquidationsLoading ? (
-                    <div className="flex justify-center items-center py-8">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-                    </div>
-                  ) : liquidations.length > 0 ? (
-                    <div className="space-y-3">
-                      {liquidations.map((liquidation) => (
-                        <div
-                          key={liquidation.id}
-                          className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-gray-300 transition-colors"
-                        >
-                          <div className="flex justify-between items-start">
-                            <div className="flex-1">
-                              <div className="flex items-center gap-3 mb-2">
-                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                <p className="font-semibold text-gray-800 text-lg">
-                                  {liquidation.period}
-                                </p>
-                                <span
-                                  className={`px-2 py-1 text-xs rounded-full ${
-                                    liquidation.closedAccounts
-                                      ? 'bg-red-100 text-red-800'
-                                      : 'bg-green-100 text-green-800'
-                                  }`}
-                                >
-                                  {liquidation.closedAccounts
-                                    ? t('Accounts Closed')
-                                    : t('Accounts Active')}
-                                </span>
-                              </div>
-
-                              <p className="text-sm text-gray-600 mb-2">
-                                {liquidation.description}
-                              </p>
-
-                              <div className="flex items-center gap-3 text-xs text-gray-500">
-                                <span className="flex items-center gap-1">
-                                  <svg
-                                    className="w-4 h-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                                    />
-                                  </svg>
-                                  {liquidation.transactionCount}{' '}
-                                  {t('transactions')}
-                                </span>
-                                <span className="flex items-center gap-1">
-                                  <svg
-                                    className="w-4 h-4"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                  >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                    />
-                                  </svg>
-                                  {new Date(
-                                    liquidation.createdAt
-                                  ).toLocaleDateString()}
-                                </span>
-                              </div>
-                            </div>
-
-                            <div className="flex gap-2 ml-3">
-                              <button
-                                onClick={() =>
-                                  handleDeleteLiquidation(liquidation.id)
-                                }
-                                className="px-2 py-1 bg-red-500 hover:bg-red-600 text-white text-sm rounded-lg transition-colors flex items-center gap-1"
-                                title={t(
-                                  'Delete liquidation and restore transactions'
-                                )}
-                              >
-                                <svg
-                                  className="w-4 h-4"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                  />
-                                </svg>
-                                {t('Delete')}
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg
-                          className="w-10 h-10 text-gray-400"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                      </div>
-                      <h4 className="text-lg font-semibold text-gray-600 mb-1">
-                        {t('No Liquidations Found')}
-                      </h4>
-                      <p className="text-gray-500 max-w-md mx-auto">
-                        {t(
-                          'No liquidation records found for this customer. Create your first liquidation to archive transactions.'
-                        )}
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="p-3 border-t border-gray-200 bg-gray-50">
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => setShowLiquidations(false)}
-                      className="flex-1 px-3 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg font-medium transition-colors"
-                    >
-                      {t('Close')}
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowLiquidations(false);
-                        // Optionally open liquidation modal here
-                      }}
-                      className="flex-1 px-3 py-2 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white rounded-lg font-medium transition-colors"
-                    >
-                      {t('Create New Liquidation')}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
-
-      {/* Hidden Printable Content - MUST be at the root level */}
-      {/* <div style={{ display: 'none' }}>
-        <PrintableContent
-          ref={componentRef}
-          transactions={customerTransaction}
-          customerInfo={{
-            name: customerName,
-            id: customerId,
-          }}
-          accountSummary={data?.accountSummary || []}
-        />
-      </div> */}
     </div>
   );
 };
 
-export default CustomerTransactions;
+export default AllCustomerTransactions;

@@ -73,6 +73,7 @@ import {
   CustomerDashboard,
   CustomerAccounts,
   CustomerLogin,
+  AllCustomerTransactions,
 } from './pages';
 import PageNotF from './components/common/PageNotF';
 
@@ -108,8 +109,8 @@ const App = () => {
           >
             <Route index element={<CustomerDashboard />} />
             <Route path="accounts" element={<CustomerAccounts />} />
-            {/* <Route path="transactions" element={<CustomerTransactions />} />
-            <Route path="profile" element={<CustomerProfile />} /> */}
+            <Route path="transactions" element={<AllCustomerTransactions />} />
+            {/* <Route path="profile" element={<CustomerProfile />} /> */}
           </Route>
 
           {/* Public routes */}

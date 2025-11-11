@@ -400,6 +400,10 @@ main {
   from {
     opacity: 0;
     transform: translateX(20px);
+    -webkit-transform: translateX(20px);
+    -moz-transform: translateX(20px);
+    -ms-transform: translateX(20px);
+    -o-transform: translateX(20px);
   }
   to {
     opacity: 1;

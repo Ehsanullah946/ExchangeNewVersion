@@ -45,7 +45,6 @@ const customerAuthSlice = createSlice({
       );
     },
     logoutCustomer: (state) => {
-      console.log('🚪 Logging out customer');
       state.customer = null;
       state.token = null;
       state.isAuthenticated = false;
@@ -56,8 +55,6 @@ const customerAuthSlice = createSlice({
       localStorage.removeItem('customer');
     },
     initializeCustomerAuth: (state) => {
-      console.log('🔄 initializeCustomerAuth called');
-
       const token = localStorage.getItem('customerToken');
       const customerStr = localStorage.getItem('customer');
 

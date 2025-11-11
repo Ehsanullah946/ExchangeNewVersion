@@ -1,4 +1,3 @@
-// components/customer/CustomerSidebar.jsx
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa';
@@ -138,7 +137,7 @@ const CustomerSidebar = ({ children }) => {
                   exit="hidden"
                   className="logo"
                 >
-                  {t('Customer Portal')}
+                  {t('Akbarian Exchange')}
                 </motion.h1>
               )}
             </AnimatePresence>
@@ -173,19 +172,33 @@ const CustomerSidebar = ({ children }) => {
                 </AnimatePresence>
               </div>
               <section className="routes">
-                {customerRoutes.map((route, index) => (
-                  <NavLink
-                    to={route.path}
-                    key={index}
-                    className="link"
-                    onClick={handleLinkClick}
-                  >
-                    <div className="icon">{route.icon}</div>
-                    {isOpen && (
-                      <span className="link_text">{t(route.nameKey)}</span>
-                    )}
-                  </NavLink>
-                ))}
+                {customerRoutes.map((route, index) => {
+                  if (route.subRoutes) {
+                    return (
+                      <SidebarMenu
+                        setIsOpen={setIsOpen}
+                        route={route}
+                        showAnimation={showAnimation}
+                        isOpen={isOpen}
+                        key={index}
+                      />
+                    );
+                  }
+
+                  return (
+                    <NavLink
+                      to={route.path}
+                      key={index}
+                      className="link"
+                      onClick={handleLinkClick}
+                    >
+                      <div className="icon">{route.icon}</div>
+                      {isOpen && (
+                        <span className="link_text">{t(route.nameKey)}</span>
+                      )}
+                    </NavLink>
+                  );
+                })}
               </section>
             </>
           )}

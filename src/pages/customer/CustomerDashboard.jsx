@@ -19,9 +19,21 @@ import {
   BsDownload,
   BsUpload,
 } from 'react-icons/bs';
+import {
+  useCustomerAccounts,
+  useCustomerTransactions,
+} from '../../hooks/useCustomerAuth';
+import { useDateFormatter } from '../../hooks/useDateFormatter';
+import { formatNumber } from '../../utils/formatNumber';
 
 const CustomerDashboard = () => {
   const { t } = useTranslation();
+
+  const { data: accountSummary, summaryLoading } = useCustomerAccounts();
+
+  const { formatDisplay } = useDateFormatter();
+
+  console.log('account data', accountSummary);
 
   // Mock data - replace with actual API calls
   const customerData = {
@@ -197,14 +209,14 @@ const CustomerDashboard = () => {
 
               <div className="mb-2">
                 <p className="text-4xl lg:text-5xl font-bold mb-2">
-                  {formatCurrency(customerData.account.balance)}
+                  {formatNumber(accountSummary?.summary.totalInMainCurrency)}{' '}
                 </p>
                 <div className="flex items-center gap-2">
                   <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium">
                     {t('Active')}
                   </span>
                   <span className="text-blue-100 text-sm">
-                    {customerData.account.currency}
+                    {accountSummary?.mainCurrency.name}
                   </span>
                 </div>
               </div>

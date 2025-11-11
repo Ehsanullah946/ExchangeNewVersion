@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   getCustomerAccounts,
+  getCustomerTransactions,
   initiateVerification,
   verifyCode,
 } from '../api/customerAuth';
@@ -93,12 +94,52 @@ export const useVerifyCode = () => {
     },
   });
 };
+
 export const useCustomerAccounts = () => {
   return useQuery({
     queryKey: ['customers'],
     queryFn: () => getCustomerAccounts(),
     onError: (error) => {
       console.error('Error fetching customer account:', error);
+    },
+  });
+};
+
+export const useCustomerTransactions = (
+  limit = 10,
+  page = 1,
+  search,
+  moneyType,
+  fromDate,
+  toDate,
+  TransactionType
+) => {
+  return useQuery({
+    queryKey: [
+      'customer-transactions',
+      limit,
+      page,
+      search,
+      moneyType,
+      fromDate,
+      toDate,
+      TransactionType,
+    ],
+    queryFn: () => {
+      return getCustomerTransactions({
+        limit,
+        page,
+        search: search || '',
+        moneyType: moneyType || '',
+        fromDate: fromDate || '',
+        toDate: toDate || '',
+        TransactionType: TransactionType || '',
+      });
+    },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    keepPreviousData: true,
+    onError: (error) => {
+      console.error('Error fetching customer transactions:', error);
     },
   });
 };

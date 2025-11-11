@@ -50,6 +50,9 @@ export const CustomerDashboard = lazy(() =>
 export const CustomerAccounts = lazy(() =>
   import('./customer/CustomerAccounts')
 );
+export const AllCustomerTransactions = lazy(() =>
+  import('./customer/AllCustomerTransactions')
+);
 export const CustomerLogin = lazy(() =>
   import('../components/customer/CustomerLogin')
 );

@@ -11,6 +11,7 @@ import { MdKeyboardArrowDown } from 'react-icons/md';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { logoutCustomer } from '../../features/customer/customerAuthSlice';
+import { useTranslation } from 'react-i18next';
 
 const NavButton = ({ title, customeFunc, icon, color, dotColor, count }) => {
   return (
@@ -63,6 +64,8 @@ const CustomerNavbar = () => {
   const [showQuickMenu, setShowQuickMenu] = useState(false);
   const menuRef = useRef(null);
 
+  const { t } = useTranslation();
+
   // Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -97,7 +100,9 @@ const CustomerNavbar = () => {
     <div className="flex items-center justify-between p-2 md:px-6 bg-gradient-to-r from-white to-gray-50/80 backdrop-blur-lg border-b border-gray-200/60 shadow-sm relative z-50">
       {/* Page Title */}
       <div className="flex items-center">
-        <h1 className="text-xl font-bold text-gray-800">Customer Dashboard</h1>
+        <h1 className="text-xl font-bold text-gray-800">
+          {t('Customer Dashboard')}
+        </h1>
       </div>
 
       {/* Right Section */}
@@ -134,9 +139,9 @@ const CustomerNavbar = () => {
 
             <div className="hidden md:block text-left">
               <p className="text-sm font-semibold text-gray-900 leading-none">
-                Customer #{customer?.id}
+                {t('Customer')} #{customer?.id}
               </p>
-              <p className="text-xs text-gray-500 mt-1">Active</p>
+              <p className="text-xs text-gray-500 mt-1">{t('Active')}</p>
             </div>
 
             <MdKeyboardArrowDown
@@ -159,9 +164,11 @@ const CustomerNavbar = () => {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">
-                      Customer #{customer?.id}
+                      {t('Customer')} #{customer?.id}
                     </p>
-                    <p className="text-sm text-gray-500">Personal Account</p>
+                    <p className="text-sm text-gray-500">
+                      {t('Personal Account')}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -172,7 +179,7 @@ const CustomerNavbar = () => {
                 className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50/80 transition-colors duration-200"
               >
                 <BsPersonCircle className="text-gray-600 text-lg" />
-                <span className="text-gray-700">My Profile</span>
+                <span className="text-gray-700">{t('My Profile')}</span>
               </button>
 
               <button
@@ -180,7 +187,7 @@ const CustomerNavbar = () => {
                 className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-gray-50/80 transition-colors duration-200"
               >
                 <BsGear className="text-gray-600 text-lg" />
-                <span className="text-gray-700">Account Settings</span>
+                <span className="text-gray-700">{t('Account Settings')}</span>
               </button>
 
               <div className="border-t border-gray-200/60 my-1"></div>
@@ -190,7 +197,7 @@ const CustomerNavbar = () => {
                 className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-red-50/80 text-red-600 transition-colors duration-200 rounded-b-2xl"
               >
                 <BsBoxArrowRight className="text-lg" />
-                <span className="font-medium">Sign Out</span>
+                <span className="font-medium">{t('Sign Out')}</span>
               </button>
             </div>
           )}
