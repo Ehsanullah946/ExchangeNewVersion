@@ -23,6 +23,11 @@ export const getCustomerAccounts = async () => {
   console.log('account data for in api', data);
   return data;
 };
+export const getCustomerTransactionTotal = async () => {
+  const { data } = await customerClient.get('auth/customer/transactionsTotal');
+  console.log('account data for in api', data);
+  return data;
+};
 
 export const getCustomerTransactions = async ({
   limit = 10,

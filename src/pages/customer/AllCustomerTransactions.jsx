@@ -74,12 +74,6 @@ const AllCustomerTransactions = () => {
     { value: 'exchange_purchase', label: t('Exchange Purchase') },
   ];
 
-  //   const { data: customerData } = useCustomerDetails(customerId);
-  //   const customer = customerData?.data || {};
-  //   const customerName = customer?.Stakeholder?.Person
-  //     ? `${customer.Stakeholder.Person.firstName} ${customer.Stakeholder.Person.lastName}`
-  //     : 'Customer';
-
   const customerTransaction = data?.data || [];
   const total = data?.total || 0;
 
@@ -192,13 +186,14 @@ const AllCustomerTransactions = () => {
               <p className="text-gray-600">
                 {t('Customer')}:{' '}
                 <span className="font-semibold text-blue-600">
-                  {/* {customerName} */}
+                  {data?.customer?.stakeholder.person.firstName}
+                  {data?.customer.stakeholder.person.lastName}
                 </span>
               </p>
-              <p className="text-sm text-gray-500">ID: </p>
+              <p className="text-sm text-gray-500">ID: {data?.customer?.id}</p>
             </div>
             <p className="text-gray-600">
-              {t('View and manage all financial transactions')}
+              {t('View all financial transactions')}
             </p>
           </div>
 

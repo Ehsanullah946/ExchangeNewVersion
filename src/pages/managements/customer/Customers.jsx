@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import Button from '../../../components/layout/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { PulseLoader } from 'react-spinners';
 import { useCustomers, useDeleteCustomer } from '../../../hooks/useCustomers';
-import { BiSolidDetail, BiSolidEdit } from 'react-icons/bi';
+import { BiSolidEdit } from 'react-icons/bi';
 
 import {
   setDebouncedPhone,
@@ -64,7 +63,7 @@ const Customers = () => {
     dispatch(setPage(1));
   }, [debouncedSearch, debouncedPhone, dispatch]);
 
-  const { data, isLoading, error } = useCustomers(
+  const { data, isLoading } = useCustomers(
     debouncedSearch,
     debouncedPhone,
     limit,

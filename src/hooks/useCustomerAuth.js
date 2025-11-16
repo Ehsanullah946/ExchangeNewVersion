@@ -4,6 +4,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   getCustomerAccounts,
   getCustomerTransactions,
+  getCustomerTransactionTotal,
   initiateVerification,
   verifyCode,
 } from '../api/customerAuth';
@@ -99,6 +100,16 @@ export const useCustomerAccounts = () => {
   return useQuery({
     queryKey: ['customers'],
     queryFn: () => getCustomerAccounts(),
+    onError: (error) => {
+      console.error('Error fetching customer account:', error);
+    },
+  });
+};
+
+export const useCustomerTransactionsTotal = () => {
+  return useQuery({
+    queryKey: ['customers'],
+    queryFn: () => getCustomerTransactionTotal(),
     onError: (error) => {
       console.error('Error fetching customer account:', error);
     },
